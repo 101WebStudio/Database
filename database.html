@@ -4,384 +4,243 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Data Base</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #ffffff;
-    --surface: #f5f5f5;
-    --surface2: #ebebeb;
-    --border: #d0d0d0;
-    --border-dark: #333;
-    --text: #0a0a0a;
-    --muted: #666;
-    --light: #999;
-    --black: #000000;
-    --white: #ffffff;
-  }
+:root {
+  --bg:#fff; --surface:#f5f5f5; --surface2:#ebebeb;
+  --border:#d0d0d0; --border-dark:#333;
+  --text:#0a0a0a; --muted:#666; --light:#999;
+  --black:#000; --white:#fff;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+/* TOP BAR */
+.top-bar{border-bottom:2px solid var(--black);padding:1.1rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--white);z-index:50;}
+.top-left{display:flex;align-items:center;gap:1rem;}
+.db-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1rem;letter-spacing:3px;text-transform:uppercase;}
+.breadcrumb{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem;}
+.breadcrumb .sep{color:var(--border);}
+.breadcrumb .crumb-link{cursor:pointer;color:var(--muted);transition:color 0.1s;}
+.breadcrumb .crumb-link:hover{color:var(--black);}
+.breadcrumb .crumb-cur{color:var(--black);font-weight:600;}
+.user-bar{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;}
+.user-chip{display:flex;align-items:center;gap:0.4rem;border:1.5px solid var(--black);border-radius:2px;padding:0.25rem 0.7rem;font-size:0.7rem;font-weight:600;font-family:'IBM Plex Mono',monospace;letter-spacing:1px;cursor:pointer;background:var(--white);transition:all 0.1s;}
+.user-chip .dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:0.4;}
+.user-chip.active-user{background:var(--black);color:var(--white);}
+.user-remove{margin-left:3px;font-size:0.82rem;opacity:0.5;cursor:pointer;transition:opacity 0.1s;}
+.user-remove:hover{opacity:1;}
+.add-user-btn{border:1.5px dashed var(--border-dark);border-radius:2px;padding:0.25rem 0.65rem;font-size:0.7rem;font-family:'IBM Plex Mono',monospace;background:transparent;cursor:pointer;color:var(--muted);transition:all 0.1s;}
+.add-user-btn:hover{color:var(--black);border-color:var(--black);}
 
-  body {
-    font-family: 'IBM Plex Sans', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
+/* TABS */
+.tabs{display:flex;border-bottom:1.5px solid var(--border);padding:0 2rem;}
+.tab{font-family:'IBM Plex Mono',monospace;font-size:0.72rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:0.8rem 1.3rem;cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-1.5px;color:var(--muted);transition:all 0.1s;user-select:none;}
+.tab:hover{color:var(--black);}
+.tab.active{color:var(--black);border-bottom-color:var(--black);}
 
-  .top-bar {
-    border-bottom: 2px solid var(--black);
-    padding: 1.2rem 2rem;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .db-title {
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 600; font-size: 1.1rem;
-    letter-spacing: 3px; text-transform: uppercase;
-  }
-  .user-bar { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
-  .user-chip {
-    display: flex; align-items: center; gap: 0.45rem;
-    border: 1.5px solid var(--black); border-radius: 2px;
-    padding: 0.28rem 0.75rem;
-    font-size: 0.72rem; font-weight: 600;
-    font-family: 'IBM Plex Mono', monospace; letter-spacing: 1px;
-    cursor: pointer; background: var(--white); transition: all 0.1s;
-  }
-  .user-chip .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; opacity: 0.4; }
-  .user-chip.active-user { background: var(--black); color: var(--white); }
-  .user-remove {
-    margin-left: 4px; font-size: 0.85rem; line-height: 1;
-    opacity: 0.5; transition: opacity 0.1s; cursor: pointer;
-  }
-  .user-remove:hover { opacity: 1; }
-  .add-user-btn {
-    border: 1.5px dashed var(--border-dark); border-radius: 2px;
-    padding: 0.28rem 0.7rem; font-size: 0.72rem;
-    font-family: 'IBM Plex Mono', monospace;
-    background: transparent; cursor: pointer; color: var(--muted);
-    transition: all 0.1s;
-  }
-  .add-user-btn:hover { color: var(--black); border-color: var(--black); }
+/* PAGES */
+.page{display:none;padding:2rem;}
+.page.active{display:block;}
 
-  .tabs {
-    display: flex; border-bottom: 1.5px solid var(--border);
-    padding: 0 2rem; gap: 0;
-  }
-  .tab {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
-    font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
-    padding: 0.85rem 1.4rem; cursor: pointer;
-    border-bottom: 2.5px solid transparent; margin-bottom: -1.5px;
-    color: var(--muted); transition: all 0.1s; user-select: none;
-  }
-  .tab:hover { color: var(--black); }
-  .tab.active { color: var(--black); border-bottom-color: var(--black); }
+/* SECTION HEAD */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem;flex-wrap:wrap;gap:1rem;}
+.section-label{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+.count-tag{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;background:var(--black);color:var(--white);padding:2px 7px;margin-left:0.5rem;}
 
-  .page { display: none; padding: 2rem; }
-  .page.active { display: block; }
+/* BUTTONS */
+.btn{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;font-weight:600;letter-spacing:1px;padding:0.45rem 0.95rem;border:1.5px solid var(--black);border-radius:2px;cursor:pointer;transition:all 0.1s;background:var(--white);color:var(--black);}
+.btn:hover{background:var(--black);color:var(--white);}
+.btn-fill{background:var(--black);color:var(--white);}
+.btn-fill:hover{background:#222;}
 
-  .section-head {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 1.4rem; flex-wrap: wrap; gap: 1rem;
-  }
-  .section-label {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
-    letter-spacing: 3px; text-transform: uppercase; color: var(--muted);
-  }
-  .count-tag {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem;
-    background: var(--black); color: var(--white);
-    padding: 2px 7px; margin-left: 0.6rem;
-  }
+/* FORMS */
+.search-row{display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap;}
+.search-input{font-family:'IBM Plex Mono',monospace;font-size:0.76rem;padding:0.45rem 0.75rem;border:1.5px solid var(--border);border-radius:2px;outline:none;width:210px;background:var(--white);color:var(--black);transition:border-color 0.1s;}
+.search-input:focus{border-color:var(--black);}
+.inline-form{display:none;background:var(--surface);border:1.5px solid var(--border-dark);border-radius:2px;padding:1.1rem 1.3rem;margin-bottom:1.3rem;animation:fadeIn 0.15s ease;}
+.inline-form.open{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:0.65rem;margin-bottom:0.9rem;}
+.field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:0.25rem;}
+.field input,.field select{width:100%;font-family:'IBM Plex Mono',monospace;font-size:0.76rem;padding:0.4rem 0.6rem;border:1.5px solid var(--border);border-radius:2px;background:var(--white);color:var(--black);outline:none;transition:border-color 0.1s;}
+.field input:focus,.field select:focus{border-color:var(--black);}
+.form-actions{display:flex;gap:0.5rem;justify-content:flex-end;}
 
-  .btn {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
-    font-weight: 600; letter-spacing: 1px;
-    padding: 0.48rem 1rem; border: 1.5px solid var(--black);
-    border-radius: 2px; cursor: pointer; transition: all 0.1s;
-    background: var(--white); color: var(--black);
-  }
-  .btn:hover { background: var(--black); color: var(--white); }
-  .btn-fill { background: var(--black); color: var(--white); }
-  .btn-fill:hover { background: #222; }
+/* TABLE */
+.table-wrap{border:1.5px solid var(--border-dark);border-radius:2px;overflow:auto;}
+table{width:100%;border-collapse:collapse;min-width:700px;}
+thead th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:0.6rem 0.85rem;background:var(--surface);border-bottom:1.5px solid var(--border);white-space:nowrap;}
+tbody tr{border-bottom:1px solid var(--border);transition:background 0.07s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--surface);}
+tbody td{padding:0.65rem 0.85rem;font-size:0.82rem;vertical-align:middle;}
+.td-name{font-weight:600;font-size:0.84rem;}
+.td-sub{color:var(--muted);font-size:0.74rem;font-family:'IBM Plex Mono',monospace;}
+.status{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border:1.5px solid;border-radius:2px;white-space:nowrap;}
+.s-accepted{border-color:#000;background:#000;color:#fff;}
+.s-declined{border-color:#aaa;background:#fff;color:#aaa;text-decoration:line-through;}
+.s-saved{border-color:#000;background:#fff;color:#000;}
+.s-pending{border-color:#ccc;background:#f5f5f5;color:#999;}
+.inv-row{display:flex;gap:3px;}
+.inv{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;font-weight:600;padding:3px 7px;border:1.5px solid var(--border);border-radius:2px;cursor:pointer;background:var(--white);color:var(--muted);transition:all 0.1s;}
+.inv:hover{border-color:var(--black);color:var(--black);}
+.inv.i-a:hover{background:var(--black);color:var(--white);border-color:var(--black);}
+.del-btn{font-size:0.7rem;background:none;border:none;cursor:pointer;color:var(--light);padding:3px;transition:color 0.1s;}
+.del-btn:hover{color:var(--black);}
 
-  .search-row { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
-  .search-input {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
-    padding: 0.48rem 0.8rem; border: 1.5px solid var(--border);
-    border-radius: 2px; outline: none; width: 220px;
-    background: var(--white); color: var(--black); transition: border-color 0.1s;
-  }
-  .search-input:focus { border-color: var(--black); }
+/* ═══════════════════════════════════
+   EVENT CARDS (list view)
+═══════════════════════════════════ */
+.ev-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;}
+.ev-card{
+  border:2px solid var(--black);border-radius:2px;
+  background:var(--white);cursor:pointer;
+  transition:box-shadow 0.15s,transform 0.1s;
+  overflow:hidden;
+}
+.ev-card:hover{box-shadow:4px 4px 0 var(--black);transform:translate(-1px,-1px);}
+.ev-card-top{padding:1rem 1.1rem 0.75rem;border-bottom:1.5px solid var(--border);}
+.ev-card-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:0.95rem;margin-bottom:0.5rem;}
+.ev-card-meta{display:flex;flex-wrap:wrap;gap:0.4rem;}
+.ev-meta-pill{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;padding:2px 7px;border:1px solid var(--border);border-radius:2px;color:var(--muted);}
+.ev-card-bottom{padding:0.7rem 1.1rem;display:flex;align-items:center;justify-content:space-between;background:var(--surface);}
+.ev-card-stage{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border:1.5px solid;border-radius:2px;}
+.ev-card-stage.planning{border-color:#ccc;color:#999;}
+.ev-card-stage.outreach{border-color:#555;color:#555;}
+.ev-card-stage.confirmed{border-color:#000;background:#000;color:#fff;}
+.ev-card-stage.delivered{border-color:#000;color:#000;}
+.ev-card-stats{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted);}
+.ev-card-del{font-size:0.7rem;background:none;border:1px solid var(--border);border-radius:2px;cursor:pointer;color:var(--light);padding:3px 7px;font-family:'IBM Plex Mono',monospace;transition:all 0.1s;}
+.ev-card-del:hover{border-color:var(--black);color:var(--black);}
+.ev-empty{text-align:center;padding:5rem 2rem;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--light);letter-spacing:2px;grid-column:1/-1;}
 
-  .inline-form {
-    display: none; background: var(--surface);
-    border: 1.5px solid var(--border-dark); border-radius: 2px;
-    padding: 1.2rem 1.4rem; margin-bottom: 1.4rem;
-    animation: fadeIn 0.15s ease;
-  }
-  .inline-form.open { display: block; }
-  @keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+/* ═══════════════════════════════════
+   EVENT DETAIL PAGE
+═══════════════════════════════════ */
+#eventDetail{display:none;padding:2rem;}
 
-  .form-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(175px,1fr));
-    gap: 0.7rem; margin-bottom: 1rem;
-  }
-  .field label {
-    display: block; font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.62rem; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--muted); margin-bottom: 0.28rem;
-  }
-  .field input, .field select {
-    width: 100%; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
-    padding: 0.42rem 0.65rem; border: 1.5px solid var(--border);
-    border-radius: 2px; background: var(--white); color: var(--black);
-    outline: none; transition: border-color 0.1s;
-  }
-  .field input:focus, .field select:focus { border-color: var(--black); }
-  .form-actions { display: flex; gap: 0.55rem; justify-content: flex-end; }
+/* LIVE TIMER */
+.ev-detail-header{
+  border:2px solid var(--black);border-radius:2px;
+  margin-bottom:1.5rem;overflow:hidden;
+}
+.ev-detail-top{
+  padding:1.2rem 1.5rem;background:var(--black);color:var(--white);
+  display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;
+}
+.ev-detail-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.3rem;letter-spacing:1px;}
+.ev-detail-meta{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;opacity:0.6;margin-top:0.3rem;display:flex;gap:1rem;flex-wrap:wrap;}
+.ev-detail-actions{display:flex;gap:0.5rem;align-items:flex-start;flex-wrap:wrap;}
+.ev-btn-white{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;font-weight:600;letter-spacing:1px;padding:0.4rem 0.9rem;border:1.5px solid rgba(255,255,255,0.4);border-radius:2px;cursor:pointer;background:transparent;color:var(--white);transition:all 0.1s;}
+.ev-btn-white:hover{background:var(--white);color:var(--black);}
+.ev-detail-timer{
+  padding:1rem 1.5rem;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border-bottom:1.5px solid var(--border);gap:0;
+}
+.timer-unit{text-align:center;padding:0.75rem 0;border-right:1px solid var(--border);}
+.timer-unit:last-child{border-right:none;}
+.timer-val{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:2rem;letter-spacing:2px;line-height:1;}
+.timer-label{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:0.3rem;}
+.timer-status{padding:0.6rem 1.5rem;background:var(--surface);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}
+.timer-status-text{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--muted);}
+.timer-status-text strong{color:var(--black);}
 
-  .table-wrap { border: 1.5px solid var(--border-dark); border-radius: 2px; overflow: auto; }
-  table { width: 100%; border-collapse: collapse; min-width: 700px; }
-  thead th {
-    text-align: left; font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase;
-    color: var(--muted); padding: 0.65rem 0.9rem;
-    background: var(--surface); border-bottom: 1.5px solid var(--border);
-    white-space: nowrap;
-  }
-  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.07s; }
-  tbody tr:last-child { border-bottom: none; }
-  tbody tr:hover { background: var(--surface); }
-  tbody td { padding: 0.7rem 0.9rem; font-size: 0.84rem; vertical-align: middle; }
-  .td-name { font-weight: 600; font-size: 0.86rem; }
-  .td-sub { color: var(--muted); font-size: 0.76rem; font-family: 'IBM Plex Mono', monospace; }
+/* PIPELINE inside event detail */
+.ev-detail-pipeline{margin-bottom:1.5rem;}
+.ev-detail-section-title{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:0.75rem;display:flex;align-items:center;justify-content:space-between;}
+.ev-pipeline-cols{display:grid;grid-template-columns:repeat(4,1fr);border:1.5px solid var(--border-dark);border-radius:2px;overflow:hidden;}
+.ev-pipe-col{border-right:1.5px solid var(--border);display:flex;flex-direction:column;}
+.ev-pipe-col:last-child{border-right:none;}
+.ev-pipe-col-head{padding:0.55rem 0.8rem;background:var(--surface);border-bottom:1.5px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:0.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;align-items:center;}
+.ev-pipe-col-cnt{font-weight:400;color:var(--light);}
+.ev-pipe-deals{padding:0.55rem;min-height:80px;display:flex;flex-direction:column;gap:0.35rem;flex:1;}
+.ev-deal-card{background:var(--white);border:1.5px solid var(--border);border-radius:2px;padding:0.5rem 0.6rem;cursor:pointer;transition:all 0.12s;position:relative;}
+.ev-deal-card:hover{border-color:var(--black);box-shadow:2px 2px 0 var(--black);}
+.ev-deal-card-name{font-weight:600;font-size:0.8rem;padding-right:1.2rem;}
+.ev-deal-card-val{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted);margin-top:2px;}
+.ev-deal-card-note{font-size:0.7rem;color:var(--muted);margin-top:3px;}
+.ev-deal-card-del{position:absolute;top:5px;right:6px;background:none;border:none;font-size:0.65rem;color:var(--light);cursor:pointer;opacity:0;transition:opacity 0.1s;}
+.ev-deal-card:hover .ev-deal-card-del{opacity:1;}
+.ev-deal-card-del:hover{color:var(--black);}
+.ev-pipe-empty{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--light);text-align:center;padding:1rem 0;letter-spacing:1px;}
+.ev-pipe-add{padding:0.5rem;border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted);text-align:center;cursor:pointer;transition:all 0.1s;letter-spacing:1px;grid-column:1/-1;}
+.ev-pipe-add:hover{background:var(--surface);color:var(--black);}
 
-  .status {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.64rem;
-    font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
-    padding: 2px 7px; border: 1.5px solid; border-radius: 2px; white-space: nowrap;
-  }
-  .s-accepted { border-color:#000;background:#000;color:#fff; }
-  .s-declined { border-color:#aaa;background:#fff;color:#aaa;text-decoration:line-through; }
-  .s-saved    { border-color:#000;background:#fff;color:#000; }
-  .s-pending  { border-color:#ccc;background:#f5f5f5;color:#999; }
+/* DEAL FORM inside event */
+.deal-inline-form{display:none;background:var(--surface);border:1.5px solid var(--border-dark);border-radius:2px;padding:1rem 1.2rem;margin-top:0.75rem;animation:fadeIn 0.15s ease;}
+.deal-inline-form.open{display:block;}
 
-  .inv-row { display: flex; gap: 3px; }
-  .inv {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem;
-    font-weight: 600; padding: 3px 7px; border: 1.5px solid var(--border);
-    border-radius: 2px; cursor: pointer; background: var(--white);
-    color: var(--muted); transition: all 0.1s;
-  }
-  .inv:hover { border-color: var(--black); color: var(--black); background: var(--surface); }
-  .inv.i-a:hover { background: var(--black); color: var(--white); border-color: var(--black); }
+/* TASKS */
+.tasks-layout{display:grid;grid-template-columns:1fr 290px;gap:2rem;}
+.task-form-box{border:1.5px solid var(--border-dark);border-radius:2px;padding:1.1rem;background:var(--surface);height:fit-content;}
+.task-form-title{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
+.task-input{width:100%;font-family:'IBM Plex Sans',sans-serif;font-size:0.84rem;padding:0.48rem 0.68rem;border:1.5px solid var(--border);border-radius:2px;outline:none;background:var(--white);color:var(--black);margin-bottom:0.5rem;transition:border-color 0.1s;}
+.task-input:focus{border-color:var(--black);}
+.prio-row{display:flex;gap:0.3rem;margin-bottom:0.65rem;}
+.prio-btn{flex:1;font-family:'IBM Plex Mono',monospace;font-size:0.6rem;font-weight:600;letter-spacing:1px;padding:0.3rem;border:1.5px solid var(--border);border-radius:2px;cursor:pointer;background:var(--white);color:var(--muted);text-transform:uppercase;transition:all 0.1s;}
+.prio-btn.selected{border-color:var(--black);background:var(--black);color:var(--white);}
+.task-list{display:flex;flex-direction:column;gap:0.4rem;}
+.task-item{display:flex;align-items:flex-start;gap:0.65rem;padding:0.75rem 0.85rem;border:1.5px solid var(--border);border-radius:2px;background:var(--white);transition:border-color 0.1s;}
+.task-item:hover{border-color:var(--border-dark);}
+.task-item.done{opacity:0.4;}
+.task-check{width:15px;height:15px;min-width:15px;border:1.5px solid var(--border-dark);border-radius:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:2px;font-size:0.62rem;background:var(--white);transition:all 0.1s;}
+.task-check:hover{background:var(--surface2);}
+.task-item.done .task-check{background:var(--black);color:var(--white);border-color:var(--black);}
+.task-body{flex:1;}
+.task-text{font-size:0.84rem;}
+.task-item.done .task-text{text-decoration:line-through;color:var(--muted);}
+.task-meta{display:flex;gap:0.4rem;margin-top:3px;align-items:center;flex-wrap:wrap;}
+.task-date{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--light);}
+.prio-tag{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:1px 5px;border:1px solid var(--border);border-radius:2px;color:var(--muted);}
+.prio-tag.high{border-color:#000;color:#000;}
+.prio-tag.med{border-color:#888;color:#888;}
+.task-del{background:none;border:none;color:var(--light);cursor:pointer;font-size:0.7rem;padding:2px;opacity:0;transition:opacity 0.1s;}
+.task-item:hover .task-del{opacity:1;}
+.task-del:hover{color:var(--black);}
 
-  .del-btn {
-    font-size: 0.72rem; background: none; border: none;
-    cursor: pointer; color: var(--light); padding: 3px; transition: color 0.1s;
-  }
-  .del-btn:hover { color: var(--black); }
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;}
+.overlay.open{display:flex;}
+.modal{background:var(--white);border:2px solid var(--black);border-radius:2px;padding:1.8rem;width:380px;animation:popIn 0.15s ease;}
+@keyframes popIn{from{opacity:0;transform:scale(0.97)}to{opacity:1;transform:scale(1)}}
+.modal h3{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.1rem;}
+.modal .field{margin-bottom:0.6rem;}
+.modal-actions{display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1.1rem;}
 
-  /* EVENTS GRID */
-  .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px,1fr)); gap: 1.2rem; }
-  .event-card {
-    border: 1.5px solid var(--border-dark); border-radius: 2px;
-    overflow: hidden; background: var(--white);
-  }
-  .event-card-head {
-    padding: 1rem 1.1rem 0.8rem;
-    border-bottom: 1.5px solid var(--border);
-    display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem;
-  }
-  .event-card-info { flex: 1; }
-  .event-card-name {
-    font-family: 'IBM Plex Mono', monospace; font-weight: 600;
-    font-size: 0.9rem; margin-bottom: 0.25rem;
-  }
-  .event-card-meta {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
-    color: var(--muted); letter-spacing: 0.5px; display: flex; gap: 0.75rem; flex-wrap: wrap;
-  }
-  .event-card-actions { display: flex; gap: 0.35rem; align-items: center; }
-  .ev-stage-badge {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; font-weight: 600;
-    letter-spacing: 1.5px; text-transform: uppercase;
-    padding: 2px 7px; border: 1.5px solid var(--black); border-radius: 2px;
-  }
-  .ev-stage-badge.planning  { border-color:#ccc; color:#999; }
-  .ev-stage-badge.outreach  { border-color:#555; color:#555; }
-  .ev-stage-badge.confirmed { border-color:#000; background:#000; color:#fff; }
-  .ev-stage-badge.delivered { border-color:#000; color:#000; }
+/* TOASTS */
+.toasts{position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;display:flex;flex-direction:column;gap:0.35rem;}
+.toast{background:var(--black);color:var(--white);font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.5px;padding:0.6rem 1rem;border-radius:2px;animation:fadeIn 0.2s ease;}
 
-  /* DEAL MINI PIPELINE inside card */
-  .ev-pipe { padding: 0.75rem 1.1rem; }
-  .ev-pipe-cols { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; border: 1px solid var(--border); border-radius: 2px; overflow:hidden; }
-  .ev-pipe-col { border-right: 1px solid var(--border); }
-  .ev-pipe-col:last-child { border-right: none; }
-  .ev-pipe-col-head {
-    padding: 0.35rem 0.5rem;
-    background: var(--surface); border-bottom: 1px solid var(--border);
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem;
-    font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
-    color: var(--muted); display: flex; align-items: center; justify-content: space-between;
-  }
-  .ev-pipe-col-head span { font-weight: 400; }
-  .ev-pipe-deals { padding: 0.4rem; min-height: 40px; display: flex; flex-direction: column; gap: 0.3rem; }
-  .ev-deal-chip {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 2px; padding: 0.3rem 0.4rem;
-    font-size: 0.72rem; cursor: pointer; transition: all 0.1s;
-    display: flex; align-items: center; justify-content: space-between; gap: 4px;
-    position: relative;
-  }
-  .ev-deal-chip:hover { border-color: var(--black); }
-  .ev-deal-chip-name { font-weight: 500; font-size: 0.72rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex:1; }
-  .ev-deal-chip-del { font-size: 0.65rem; color: var(--light); cursor: pointer; flex-shrink:0; }
-  .ev-deal-chip-del:hover { color: var(--black); }
-  .ev-pipe-empty { font-family:'IBM Plex Mono',monospace; font-size:0.6rem; color:var(--light); text-align:center; padding:0.5rem 0; }
-  .ev-add-deal {
-    display: flex; align-items: center; justify-content: center;
-    padding: 0.4rem; font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.65rem; color: var(--muted); cursor: pointer;
-    border-top: 1px solid var(--border); transition: all 0.1s;
-    letter-spacing: 1px;
-  }
-  .ev-add-deal:hover { background: var(--surface); color: var(--black); }
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-thumb{background:var(--border);}
 
-  .ev-del-btn {
-    font-size: 0.72rem; background: none; border: 1px solid var(--border);
-    border-radius: 2px; cursor: pointer; color: var(--light); padding: 3px 6px;
-    font-family: 'IBM Plex Mono', monospace; transition: all 0.1s;
-  }
-  .ev-del-btn:hover { border-color: var(--black); color: var(--black); }
-  .ev-adv-btn {
-    font-size: 0.65rem; background: none; border: 1px solid var(--border);
-    border-radius: 2px; cursor: pointer; color: var(--muted); padding: 3px 7px;
-    font-family: 'IBM Plex Mono', monospace; transition: all 0.1s; white-space:nowrap;
-  }
-  .ev-adv-btn:hover { border-color: var(--black); color: var(--black); }
-  .ev-empty-state {
-    grid-column: 1/-1; text-align:center; padding: 4rem 2rem;
-    font-family:'IBM Plex Mono',monospace; font-size:0.75rem; color:var(--light); letter-spacing:2px;
-  }
-
-  /* TASKS */
-  .tasks-layout { display: grid; grid-template-columns: 1fr 300px; gap: 2rem; }
-  .task-form-box {
-    border: 1.5px solid var(--border-dark); border-radius: 2px;
-    padding: 1.2rem; background: var(--surface); height: fit-content;
-  }
-  .task-form-title {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem;
-    letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
-    margin-bottom: 0.9rem;
-  }
-  .task-input {
-    width: 100%; font-family: 'IBM Plex Sans', sans-serif; font-size: 0.86rem;
-    padding: 0.5rem 0.7rem; border: 1.5px solid var(--border);
-    border-radius: 2px; outline: none; background: var(--white); color: var(--black);
-    margin-bottom: 0.55rem; transition: border-color 0.1s;
-  }
-  .task-input:focus { border-color: var(--black); }
-  .prio-row { display: flex; gap: 0.35rem; margin-bottom: 0.7rem; }
-  .prio-btn {
-    flex: 1; font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem;
-    font-weight: 600; letter-spacing: 1px; padding: 0.32rem;
-    border: 1.5px solid var(--border); border-radius: 2px;
-    cursor: pointer; background: var(--white); color: var(--muted);
-    text-transform: uppercase; transition: all 0.1s;
-  }
-  .prio-btn.selected { border-color: var(--black); background: var(--black); color: var(--white); }
-
-  .task-list { display: flex; flex-direction: column; gap: 0.45rem; }
-  .task-item {
-    display: flex; align-items: flex-start; gap: 0.7rem;
-    padding: 0.8rem 0.9rem; border: 1.5px solid var(--border);
-    border-radius: 2px; background: var(--white); transition: border-color 0.1s;
-  }
-  .task-item:hover { border-color: var(--border-dark); }
-  .task-item.done { opacity: 0.4; }
-  .task-check {
-    width: 15px; height: 15px; min-width: 15px; border: 1.5px solid var(--border-dark);
-    border-radius: 2px; cursor: pointer; display: flex; align-items: center;
-    justify-content: center; margin-top: 2px; font-size: 0.65rem;
-    background: var(--white); transition: all 0.1s;
-  }
-  .task-check:hover { background: var(--surface2); }
-  .task-item.done .task-check { background: var(--black); color: var(--white); border-color: var(--black); }
-  .task-body { flex: 1; }
-  .task-text { font-size: 0.86rem; }
-  .task-item.done .task-text { text-decoration: line-through; color: var(--muted); }
-  .task-meta { display: flex; gap: 0.45rem; margin-top: 3px; align-items: center; flex-wrap: wrap; }
-  .task-date { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--light); }
-  .prio-tag {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem; font-weight: 600;
-    letter-spacing: 1px; text-transform: uppercase; padding: 1px 5px;
-    border: 1px solid var(--border); border-radius: 2px; color: var(--muted);
-  }
-  .prio-tag.high { border-color: #000; color: #000; }
-  .prio-tag.med  { border-color: #888; color: #888; }
-  .task-del {
-    background: none; border: none; color: var(--light);
-    cursor: pointer; font-size: 0.72rem; padding: 2px;
-    opacity: 0; transition: opacity 0.1s;
-  }
-  .task-item:hover .task-del { opacity: 1; }
-  .task-del:hover { color: var(--black); }
-
-  .empty {
-    text-align: center; padding: 3rem 1rem;
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
-    color: var(--light); letter-spacing: 1px;
-  }
-
-  .overlay {
-    display: none; position: fixed; inset: 0; z-index: 200;
-    background: rgba(0,0,0,0.4); align-items: center; justify-content: center;
-  }
-  .overlay.open { display: flex; }
-  .modal {
-    background: var(--white); border: 2px solid var(--black);
-    border-radius: 2px; padding: 1.8rem; width: 340px;
-    animation: popIn 0.15s ease;
-  }
-  @keyframes popIn { from{opacity:0;transform:scale(0.97)} to{opacity:1;transform:scale(1)} }
-  .modal h3 {
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
-    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 1.1rem;
-  }
-  .modal .field { margin-bottom: 0.65rem; }
-  .modal-actions { display: flex; gap: 0.55rem; justify-content: flex-end; margin-top: 1.1rem; }
-
-  .toasts { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 300; display: flex; flex-direction: column; gap: 0.35rem; }
-  .toast {
-    background: var(--black); color: var(--white);
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.5px;
-    padding: 0.6rem 1rem; border-radius: 2px; animation: fadeIn 0.2s ease;
-  }
-
-  ::-webkit-scrollbar { width: 3px; height: 3px; }
-  ::-webkit-scrollbar-thumb { background: var(--border); }
-
-  @media(max-width:900px){ .pipeline{grid-template-columns:repeat(2,1fr);} .tasks-layout{grid-template-columns:1fr;} }
-  @media(max-width:600px){ .pipeline{grid-template-columns:1fr;} .top-bar{flex-wrap:wrap;gap:0.6rem;} }
+@media(max-width:768px){.tasks-layout{grid-template-columns:1fr;}.ev-pipeline-cols{grid-template-columns:repeat(2,1fr);}.ev-detail-timer{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:500px){.ev-cards-grid{grid-template-columns:1fr;}.top-bar{flex-wrap:wrap;gap:0.5rem;}}
 </style>
 </head>
 <body>
 
+<!-- TOP BAR -->
 <div class="top-bar">
-  <div class="db-title">Data Base</div>
+  <div class="top-left">
+    <div class="db-title">Data Base</div>
+    <div class="breadcrumb" id="breadcrumb"></div>
+  </div>
   <div class="user-bar" id="userBar"></div>
 </div>
 
-<div class="tabs">
+<!-- TABS -->
+<div class="tabs" id="mainTabs">
   <div class="tab active" onclick="switchTab('delegates',this)">Delegates</div>
-  <div class="tab" onclick="switchTab('pipeline',this)">Events</div>
+  <div class="tab" onclick="switchTab('events',this)">Events</div>
   <div class="tab" onclick="switchTab('tasks',this)">Tasks</div>
 </div>
 
-<!-- DELEGATES -->
+<!-- ══════════════════════════════
+     TAB: DELEGATES
+══════════════════════════════ -->
 <div class="page active" id="tab-delegates">
   <div class="section-head">
     <div><span class="section-label">Delegates</span><span class="count-tag" id="delCount">0</span></div>
@@ -409,55 +268,35 @@
     <table>
       <thead><tr>
         <th>Name</th><th>Email</th><th>Phone</th><th>Company</th>
-        <th>Title</th><th>Event</th><th>Status</th><th>Calendar Invite</th><th></th>
+        <th>Title</th><th>Event</th><th>Status</th><th>Calendar</th><th></th>
       </tr></thead>
       <tbody id="delegateRows"></tbody>
     </table>
-    <div id="delEmpty" class="empty" style="display:none">NO DELEGATES YET</div>
+    <div id="delEmpty" class="ev-empty" style="display:none">NO DELEGATES YET</div>
   </div>
 </div>
 
-<!-- EVENTS -->
-<div class="page" id="tab-pipeline">
+<!-- ══════════════════════════════
+     TAB: EVENTS (card list)
+══════════════════════════════ -->
+<div class="page" id="tab-events">
   <div class="section-head">
     <div><span class="section-label">Events</span><span class="count-tag" id="evCount">0</span></div>
     <button class="btn btn-fill" onclick="openEventModal()">+ New Event</button>
   </div>
-  <div id="eventsGrid"></div>
+  <div class="ev-cards-grid" id="evCardsGrid"></div>
 </div>
 
-<!-- EVENT MODAL -->
-<div class="overlay" id="eventModal">
-  <div class="modal" style="width:420px">
-    <h3 id="evModalTitle">New Event</h3>
-    <div class="field" style="margin-bottom:0.65rem"><label>Event Name *</label><input id="evName" placeholder="Oslo Tech Summit 2026"></div>
-    <div class="field" style="margin-bottom:0.65rem"><label>Region / City *</label><input id="evRegion" placeholder="Oslo, Norway"></div>
-    <div class="field" style="margin-bottom:0.65rem"><label>Date</label><input id="evDate" type="date"></div>
-    <div class="field" style="margin-bottom:0.65rem"><label>Client / Sponsor</label><input id="evClient" placeholder="Acme Corp"></div>
-    <div class="field"><label>Notes</label><input id="evNotes" placeholder="Optional notes"></div>
-    <div class="modal-actions">
-      <button class="btn" onclick="closeModal('eventModal')">Cancel</button>
-      <button class="btn btn-fill" onclick="saveEvent()">Save Event</button>
-    </div>
-  </div>
+<!-- ══════════════════════════════
+     EVENT DETAIL PAGE
+══════════════════════════════ -->
+<div id="eventDetail">
+  <!-- injected by JS -->
 </div>
 
-<!-- DEAL MODAL -->
-<div class="overlay" id="dealModal">
-  <div class="modal">
-    <h3>Add Deal</h3>
-    <div class="field" style="margin-bottom:0.65rem"><label>Contact / Company *</label><input id="dlName" placeholder="Jane Doe — Acme Corp"></div>
-    <div class="field" style="margin-bottom:0.65rem"><label>Value</label><input id="dlValue" placeholder="£5,000"></div>
-    <div class="field"><label>Notes</label><input id="dlNotes" placeholder="Optional"></div>
-    <input type="hidden" id="dlEventId">
-    <div class="modal-actions">
-      <button class="btn" onclick="closeModal('dealModal')">Cancel</button>
-      <button class="btn btn-fill" onclick="saveDeal()">Add Deal</button>
-    </div>
-  </div>
-</div>
-
-<!-- TASKS -->
+<!-- ══════════════════════════════
+     TAB: TASKS
+══════════════════════════════ -->
 <div class="page" id="tab-tasks">
   <div class="tasks-layout">
     <div>
@@ -480,6 +319,46 @@
   </div>
 </div>
 
+<!-- EVENT MODAL -->
+<div class="overlay" id="eventModal">
+  <div class="modal" style="width:420px">
+    <h3 id="evModalTitle">New Event</h3>
+    <div class="field"><label>Event Name *</label><input id="evName" placeholder="Oslo Tech Summit 2026"></div>
+    <div class="field"><label>Region / City *</label><input id="evRegion" placeholder="Oslo, Norway"></div>
+    <div class="field"><label>Date & Time</label><input id="evDate" type="datetime-local"></div>
+    <div class="field"><label>End Time</label><input id="evDateEnd" type="datetime-local"></div>
+    <div class="field"><label>Client / Sponsor</label><input id="evClient" placeholder="Acme Corp"></div>
+    <div class="field"><label>Notes</label><input id="evNotes" placeholder="Optional notes"></div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('eventModal')">Cancel</button>
+      <button class="btn btn-fill" onclick="saveEvent()">Save Event</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEAL MODAL -->
+<div class="overlay" id="dealModal">
+  <div class="modal">
+    <h3>Add Deal</h3>
+    <div class="field"><label>Contact / Company *</label><input id="dlName" placeholder="Jane Doe — Acme Corp"></div>
+    <div class="field"><label>Value</label><input id="dlValue" placeholder="£5,000"></div>
+    <div class="field"><label>Stage</label>
+      <select id="dlStage">
+        <option value="planning">Planning</option>
+        <option value="outreach">Outreach</option>
+        <option value="confirmed">Confirmed</option>
+        <option value="delivered">Delivered</option>
+      </select>
+    </div>
+    <div class="field"><label>Notes</label><input id="dlNotes" placeholder="Optional"></div>
+    <input type="hidden" id="dlEventId">
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('dealModal')">Cancel</button>
+      <button class="btn btn-fill" onclick="saveDeal()">Add Deal</button>
+    </div>
+  </div>
+</div>
+
 <!-- USER MODAL -->
 <div class="overlay" id="userModal">
   <div class="modal">
@@ -496,80 +375,122 @@
 <div class="toasts" id="toasts"></div>
 
 <script>
-let S = {
-  users:[{id:'andrit',name:'Andrit',role:'Delegate Acquisition',active:true}],
-  delegates:[],
-  deals:[],
-  tasks:[],
-  prio:'med'
-};
+// ── CONSTANTS ──────────────────────────────────────
+const EV_STAGES=['planning','outreach','confirmed','delivered'];
+const EV_LABELS={planning:'PLANNING',outreach:'OUTREACH',confirmed:'CONFIRMED',delivered:'DELIVERED'};
 
-function save(){ localStorage.setItem('db3',JSON.stringify(S)); }
+// ── STATE ──────────────────────────────────────────
+let S={
+  users:[{id:'andrit',name:'Andrit',role:'Delegate Acquisition',active:true}],
+  delegates:[],events:[],deals:[],tasks:[],prio:'med'
+};
+let timerInterval=null;
+let editingEventId=null;
+let currentEventId=null; // which event detail is open
+
+// ── PERSIST ────────────────────────────────────────
+function save(){localStorage.setItem('db4',JSON.stringify(S));}
 function load(){
-  const r=localStorage.getItem('db3');
-  if(r) try{ S=JSON.parse(r); }catch(e){}
+  const r=localStorage.getItem('db4');
+  if(r) try{S=JSON.parse(r);}catch(e){}
   if(!S.users) S.users=[];
-  if(!S.users.find(u=>u.id==='andrit'))
-    S.users.unshift({id:'andrit',name:'Andrit',role:'Delegate Acquisition',active:true});
+  if(!S.users.find(u=>u.id==='andrit')) S.users.unshift({id:'andrit',name:'Andrit',role:'Delegate Acquisition',active:true});
   if(!S.delegates) S.delegates=[];
-  if(!S.deals) S.deals=[];
   if(!S.events) S.events=[];
+  if(!S.deals) S.deals=[];
   if(!S.tasks) S.tasks=[];
 }
-function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2); }
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
 
+// ── NAVIGATION ─────────────────────────────────────
 function switchTab(name,el){
+  closeEventDetail();
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  el.classList.add('active');
+  if(el) el.classList.add('active');
+  updateBreadcrumb();
 }
 
-// USERS
-function activeUser(){ return S.users.find(u=>u.active)||S.users[0]; }
+function openEventDetail(evId){
+  currentEventId=evId;
+  // hide all pages and tabs highlight
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('mainTabs').style.display='none';
+  const detail=document.getElementById('eventDetail');
+  detail.style.display='block';
+  renderEventDetail(evId);
+  updateBreadcrumb();
+}
+
+function closeEventDetail(){
+  currentEventId=null;
+  if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
+  document.getElementById('eventDetail').style.display='none';
+  document.getElementById('mainTabs').style.display='flex';
+  updateBreadcrumb();
+}
+
+function updateBreadcrumb(){
+  const bc=document.getElementById('breadcrumb');
+  if(currentEventId){
+    const ev=S.events.find(e=>e.id===currentEventId);
+    bc.innerHTML=`
+      <span class="crumb-link" onclick="goBackToEvents()">Events</span>
+      <span class="sep">/</span>
+      <span class="crumb-cur">${ev?ev.name:'Event'}</span>
+    `;
+  } else {
+    bc.innerHTML='';
+  }
+}
+
+function goBackToEvents(){
+  closeEventDetail();
+  switchTab('events', document.querySelectorAll('.tab')[1]);
+}
+
+// ── USERS ──────────────────────────────────────────
+function activeUser(){return S.users.find(u=>u.active)||S.users[0];}
 function renderUsers(){
   const bar=document.getElementById('userBar');
   bar.innerHTML='';
   S.users.forEach(u=>{
     const c=document.createElement('div');
     c.className='user-chip'+(u.active?' active-user':'');
-    const removeBtn = u.id!=='andrit'
-      ? `<span class="user-remove" onclick="removeUser('${u.id}',event)" title="Remove user">×</span>`
-      : '';
-    c.innerHTML=`<span class="dot"></span>${u.name.toUpperCase()}${removeBtn}`;
-    c.title=u.role||'';
+    const rem=u.id!=='andrit'?`<span class="user-remove" onclick="removeUser('${u.id}',event)">×</span>`:'';
+    c.innerHTML=`<span class="dot"></span>${u.name.toUpperCase()}${rem}`;
     c.onclick=(e)=>{
       if(e.target.classList.contains('user-remove')) return;
-      S.users.forEach(x=>x.active=false); u.active=true; save(); renderUsers(); renderEvents();
+      S.users.forEach(x=>x.active=false);u.active=true;save();renderUsers();renderEvents();
     };
     bar.appendChild(c);
   });
   const b=document.createElement('button');
-  b.className='add-user-btn'; b.textContent='+ User';
+  b.className='add-user-btn';b.textContent='+ User';
   b.onclick=()=>document.getElementById('userModal').classList.add('open');
   bar.appendChild(b);
 }
-function removeUser(id, e){
+function removeUser(id,e){
   e.stopPropagation();
-  if(!confirm('Remove this user? Their events and deals will also be removed.')) return;
-  S.events = S.events.filter(ev=>ev.owner!==id);
-  S.deals = S.deals.filter(d=>d.owner!==id);
-  S.users = S.users.filter(u=>u.id!==id);
+  if(!confirm('Remove this user?')) return;
+  S.events=S.events.filter(ev=>ev.owner!==id);
+  S.deals=S.deals.filter(d=>d.owner!==id);
+  S.users=S.users.filter(u=>u.id!==id);
   if(!S.users.find(u=>u.active)) S.users[0].active=true;
-  save(); renderUsers(); renderEvents(); toast('User removed');
+  save();renderUsers();renderEvents();toast('User removed');
 }
 function addUser(){
   const name=document.getElementById('newUserName').value.trim();
   if(!name){toast('Name required');return;}
   S.users.forEach(u=>u.active=false);
-  const newId=uid();
-  S.users.push({id:newId,name,role:document.getElementById('newUserRole').value.trim(),active:true});
+  S.users.push({id:uid(),name,role:document.getElementById('newUserRole').value.trim(),active:true});
   document.getElementById('newUserName').value='';
   document.getElementById('newUserRole').value='';
-  save(); renderUsers(); closeModal('userModal'); toast('User added');
+  save();renderUsers();closeModal('userModal');toast('User added');
 }
 
-// DELEGATES
+// ── DELEGATES ──────────────────────────────────────
 function renderDelegates(){
   const q=document.getElementById('delSearch').value.toLowerCase();
   let list=S.delegates.filter(d=>!q||`${d.firstName} ${d.lastName} ${d.email} ${d.company} ${d.title} ${d.event}`.toLowerCase().includes(q));
@@ -584,8 +505,8 @@ function renderDelegates(){
       <td><div class="td-sub">${d.email}</div></td>
       <td><div class="td-sub">${d.phone||'—'}</div></td>
       <td>${d.company||'—'}</td>
-      <td style="color:var(--muted);font-size:0.78rem">${d.title||'—'}</td>
-      <td style="font-size:0.78rem">${d.event||'—'}</td>
+      <td style="color:var(--muted);font-size:0.76rem">${d.title||'—'}</td>
+      <td style="font-size:0.76rem">${d.event||'—'}</td>
       <td>${sBadge(d.status)}</td>
       <td><div class="inv-row">
         <button class="inv i-a" onclick="setDS('${d.id}','accepted')">✓ Accept</button>
@@ -601,40 +522,224 @@ function sBadge(s){
   const[cls,lbl]=m[s]||m.pending;
   return`<span class="status ${cls}">${lbl}</span>`;
 }
-function toggleForm(id){ document.getElementById(id).classList.toggle('open'); }
+function toggleForm(id){document.getElementById(id).classList.toggle('open');}
 function addDelegate(){
   const f=v=>document.getElementById(v).value.trim();
-  if(!f('dFirst')||!f('dLast')||!f('dEmail')){toast('First, last name and email required');return;}
+  if(!f('dFirst')||!f('dLast')||!f('dEmail')){toast('First, last and email required');return;}
   S.delegates.push({id:uid(),firstName:f('dFirst'),lastName:f('dLast'),email:f('dEmail'),phone:f('dPhone'),company:f('dCompany'),title:f('dTitle'),event:f('dEvent'),status:'pending'});
-  ['dFirst','dLast','dEmail','dPhone','dCompany','dTitle','dEvent'].forEach(id=>document.getElementById(id).value='');
-  save(); renderDelegates(); document.getElementById('delForm').classList.remove('open'); toast('Delegate saved');
+  ['dFirst','dLast','dEmail','dPhone','dCompany','dTitle','dEvent'].forEach(i=>document.getElementById(i).value='');
+  save();renderDelegates();document.getElementById('delForm').classList.remove('open');toast('Delegate saved');
 }
-function setDS(id,status){
-  const d=S.delegates.find(x=>x.id===id);
-  if(d){d.status=status;save();renderDelegates();toast(status.toUpperCase());}
+function setDS(id,status){const d=S.delegates.find(x=>x.id===id);if(d){d.status=status;save();renderDelegates();toast(status.toUpperCase());}}
+function delD(id){S.delegates=S.delegates.filter(x=>x.id!==id);save();renderDelegates();toast('Removed');}
+
+// ── EVENTS (card list) ─────────────────────────────
+function renderEvents(){
+  const me=activeUser();
+  const myEvents=me.id==='andrit'?S.events:S.events.filter(e=>e.owner===me.id);
+  document.getElementById('evCount').textContent=myEvents.length;
+  const grid=document.getElementById('evCardsGrid');
+  grid.innerHTML='';
+  if(myEvents.length===0){
+    grid.innerHTML='<div class="ev-empty">NO EVENTS YET — CREATE YOUR FIRST ONE</div>';
+    return;
+  }
+  myEvents.forEach(ev=>{
+    const deals=S.deals.filter(d=>d.eventId===ev.id);
+    const confirmed=deals.filter(d=>d.stage==='confirmed'||d.stage==='delivered').length;
+    const card=document.createElement('div');
+    card.className='ev-card';
+    const pills=[];
+    if(ev.region) pills.push(ev.region);
+    if(ev.date) pills.push(fmtDT(ev.date));
+    if(ev.client) pills.push(ev.client);
+
+    card.innerHTML=`
+      <div class="ev-card-top">
+        <div class="ev-card-name">${ev.name}</div>
+        <div class="ev-card-meta">
+          ${pills.map(p=>`<span class="ev-meta-pill">${p}</span>`).join('')}
+        </div>
+      </div>
+      <div class="ev-card-bottom">
+        <span class="ev-card-stage ${ev.stage||'planning'}">${EV_LABELS[ev.stage||'planning']}</span>
+        <span class="ev-card-stats">${deals.length} deal${deals.length!==1?'s':''} · ${confirmed} confirmed</span>
+        <button class="ev-card-del" onclick="deleteEvent('${ev.id}',event)">✕</button>
+      </div>
+    `;
+    card.onclick=(e)=>{
+      if(e.target.classList.contains('ev-card-del')) return;
+      openEventDetail(ev.id);
+    };
+    grid.appendChild(card);
+  });
 }
-function delD(id){ S.delegates=S.delegates.filter(x=>x.id!==id); save(); renderDelegates(); toast('Removed'); }
 
-// EVENTS
-const EV_STAGES = ['planning','outreach','confirmed','delivered'];
-const EV_LABELS = {planning:'PLAN',outreach:'OUT',confirmed:'CONF',delivered:'DONE'};
-const EV_LABELS_FULL = {planning:'PLANNING',outreach:'OUTREACH',confirmed:'CONFIRMED',delivered:'DELIVERED'};
+// ── EVENT DETAIL ───────────────────────────────────
+function renderEventDetail(evId){
+  const ev=S.events.find(e=>e.id===evId);
+  if(!ev) return;
+  const detail=document.getElementById('eventDetail');
+  const deals=S.deals.filter(d=>d.eventId===evId);
 
-let editingEventId = null;
+  // timer calculation
+  const now=new Date();
+  const eventDate=ev.date?new Date(ev.date):null;
+  const eventEnd=ev.dateEnd?new Date(ev.dateEnd):null;
 
+  let timerHTML='';
+  let statusText='';
+
+  if(eventDate){
+    const diff=eventDate-now;
+    if(diff>0){
+      statusText=`<strong>STARTS IN</strong> — ${fmtDT(ev.date)}`;
+    } else if(eventEnd && now<eventEnd){
+      statusText=`<strong>🔴 LIVE NOW</strong> — ends ${fmtDT(ev.dateEnd)}`;
+    } else {
+      statusText=`<strong>ENDED</strong> — ${fmtDT(ev.date)}`;
+    }
+    timerHTML=`
+      <div class="ev-detail-timer" id="timerBox">
+        <div class="timer-unit"><div class="timer-val" id="t-days">--</div><div class="timer-label">Days</div></div>
+        <div class="timer-unit"><div class="timer-val" id="t-hours">--</div><div class="timer-label">Hours</div></div>
+        <div class="timer-unit"><div class="timer-val" id="t-mins">--</div><div class="timer-label">Mins</div></div>
+        <div class="timer-unit"><div class="timer-val" id="t-secs">--</div><div class="timer-label">Secs</div></div>
+      </div>
+      <div class="timer-status">
+        <span class="timer-status-text">${statusText}</span>
+        <span class="timer-status-text" style="font-size:0.62rem">📍 ${ev.region||'—'}</span>
+      </div>
+    `;
+  }
+
+  const metaParts=[];
+  if(ev.region) metaParts.push('📍 '+ev.region);
+  if(ev.date) metaParts.push('🗓 '+fmtDT(ev.date));
+  if(ev.client) metaParts.push('🏢 '+ev.client);
+  if(ev.notes) metaParts.push('📝 '+ev.notes);
+
+  detail.innerHTML=`
+    <div style="margin-bottom:1rem;display:flex;align-items:center;gap:0.75rem;">
+      <button class="btn" onclick="goBackToEvents()">← Back</button>
+      <button class="btn" onclick="openEventModal('${ev.id}')">✎ Edit Event</button>
+      <button class="btn" onclick="advanceEvent('${ev.id}')">→ Advance Stage</button>
+    </div>
+
+    <div class="ev-detail-header">
+      <div class="ev-detail-top">
+        <div>
+          <div class="ev-detail-name">${ev.name}</div>
+          <div class="ev-detail-meta">${metaParts.join('&nbsp;&nbsp;&nbsp;')}</div>
+        </div>
+        <span class="ev-card-stage ${ev.stage||'planning'}" style="border-color:rgba(255,255,255,0.4);color:#fff;background:rgba(255,255,255,0.15)">
+          ${EV_LABELS[ev.stage||'planning']}
+        </span>
+      </div>
+      ${timerHTML}
+    </div>
+
+    <div class="ev-detail-pipeline">
+      <div class="ev-detail-section-title">
+        <span>DEALS PIPELINE<span class="count-tag" style="margin-left:0.5rem">${deals.length}</span></span>
+        <button class="btn btn-fill" onclick="openDealModal('${ev.id}')">+ Add Deal</button>
+      </div>
+      <div class="ev-pipeline-cols" id="detailPipe"></div>
+    </div>
+  `;
+
+  // Build pipeline columns
+  const pipe=document.getElementById('detailPipe');
+  EV_STAGES.forEach(stage=>{
+    const stageDeals=deals.filter(d=>d.stage===stage);
+    const col=document.createElement('div');
+    col.className='ev-pipe-col';
+    col.innerHTML=`
+      <div class="ev-pipe-col-head">${EV_LABELS[stage]}<span class="ev-pipe-col-cnt">${stageDeals.length||''}</span></div>
+      <div class="ev-pipe-deals" id="dp-${stage}"></div>
+    `;
+    pipe.appendChild(col);
+    const dealsEl=document.getElementById('dp-'+stage);
+    if(stageDeals.length===0){
+      dealsEl.innerHTML='<div class="ev-pipe-empty">EMPTY</div>';
+    } else {
+      stageDeals.forEach(d=>{
+        const card=document.createElement('div');
+        card.className='ev-deal-card';
+        card.title='Click to advance stage';
+        card.innerHTML=`
+          <div class="ev-deal-card-name">${d.name}</div>
+          ${d.value?`<div class="ev-deal-card-val">${d.value}</div>`:''}
+          ${d.notes?`<div class="ev-deal-card-note">${d.notes}</div>`:''}
+          <button class="ev-deal-card-del" onclick="deleteDeal('${d.id}',event)">✕</button>
+        `;
+        card.onclick=(e)=>{
+          if(e.target.classList.contains('ev-deal-card-del')) return;
+          advanceDeal(d.id);
+        };
+        dealsEl.appendChild(card);
+      });
+    }
+  });
+
+  // Add deal row at bottom
+  const addRow=document.createElement('div');
+  addRow.className='ev-pipe-add';
+  addRow.textContent='+ ADD DEAL';
+  addRow.onclick=()=>openDealModal(ev.id);
+  pipe.appendChild(addRow);
+
+  // Start timer
+  if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
+  if(eventDate && document.getElementById('t-secs')){
+    updateTimer(eventDate, eventEnd);
+    timerInterval=setInterval(()=>updateTimer(eventDate, eventEnd),1000);
+  }
+}
+
+function updateTimer(eventDate, eventEnd){
+  const now=new Date();
+  let target=eventDate;
+  // if event is live, count down to end
+  if(eventEnd && now>eventDate && now<eventEnd) target=eventEnd;
+  const diff=target-now;
+  if(diff<=0){
+    ['t-days','t-hours','t-mins','t-secs'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.textContent='00';
+    });
+    return;
+  }
+  const days=Math.floor(diff/86400000);
+  const hours=Math.floor((diff%86400000)/3600000);
+  const mins=Math.floor((diff%3600000)/60000);
+  const secs=Math.floor((diff%60000)/1000);
+  const fmt=n=>String(n).padStart(2,'0');
+  const d=document.getElementById('t-days');
+  const h=document.getElementById('t-hours');
+  const m=document.getElementById('t-mins');
+  const s=document.getElementById('t-secs');
+  if(d) d.textContent=fmt(days);
+  if(h) h.textContent=fmt(hours);
+  if(m) m.textContent=fmt(mins);
+  if(s) s.textContent=fmt(secs);
+}
+
+// ── EVENT CRUD ─────────────────────────────────────
 function openEventModal(id){
-  editingEventId = id||null;
+  editingEventId=id||null;
   if(id){
     const ev=S.events.find(e=>e.id===id);
     document.getElementById('evModalTitle').textContent='Edit Event';
     document.getElementById('evName').value=ev.name;
-    document.getElementById('evRegion').value=ev.region;
+    document.getElementById('evRegion').value=ev.region||'';
     document.getElementById('evDate').value=ev.date||'';
+    document.getElementById('evDateEnd').value=ev.dateEnd||'';
     document.getElementById('evClient').value=ev.client||'';
     document.getElementById('evNotes').value=ev.notes||'';
   } else {
     document.getElementById('evModalTitle').textContent='New Event';
-    ['evName','evRegion','evDate','evClient','evNotes'].forEach(i=>document.getElementById(i).value='');
+    ['evName','evRegion','evDate','evDateEnd','evClient','evNotes'].forEach(i=>document.getElementById(i).value='');
   }
   document.getElementById('eventModal').classList.add('open');
   setTimeout(()=>document.getElementById('evName').focus(),100);
@@ -646,140 +751,68 @@ function saveEvent(){
   const me=activeUser();
   if(editingEventId){
     const ev=S.events.find(e=>e.id===editingEventId);
-    ev.name=f('evName'); ev.region=f('evRegion'); ev.date=f('evDate'); ev.client=f('evClient'); ev.notes=f('evNotes');
+    ev.name=f('evName');ev.region=f('evRegion');ev.date=f('evDate');
+    ev.dateEnd=f('evDateEnd');ev.client=f('evClient');ev.notes=f('evNotes');
     toast('Event updated');
+    if(currentEventId===editingEventId) renderEventDetail(editingEventId);
   } else {
-    S.events.push({id:uid(),owner:me.id,name:f('evName'),region:f('evRegion'),date:f('evDate'),client:f('evClient'),notes:f('evNotes'),stage:'planning'});
-    toast('Event created');
+    S.events.push({id:uid(),owner:me.id,name:f('evName'),region:f('evRegion'),date:f('evDate'),dateEnd:f('evDateEnd'),client:f('evClient'),notes:f('evNotes'),stage:'planning'});
+    toast('Event created — click the card to open it');
   }
-  save(); renderEvents(); closeModal('eventModal');
+  save();renderEvents();closeModal('eventModal');
 }
 
-function deleteEvent(id){
+function deleteEvent(id,e){
+  if(e) e.stopPropagation();
   if(!confirm('Delete this event and all its deals?')) return;
-  S.events=S.events.filter(e=>e.id!==id);
+  S.events=S.events.filter(ev=>ev.id!==id);
   S.deals=S.deals.filter(d=>d.eventId!==id);
-  save(); renderEvents(); toast('Event deleted');
+  save();renderEvents();toast('Event deleted');
 }
 
-function advanceEvent(id,e){
-  e.stopPropagation();
+function advanceEvent(id){
   const ev=S.events.find(x=>x.id===id);
-  const idx=EV_STAGES.indexOf(ev.stage);
-  if(idx<EV_STAGES.length-1){ ev.stage=EV_STAGES[idx+1]; save(); renderEvents(); toast('→ '+EV_LABELS_FULL[ev.stage]); }
+  const idx=EV_STAGES.indexOf(ev.stage||'planning');
+  if(idx<EV_STAGES.length-1){ev.stage=EV_STAGES[idx+1];save();renderEvents();renderEventDetail(id);toast('→ '+EV_LABELS[ev.stage]);}
   else toast('Already DELIVERED');
 }
 
-function openDealModal(eventId){
-  document.getElementById('dlEventId').value=eventId;
+// ── DEALS ──────────────────────────────────────────
+function openDealModal(evId){
+  document.getElementById('dlEventId').value=evId;
   ['dlName','dlValue','dlNotes'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('dlStage').value='planning';
   document.getElementById('dealModal').classList.add('open');
   setTimeout(()=>document.getElementById('dlName').focus(),100);
 }
-
 function saveDeal(){
   const f=id=>document.getElementById(id).value.trim();
   if(!f('dlName')){toast('Contact name required');return;}
-  const eventId=document.getElementById('dlEventId').value;
+  const evId=document.getElementById('dlEventId').value;
   const me=activeUser();
-  S.deals.push({id:uid(),eventId,owner:me.id,name:f('dlName'),value:f('dlValue'),notes:f('dlNotes'),stage:'planning'});
-  save(); renderEvents(); closeModal('dealModal'); toast('Deal added');
+  S.deals.push({id:uid(),eventId:evId,owner:me.id,name:f('dlName'),value:f('dlValue'),notes:f('dlNotes'),stage:f('dlStage')||'planning'});
+  save();
+  if(currentEventId===evId) renderEventDetail(evId);
+  renderEvents();closeModal('dealModal');toast('Deal added');
 }
-
-function advanceDeal(dealId, e){
-  e.stopPropagation();
+function advanceDeal(dealId){
   const d=S.deals.find(x=>x.id===dealId);
   const idx=EV_STAGES.indexOf(d.stage);
-  if(idx<EV_STAGES.length-1){ d.stage=EV_STAGES[idx+1]; save(); renderEvents(); }
+  if(idx<EV_STAGES.length-1){d.stage=EV_STAGES[idx+1];save();if(currentEventId) renderEventDetail(currentEventId);toast('→ '+EV_LABELS[d.stage]);}
+  else toast('Already DELIVERED');
+}
+function deleteDeal(id,e){
+  if(e) e.stopPropagation();
+  S.deals=S.deals.filter(x=>x.id!==id);
+  save();
+  if(currentEventId) renderEventDetail(currentEventId);
+  renderEvents();toast('Deal removed');
 }
 
-function deleteDeal(dealId,e){
-  e.stopPropagation();
-  S.deals=S.deals.filter(x=>x.id!==dealId);
-  save(); renderEvents(); toast('Deal removed');
-}
-
-function renderEvents(){
-  const me=activeUser();
-  const myEvents = me.id==='andrit' ? S.events : S.events.filter(e=>e.owner===me.id);
-  document.getElementById('evCount').textContent=myEvents.length;
-  const grid=document.getElementById('eventsGrid');
-  grid.className='events-grid';
-  grid.innerHTML='';
-
-  if(myEvents.length===0){
-    grid.innerHTML='<div class="ev-empty-state">NO EVENTS YET — CREATE YOUR FIRST ONE</div>';
-    return;
-  }
-
-  myEvents.forEach(ev=>{
-    const evDeals = S.deals.filter(d=>d.eventId===ev.id);
-    const card=document.createElement('div');
-    card.className='event-card';
-
-    // header
-    const metaParts=[];
-    if(ev.region) metaParts.push('📍 '+ev.region);
-    if(ev.date) metaParts.push('🗓 '+fmtDate(ev.date));
-    if(ev.client) metaParts.push('🏢 '+ev.client);
-
-    card.innerHTML=`
-      <div class="event-card-head">
-        <div class="event-card-info">
-          <div class="event-card-name">${ev.name}</div>
-          <div class="event-card-meta">${metaParts.join('&nbsp;&nbsp;')}</div>
-        </div>
-        <div class="event-card-actions">
-          <span class="ev-stage-badge ${ev.stage}">${EV_LABELS_FULL[ev.stage]||ev.stage}</span>
-          <button class="ev-adv-btn" onclick="advanceEvent('${ev.id}',event)" title="Advance stage">→</button>
-          <button class="ev-del-btn" onclick="deleteEvent('${ev.id}')" title="Delete">✕</button>
-        </div>
-      </div>
-      <div class="ev-pipe">
-        <div class="ev-pipe-cols" id="evcols-${ev.id}"></div>
-        <div class="ev-add-deal" onclick="openDealModal('${ev.id}')">+ Add Deal</div>
-      </div>
-    `;
-    grid.appendChild(card);
-
-    // render mini pipeline columns
-    const colsEl=document.getElementById('evcols-'+ev.id);
-    EV_STAGES.forEach(stage=>{
-      const stageDeals=evDeals.filter(d=>d.stage===stage);
-      const col=document.createElement('div');
-      col.className='ev-pipe-col';
-      col.innerHTML=`
-        <div class="ev-pipe-col-head">${EV_LABELS[stage]} <span>${stageDeals.length||''}</span></div>
-        <div class="ev-pipe-deals" id="evd-${ev.id}-${stage}"></div>
-      `;
-      colsEl.appendChild(col);
-      const dealsEl=document.getElementById(`evd-${ev.id}-${stage}`);
-      if(stageDeals.length===0){
-        dealsEl.innerHTML='<div class="ev-pipe-empty">—</div>';
-      } else {
-        stageDeals.forEach(d=>{
-          const chip=document.createElement('div');
-          chip.className='ev-deal-chip';
-          chip.title='Click to advance stage';
-          chip.innerHTML=`
-            <span class="ev-deal-chip-name">${d.name}</span>
-            <span class="ev-deal-chip-del" onclick="deleteDeal('${d.id}',event)">✕</span>
-          `;
-          chip.onclick=(e)=>{
-            if(e.target.classList.contains('ev-deal-chip-del')) return;
-            advanceDeal(d.id,e);
-          };
-          dealsEl.appendChild(chip);
-        });
-      }
-    });
-  });
-}
-
-// TASKS
+// ── TASKS ──────────────────────────────────────────
 function selectPrio(btn){
   document.querySelectorAll('.prio-btn').forEach(b=>b.classList.remove('selected'));
-  btn.classList.add('selected'); S.prio=btn.dataset.p;
+  btn.classList.add('selected');S.prio=btn.dataset.p;
 }
 function renderTasks(){
   const list=document.getElementById('taskList');
@@ -787,10 +820,7 @@ function renderTasks(){
   document.getElementById('taskCount').textContent=open;
   const sorted=[...S.tasks].sort((a,b)=>{const p={high:0,med:1,low:2};return(p[a.prio]||1)-(p[b.prio]||1);});
   list.innerHTML='';
-  if(sorted.length===0){
-    list.innerHTML='<div class="empty" id="taskEmpty">NO TASKS YET</div>';
-    return;
-  }
+  if(sorted.length===0){list.innerHTML='<div class="ev-empty" style="padding:2rem">NO TASKS YET</div>';return;}
   sorted.forEach(t=>{
     const item=document.createElement('div');
     item.className='task-item'+(t.done?' done':'');
@@ -813,25 +843,34 @@ function addTask(){
   S.tasks.push({id:uid(),text,due:document.getElementById('taskDue').value,prio:S.prio||'med',done:false});
   document.getElementById('taskText').value='';
   document.getElementById('taskDue').value='';
-  save(); renderTasks(); toast('Task added');
+  save();renderTasks();toast('Task added');
 }
-function toggleT(id){ const t=S.tasks.find(x=>x.id===id); if(t){t.done=!t.done;save();renderTasks();} }
-function delT(id){ S.tasks=S.tasks.filter(x=>x.id!==id); save(); renderTasks(); }
+function toggleT(id){const t=S.tasks.find(x=>x.id===id);if(t){t.done=!t.done;save();renderTasks();}}
+function delT(id){S.tasks=S.tasks.filter(x=>x.id!==id);save();renderTasks();}
 
-// UTILS
-function fmtDate(d){ if(!d)return''; return new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'}); }
-function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+// ── UTILS ──────────────────────────────────────────
+function fmtDate(d){if(!d)return'';return new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});}
+function fmtDT(d){
+  if(!d)return'';
+  const dt=new Date(d);
+  if(isNaN(dt)) return d;
+  return dt.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+
+    (d.includes('T')?' · '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'');
+}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
 function toast(msg){
   const el=document.createElement('div');
-  el.className='toast'; el.textContent=msg;
+  el.className='toast';el.textContent=msg;
   document.getElementById('toasts').appendChild(el);
-  setTimeout(()=>el.remove(),2400);
+  setTimeout(()=>el.remove(),2500);
 }
-document.getElementById('userModal').addEventListener('click',function(e){if(e.target===this)closeModal('userModal');});
-document.getElementById('eventModal').addEventListener('click',function(e){if(e.target===this)closeModal('eventModal');});
-document.getElementById('dealModal').addEventListener('click',function(e){if(e.target===this)closeModal('dealModal');});
 
-load(); renderUsers(); renderDelegates(); renderEvents(); renderTasks();
+['eventModal','dealModal','userModal'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id);});
+});
+
+// ── INIT ───────────────────────────────────────────
+load();renderUsers();renderDelegates();renderEvents();renderTasks();
 </script>
 </body>
 </html>
