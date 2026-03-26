@@ -3,425 +3,507 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data Base</title>
+<title>Data Base — IT Reader</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
-/* ── THEME VARIABLES ─────────────────────────────── */
-:root {
-  --bg: #ffffff;
-  --surface: #f7f7f5;
-  --surface2: #eeece8;
-  --border: #e0ddd8;
-  --border-dark: #2a2a2a;
-  --text: #0a0a0a;
-  --muted: #666;
-  --light: #aaa;
-  --black: #0a0a0a;
-  --white: #ffffff;
-  --orange: #E86B25;
-  --orange-light: #fff0e8;
-  --orange-mid: #f5a673;
+:root{
+  --bg:#fff;--surface:#f7f7f5;--surface2:#eeece8;
+  --border:#e0ddd8;--border-dark:#2a2a2a;
+  --text:#0a0a0a;--muted:#777;--light:#bbb;
+  --orange:#E86B25;--orange-light:#fff3ec;--orange-dark:#c85a1a;
+  --green:#22c55e;--green-light:#f0fdf4;
+  --red:#ef4444;--red-light:#fef2f2;
+  --blue:#3b82f6;--blue-light:#eff6ff;
+  --yellow:#f59e0b;--yellow-light:#fffbeb;
+  --radius:8px;--radius-sm:4px;
 }
-[data-theme="dark"] {
-  --bg: #0f0e0d;
-  --surface: #1a1714;
-  --surface2: #231f1b;
-  --border: #2e2a26;
-  --border-dark: #E86B25;
-  --text: #f5f0eb;
-  --muted: #9a9088;
-  --light: #5a5248;
-  --black: #f5f0eb;
-  --white: #0f0e0d;
-  --orange-light: #1f1208;
+[data-theme="dark"]{
+  --bg:#0f0e0d;--surface:#1a1714;--surface2:#231f1b;
+  --border:#2e2a26;--border-dark:#E86B25;
+  --text:#f5f0eb;--muted:#9a9088;--light:#4a4642;
+  --orange-light:#1f1208;--green-light:#0a1f0a;
+  --red-light:#1f0a0a;--blue-light:#0a0f1f;--yellow-light:#1a1400;
 }
-
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background 0.25s,color 0.25s;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .2s,color .2s;}
 
-/* ── TOP BAR ─────────────────────────────────────── */
-.top-bar{
-  border-bottom:2px solid var(--border-dark);
-  padding:0.9rem 2rem;
-  display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;background:var(--bg);z-index:100;
-  transition:background 0.25s,border-color 0.25s;
-}
-.top-left{display:flex;align-items:center;gap:1rem;}
-.db-title{
-  font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1rem;
-  letter-spacing:3px;text-transform:uppercase;color:var(--orange);
-}
-.breadcrumb{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem;}
-.crumb-link{cursor:pointer;color:var(--muted);transition:color 0.1s;}
+/* ── TOP BAR ── */
+.top-bar{border-bottom:2px solid var(--border-dark);padding:.85rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);z-index:100;transition:background .2s;}
+.db-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1rem;letter-spacing:3px;text-transform:uppercase;color:var(--orange);}
+.top-center{flex:1;padding:0 1.5rem;}
+.breadcrumb{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--muted);display:flex;align-items:center;gap:.4rem;}
+.crumb-link{cursor:pointer;color:var(--muted);transition:color .1s;}
 .crumb-link:hover{color:var(--orange);}
 .crumb-cur{color:var(--text);font-weight:600;}
 .crumb-sep{color:var(--border);}
-
-.top-right{display:flex;align-items:center;gap:0.75rem;}
-
-/* THEME TOGGLE */
-.theme-toggle{
-  display:flex;align-items:center;gap:0.5rem;
-  background:var(--surface);border:1.5px solid var(--border);
-  border-radius:20px;padding:0.25rem 0.6rem;cursor:pointer;
-  transition:all 0.2s;
-}
-.theme-toggle:hover{border-color:var(--orange);}
-.toggle-track{
-  width:32px;height:18px;border-radius:9px;
-  background:var(--border);position:relative;
-  transition:background 0.25s;cursor:pointer;
-}
+.top-right{display:flex;align-items:center;gap:.5rem;}
+.toggle-pill{display:flex;align-items:center;gap:.4rem;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:.2rem .55rem;cursor:pointer;transition:all .2s;}
+.toggle-pill:hover{border-color:var(--orange);}
+.toggle-track{width:28px;height:16px;border-radius:8px;background:var(--border);position:relative;transition:background .2s;}
 [data-theme="dark"] .toggle-track{background:var(--orange);}
-.toggle-thumb{
-  position:absolute;top:2px;left:2px;
-  width:14px;height:14px;border-radius:50%;
-  background:var(--white);transition:transform 0.25s;
-  box-shadow:0 1px 3px rgba(0,0,0,0.2);
-}
-[data-theme="dark"] .toggle-thumb{transform:translateX(14px);}
-.toggle-label{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+[data-theme="dark"] .toggle-thumb{transform:translateX(12px);}
+.toggle-lbl{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.sync-btn{font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:600;padding:.28rem .7rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;background:var(--bg);color:var(--muted);transition:all .15s;display:flex;align-items:center;gap:.3rem;}
+.sync-btn:hover{border-color:var(--orange);color:var(--orange);}
+.sync-btn.syncing{border-color:var(--orange);color:var(--orange);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.sync-dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+.sync-dot.stale{background:var(--yellow);}
 
-/* USERS */
-.user-bar{display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;}
-.user-chip{
-  display:flex;align-items:center;gap:0.35rem;
-  border:1.5px solid var(--border-dark);border-radius:20px;
-  padding:0.22rem 0.65rem;font-size:0.68rem;font-weight:600;
-  font-family:'IBM Plex Mono',monospace;letter-spacing:0.5px;
-  cursor:pointer;background:var(--white);color:var(--text);transition:all 0.15s;
-}
-.user-chip .dot{width:5px;height:5px;border-radius:50%;background:var(--border-dark);opacity:0.4;}
-.user-chip.active-user{background:var(--orange);color:#fff;border-color:var(--orange);}
-.user-chip.active-user .dot{background:#fff;}
-.user-remove{margin-left:3px;font-size:0.8rem;opacity:0.5;cursor:pointer;transition:opacity 0.1s;}
-.user-remove:hover{opacity:1;}
-.add-user-btn{
-  border:1.5px dashed var(--border);border-radius:20px;
-  padding:0.22rem 0.65rem;font-size:0.68rem;
-  font-family:'IBM Plex Mono',monospace;
-  background:transparent;cursor:pointer;color:var(--muted);transition:all 0.15s;
-}
-.add-user-btn:hover{color:var(--orange);border-color:var(--orange);}
-
-/* ── TABS ────────────────────────────────────────── */
-.tabs{display:flex;border-bottom:1.5px solid var(--border);padding:0 2rem;background:var(--bg);transition:background 0.25s;}
-.tab{
-  font-family:'IBM Plex Mono',monospace;font-size:0.7rem;font-weight:600;
-  letter-spacing:1.5px;text-transform:uppercase;
-  padding:0.8rem 1.3rem;cursor:pointer;
-  border-bottom:2.5px solid transparent;margin-bottom:-1.5px;
-  color:var(--muted);transition:all 0.1s;user-select:none;
-}
+/* ── TABS ── */
+.tabs{display:flex;border-bottom:1.5px solid var(--border);padding:0 2rem;background:var(--bg);overflow-x:auto;gap:0;transition:background .2s;}
+.tabs::-webkit-scrollbar{height:0;}
+.tab{font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:.75rem 1.2rem;cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-1.5px;color:var(--muted);transition:all .1s;user-select:none;white-space:nowrap;}
 .tab:hover{color:var(--orange);}
 .tab.active{color:var(--orange);border-bottom-color:var(--orange);}
 
-/* ── PAGES ───────────────────────────────────────── */
+/* ── PAGES ── */
 .page{display:none;padding:2rem;}
 .page.active{display:block;}
-
-/* ── COMMON ──────────────────────────────────────── */
-.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.4rem;flex-wrap:wrap;gap:1rem;}
-.section-label{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
-.count-tag{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;background:var(--orange);color:#fff;padding:2px 7px;margin-left:0.5rem;border-radius:3px;}
-
-.btn{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;font-weight:600;letter-spacing:1px;padding:0.42rem 0.9rem;border:1.5px solid var(--border-dark);border-radius:4px;cursor:pointer;transition:all 0.15s;background:var(--white);color:var(--text);}
-.btn:hover{background:var(--text);color:var(--white);}
-.btn-fill{background:var(--orange);color:#fff;border-color:var(--orange);}
-.btn-fill:hover{background:#c85a1a;border-color:#c85a1a;}
-.btn-ghost{background:transparent;color:var(--muted);border-color:var(--border);}
-.btn-ghost:hover{color:var(--orange);border-color:var(--orange);}
-
-/* FORM */
-.inline-form{display:none;background:var(--surface);border:1.5px solid var(--border-dark);border-radius:6px;padding:1.1rem 1.3rem;margin-bottom:1.3rem;animation:fadeIn 0.15s ease;}
-.inline-form.open{display:block;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
-.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:0.65rem;margin-bottom:0.9rem;}
-.field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:0.25rem;}
-.field input,.field select,.field textarea{width:100%;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;padding:0.4rem 0.6rem;border:1.5px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text);outline:none;transition:border-color 0.15s;}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--orange);}
-.form-actions{display:flex;gap:0.5rem;justify-content:flex-end;}
-
-/* ── EVENT CARDS ─────────────────────────────────── */
-.ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1rem;}
-.ev-card{
-  border:2px solid var(--border);border-radius:8px;
-  background:var(--bg);cursor:pointer;
-  transition:all 0.18s;overflow:hidden;
-}
-.ev-card:hover{border-color:var(--orange);box-shadow:0 4px 20px rgba(232,107,37,0.15);transform:translateY(-2px);}
-.ev-card-top{padding:1rem 1.1rem 0.8rem;}
-.ev-card-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:0.95rem;margin-bottom:0.5rem;color:var(--text);}
-.ev-card-pills{display:flex;flex-wrap:wrap;gap:0.35rem;}
-.ev-pill{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;padding:2px 7px;border:1px solid var(--border);border-radius:3px;color:var(--muted);}
-.ev-card-bottom{padding:0.65rem 1.1rem;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-top:1px solid var(--border);}
-.ev-stage{font-family:'IBM Plex Mono',monospace;font-size:0.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border:1.5px solid;border-radius:3px;}
-.ev-stage.planning{border-color:var(--border);color:var(--muted);}
-.ev-stage.outreach{border-color:var(--orange-mid);color:var(--orange);}
-.ev-stage.confirmed{background:var(--orange);border-color:var(--orange);color:#fff;}
-.ev-stage.delivered{background:var(--text);border-color:var(--text);color:var(--white);}
-.ev-card-stats{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);}
-.ev-card-del{font-size:0.68rem;background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--light);padding:2px 6px;font-family:'IBM Plex Mono',monospace;transition:all 0.1s;}
-.ev-card-del:hover{border-color:var(--orange);color:var(--orange);}
-.ev-empty{text-align:center;padding:5rem 2rem;font-family:'IBM Plex Mono',monospace;font-size:0.72rem;color:var(--light);letter-spacing:2px;grid-column:1/-1;}
-
-/* ── EVENT DETAIL PAGE ───────────────────────────── */
 #eventDetail{display:none;padding:2rem;}
 
-.ev-detail-back{display:flex;align-items:center;gap:0.6rem;margin-bottom:1.2rem;flex-wrap:wrap;}
+/* ── COMMON ── */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.3rem;flex-wrap:wrap;gap:.75rem;}
+.sec-label{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+.badge{font-family:'IBM Plex Mono',monospace;font-size:.65rem;background:var(--orange);color:#fff;padding:2px 8px;border-radius:3px;margin-left:.4rem;}
+.btn{font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:600;letter-spacing:1px;padding:.4rem .9rem;border:1.5px solid var(--border-dark);border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;background:var(--bg);color:var(--text);}
+.btn:hover{background:var(--text);color:var(--bg);}
+.btn-fill{background:var(--orange);color:#fff;border-color:var(--orange);}
+.btn-fill:hover{background:var(--orange-dark);border-color:var(--orange-dark);}
+.btn-ghost{background:transparent;color:var(--muted);border-color:var(--border);}
+.btn-ghost:hover{color:var(--orange);border-color:var(--orange);}
+.btn-green{background:var(--green);color:#fff;border-color:var(--green);}
+.btn-green:hover{background:#16a34a;border-color:#16a34a;}
+.inline-form{display:none;background:var(--surface);border:1.5px solid var(--border-dark);border-radius:var(--radius);padding:1.1rem 1.3rem;margin-bottom:1.3rem;animation:fadeIn .15s ease;}
+.inline-form.open{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:.6rem;margin-bottom:.85rem;}
+.field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.22rem;}
+.field input,.field select,.field textarea{width:100%;font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:.38rem .6rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--orange);}
+.form-actions{display:flex;gap:.5rem;justify-content:flex-end;}
 
-/* HERO HEADER */
-.ev-hero{
-  background:var(--orange);border-radius:10px;
-  overflow:hidden;margin-bottom:1.5rem;
-  box-shadow:0 4px 24px rgba(232,107,37,0.25);
-}
-.ev-hero-top{padding:1.5rem 1.8rem 1rem;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
-.ev-hero-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.4rem;color:#fff;letter-spacing:0.5px;}
-.ev-hero-meta{display:flex;gap:1rem;flex-wrap:wrap;margin-top:0.4rem;}
-.ev-hero-meta span{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:rgba(255,255,255,0.75);}
-.ev-hero-stage{
-  font-family:'IBM Plex Mono',monospace;font-size:0.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;
-  padding:4px 10px;border:1.5px solid rgba(255,255,255,0.5);border-radius:4px;color:#fff;background:rgba(255,255,255,0.15);
-}
-.ev-hero-actions{display:flex;gap:0.5rem;flex-wrap:wrap;}
-.btn-hero{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;font-weight:600;letter-spacing:1px;padding:0.38rem 0.85rem;border:1.5px solid rgba(255,255,255,0.5);border-radius:4px;cursor:pointer;background:transparent;color:#fff;transition:all 0.15s;}
-.btn-hero:hover{background:rgba(255,255,255,0.2);}
+/* ── EVENTS ── */
+.ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:1rem;}
+.ev-card{border:2px solid var(--border);border-radius:var(--radius);background:var(--bg);cursor:pointer;transition:all .18s;overflow:hidden;}
+.ev-card:hover{border-color:var(--orange);box-shadow:0 6px 24px rgba(232,107,37,.14);transform:translateY(-2px);}
+.ev-card-top{padding:1rem 1.1rem .8rem;}
+.ev-card-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.92rem;margin-bottom:.45rem;}
+.ev-card-pills{display:flex;flex-wrap:wrap;gap:.3rem;}
+.ev-pill{font-family:'IBM Plex Mono',monospace;font-size:.57rem;padding:2px 7px;border:1px solid var(--border);border-radius:3px;color:var(--muted);}
+.ev-card-bot{padding:.6rem 1.1rem;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-top:1px solid var(--border);}
+.ev-stage{font-family:'IBM Plex Mono',monospace;font-size:.57rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:2px 8px;border:1.5px solid;border-radius:3px;}
+.ev-stage.planning{border-color:var(--border);color:var(--muted);}
+.ev-stage.outreach{border-color:var(--orange);color:var(--orange);}
+.ev-stage.confirmed{background:var(--orange);border-color:var(--orange);color:#fff;}
+.ev-stage.delivered{background:var(--text);border-color:var(--text);color:var(--bg);}
+.ev-card-stats{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--muted);}
+.ev-card-del{font-size:.65rem;background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--light);padding:2px 6px;font-family:'IBM Plex Mono',monospace;transition:all .1s;}
+.ev-card-del:hover{border-color:var(--orange);color:var(--orange);}
+.ev-empty{text-align:center;padding:5rem 2rem;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--light);letter-spacing:2px;grid-column:1/-1;}
 
-/* LIVE TIMER */
-.ev-timer{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  background:rgba(0,0,0,0.2);
-}
-.timer-cell{text-align:center;padding:1rem 0.5rem;border-right:1px solid rgba(255,255,255,0.1);}
+/* ── EVENT DETAIL / HERO ── */
+.ev-hero{background:var(--orange);border-radius:10px;overflow:hidden;margin-bottom:1.5rem;box-shadow:0 6px 28px rgba(232,107,37,.22);}
+.ev-hero-top{padding:1.4rem 1.8rem 1rem;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.ev-hero-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.3rem;color:#fff;}
+.ev-hero-meta{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.35rem;}
+.ev-hero-meta span{font-family:'IBM Plex Mono',monospace;font-size:.66rem;color:rgba(255,255,255,.75);}
+.ev-hero-right{display:flex;flex-direction:column;gap:.5rem;align-items:flex-end;}
+.ev-stage-badge{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 10px;border:1.5px solid rgba(255,255,255,.5);border-radius:4px;color:#fff;background:rgba(255,255,255,.15);}
+.btn-hero{font-family:'IBM Plex Mono',monospace;font-size:.63rem;font-weight:600;letter-spacing:1px;padding:.35rem .8rem;border:1.5px solid rgba(255,255,255,.45);border-radius:var(--radius-sm);cursor:pointer;background:transparent;color:#fff;transition:all .15s;}
+.btn-hero:hover{background:rgba(255,255,255,.2);}
+.ev-timer-box{display:grid;grid-template-columns:repeat(4,1fr);background:rgba(0,0,0,.22);}
+.timer-cell{text-align:center;padding:.9rem .5rem;border-right:1px solid rgba(255,255,255,.1);}
 .timer-cell:last-child{border-right:none;}
-.timer-num{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:2.2rem;color:#fff;line-height:1;letter-spacing:2px;}
-.timer-lbl{font-family:'IBM Plex Mono',monospace;font-size:0.55rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-top:0.3rem;}
-.timer-footer{padding:0.6rem 1.8rem;background:rgba(0,0,0,0.15);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.5rem;}
-.timer-status-txt{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;color:rgba(255,255,255,0.8);}
-.timer-status-txt strong{color:#fff;}
+.timer-num{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:2rem;color:#fff;line-height:1;letter-spacing:2px;}
+.timer-lbl{font-family:'IBM Plex Mono',monospace;font-size:.52rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.55);margin-top:.3rem;}
+.timer-foot{padding:.55rem 1.8rem;background:rgba(0,0,0,.15);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.timer-txt{font-family:'IBM Plex Mono',monospace;font-size:.63rem;color:rgba(255,255,255,.8);}
+.timer-txt strong{color:#fff;}
 
-/* LEADS PIPELINE */
+/* ── LEADS TABLE ── */
 .leads-section{margin-bottom:1.5rem;}
-.leads-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem;}
-.leads-section-title{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
-
-/* LEADS TABLE — spreadsheet style */
-.leads-table-wrap{border:1.5px solid var(--border);border-radius:8px;overflow:auto;margin-bottom:0.5rem;}
-.leads-table{width:100%;border-collapse:collapse;min-width:900px;}
-.leads-table thead tr{background:var(--surface);}
-.leads-table thead th{
-  padding:0.55rem 0.85rem;text-align:left;
-  font-family:'IBM Plex Mono',monospace;font-size:0.6rem;
-  font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-  color:var(--muted);border-bottom:1.5px solid var(--border);
-  white-space:nowrap;position:sticky;top:0;background:var(--surface);
-}
-.leads-table tbody tr{border-bottom:1px solid var(--border);transition:background 0.08s;}
+.leads-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.7rem;flex-wrap:wrap;gap:.5rem;}
+.leads-title{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+.filter-tabs{display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.7rem;}
+.ftab{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:2px 9px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;}
+.ftab:hover{border-color:var(--orange);color:var(--orange);}
+.ftab.active{background:var(--orange);border-color:var(--orange);color:#fff;}
+.table-wrap{border:1.5px solid var(--border);border-radius:var(--radius);overflow:auto;}
+.leads-table{width:100%;border-collapse:collapse;min-width:880px;}
+.leads-table thead th{padding:.52rem .8rem;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--border);background:var(--surface);white-space:nowrap;}
+.leads-table tbody tr{border-bottom:1px solid var(--border);transition:background .07s;}
 .leads-table tbody tr:last-child{border-bottom:none;}
 .leads-table tbody tr:hover{background:var(--orange-light);}
-.leads-table td{padding:0.6rem 0.85rem;font-size:0.82rem;vertical-align:middle;}
-.leads-table td:first-child{font-weight:600;}
-.lt-mono{font-family:'IBM Plex Mono',monospace;font-size:0.75rem;color:var(--muted);}
-.lt-status{
-  font-family:'IBM Plex Mono',monospace;font-size:0.6rem;font-weight:700;
-  letter-spacing:1px;text-transform:uppercase;
-  padding:2px 8px;border:1.5px solid;border-radius:3px;
-  cursor:pointer;transition:all 0.12s;white-space:nowrap;
-}
-.lt-status.leads{border-color:var(--orange);color:var(--orange);background:var(--orange-light);}
-.lt-status.deal{border-color:#2e7d32;color:#2e7d32;background:#e8f5e9;}
-[data-theme="dark"] .lt-status.deal{background:#0d1f0e;}
-.lt-status.rejected{border-color:#c62828;color:#c62828;background:#fce4ec;}
-[data-theme="dark"] .lt-status.rejected{background:#1a0509;}
-.lt-status.waiting{border-color:#e65100;color:#e65100;background:#fff8e1;}
-[data-theme="dark"] .lt-status.waiting{background:#1a1200;}
-.lt-status:hover{opacity:0.75;}
-.lt-del{background:none;border:none;font-size:0.7rem;color:var(--light);cursor:pointer;padding:3px 5px;transition:color 0.1s;border-radius:3px;}
+.leads-table td{padding:.58rem .8rem;font-size:.8rem;vertical-align:middle;}
+.lt-mono{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--muted);}
+.ls{font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 7px;border:1.5px solid;border-radius:3px;cursor:pointer;transition:all .12s;white-space:nowrap;}
+.ls.leads{border-color:var(--orange);color:var(--orange);background:var(--orange-light);}
+.ls.deal{border-color:var(--green);color:var(--green);background:var(--green-light);}
+.ls.rejected{border-color:var(--red);color:var(--red);background:var(--red-light);}
+.ls.waiting{border-color:var(--yellow);color:var(--yellow);background:var(--yellow-light);}
+.lt-del{background:none;border:none;font-size:.68rem;color:var(--light);cursor:pointer;padding:3px 4px;border-radius:3px;transition:all .1s;}
 .lt-del:hover{color:var(--orange);background:var(--orange-light);}
-.leads-empty-row td{text-align:center;padding:3rem;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--light);letter-spacing:2px;}
-.leads-add-row{
-  padding:0.5rem;border-top:1px solid var(--border);
-  font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--muted);
-  text-align:center;cursor:pointer;transition:all 0.1s;letter-spacing:1px;
-}
-.leads-add-row:hover{background:var(--orange-light);color:var(--orange);}
-/* status filter tabs */
-.leads-filter-tabs{display:flex;gap:0.35rem;flex-wrap:wrap;margin-bottom:0.75rem;}
-.lf-tab{
-  font-family:'IBM Plex Mono',monospace;font-size:0.62rem;font-weight:600;
-  letter-spacing:1px;text-transform:uppercase;
-  padding:3px 10px;border:1.5px solid var(--border);border-radius:20px;
-  cursor:pointer;background:var(--bg);color:var(--muted);transition:all 0.12s;
-}
-.lf-tab:hover{border-color:var(--orange);color:var(--orange);}
-.lf-tab.active{background:var(--orange);border-color:var(--orange);color:#fff;}
+.empty-row td{text-align:center;padding:2.5rem;font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--light);letter-spacing:2px;}
+.table-add{padding:.45rem;border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);text-align:center;cursor:pointer;transition:all .1s;letter-spacing:1px;}
+.table-add:hover{background:var(--orange-light);color:var(--orange);}
 
-/* ── GOOGLE DRIVE SECTION ────────────────────────── */
-.drive-section{}
-.drive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;}
-.drive-card{
-  border:1.5px solid var(--border);border-radius:6px;
-  background:var(--bg);padding:0.9rem 1rem;
-  transition:all 0.15s;position:relative;
-  display:flex;flex-direction:column;gap:0.4rem;
-}
-.drive-card.has-link{cursor:pointer;}
-.drive-card.has-link:hover{border-color:var(--orange);box-shadow:0 2px 12px rgba(232,107,37,0.1);}
-.drive-card-icon{font-size:1.2rem;}
-.drive-card-name{font-weight:600;font-size:0.82rem;}
-.drive-card-type{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
-.drive-card-link{font-family:'IBM Plex Mono',monospace;font-size:0.62rem;color:var(--orange);word-break:break-all;text-decoration:none;}
-.drive-add-card{
-  border:1.5px dashed var(--border);border-radius:6px;
-  background:transparent;padding:0.9rem 1rem;
-  cursor:pointer;transition:all 0.15s;
-  display:flex;align-items:center;justify-content:center;
-  font-family:'IBM Plex Mono',monospace;font-size:0.65rem;
-  color:var(--muted);letter-spacing:1px;
-  min-height:90px;
-}
-.drive-add-card:hover{border-color:var(--orange);color:var(--orange);}
-.drive-main-link{
-  display:inline-flex;align-items:center;gap:0.5rem;
-  font-family:'IBM Plex Mono',monospace;font-size:0.7rem;
-  color:var(--orange);text-decoration:none;
-  border:1.5px solid var(--orange);border-radius:4px;
-  padding:0.4rem 0.9rem;transition:all 0.15s;
-}
+/* ── QR CHECK-IN ── */
+.qr-section{margin-top:1.5rem;}
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;}
+.qr-card{border:1.5px solid var(--border);border-radius:var(--radius);padding:.85rem;background:var(--bg);transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:.6rem;}
+.qr-card:hover{border-color:var(--orange);}
+.qr-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.75rem;text-align:center;}
+.qr-status{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:3px;}
+.qr-status.pending{background:var(--yellow-light);color:var(--yellow);}
+.qr-status.arrived{background:var(--green-light);color:var(--green);}
+.qr-download{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--orange);cursor:pointer;text-decoration:underline;}
+.qr-del-btn{font-size:.65rem;background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--light);padding:2px 6px;font-family:'IBM Plex Mono',monospace;transition:all .1s;margin-top:.2rem;}
+.qr-del-btn:hover{border-color:var(--orange);color:var(--orange);}
+
+/* ── CHECK-IN PAGE (shown on QR scan) ── */
+#checkinPage{display:none;position:fixed;inset:0;background:var(--bg);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;}
+#checkinPage.show{display:flex;}
+.checkin-logo{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1rem;color:var(--orange);letter-spacing:3px;margin-bottom:2rem;}
+.checkin-event{font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:var(--muted);margin-bottom:.5rem;letter-spacing:1px;}
+.checkin-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:2rem;margin-bottom:.5rem;color:var(--text);}
+.checkin-role{font-size:.9rem;color:var(--muted);margin-bottom:2.5rem;}
+.checkin-btn{font-family:'IBM Plex Mono',monospace;font-size:1rem;font-weight:700;letter-spacing:2px;padding:1.2rem 3rem;background:var(--orange);color:#fff;border:none;border-radius:10px;cursor:pointer;transition:all .2s;box-shadow:0 6px 24px rgba(232,107,37,.3);}
+.checkin-btn:hover{background:var(--orange-dark);transform:scale(1.03);}
+.checkin-btn:active{transform:scale(.97);}
+.checkin-success{display:none;flex-direction:column;align-items:center;gap:1rem;}
+.checkin-tick{font-size:5rem;animation:pop .4s ease;}
+@keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.1)}100%{transform:scale(1)}}
+.checkin-done-txt{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.5rem;color:var(--green);}
+.checkin-sub{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted);}
+
+/* ── DRIVE ── */
+.drive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;}
+.drive-card{border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);padding:.9rem 1rem;transition:all .15s;position:relative;display:flex;flex-direction:column;gap:.4rem;cursor:pointer;}
+.drive-card:hover{border-color:var(--orange);box-shadow:0 2px 12px rgba(232,107,37,.1);}
+.drive-icon{font-size:1.2rem;}
+.drive-name{font-weight:600;font-size:.82rem;}
+.drive-desc{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.drive-url{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--orange);}
+.drive-del{position:absolute;top:6px;right:8px;background:none;border:none;font-size:.65rem;color:var(--light);cursor:pointer;opacity:0;transition:opacity .1s;}
+.drive-card:hover .drive-del{opacity:1;}
+.drive-del:hover{color:var(--orange);}
+.drive-main-link{display:inline-flex;align-items:center;gap:.5rem;font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--orange);text-decoration:none;border:1.5px solid var(--orange);border-radius:var(--radius-sm);padding:.38rem .85rem;transition:all .15s;}
 .drive-main-link:hover{background:var(--orange);color:#fff;}
-.drive-card-del{position:absolute;top:6px;right:8px;background:none;border:none;font-size:0.65rem;color:var(--light);cursor:pointer;opacity:0;transition:opacity 0.1s;}
-.drive-card:hover .drive-card-del{opacity:1;}
-.drive-card-del:hover{color:var(--orange);}
 
-/* ── TASKS ───────────────────────────────────────── */
-.tasks-layout{display:grid;grid-template-columns:1fr 280px;gap:2rem;}
-.task-form-box{border:1.5px solid var(--border);border-radius:6px;padding:1.1rem;background:var(--surface);height:fit-content;}
-.task-form-title{font-family:'IBM Plex Mono',monospace;font-size:0.63rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:0.85rem;}
-.task-input{width:100%;font-family:'IBM Plex Sans',sans-serif;font-size:0.84rem;padding:0.45rem 0.65rem;border:1.5px solid var(--border);border-radius:4px;outline:none;background:var(--bg);color:var(--text);margin-bottom:0.5rem;transition:border-color 0.15s;}
+/* ── TASKS ── */
+.tasks-layout{display:grid;grid-template-columns:1fr 275px;gap:2rem;}
+.task-form-box{border:1.5px solid var(--border);border-radius:var(--radius);padding:1.1rem;background:var(--surface);height:fit-content;}
+.task-form-ttl{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem;}
+.task-input{width:100%;font-family:'IBM Plex Sans',sans-serif;font-size:.82rem;padding:.42rem .62rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);outline:none;background:var(--bg);color:var(--text);margin-bottom:.45rem;transition:border-color .15s;}
 .task-input:focus{border-color:var(--orange);}
-.prio-row{display:flex;gap:0.3rem;margin-bottom:0.65rem;}
-.prio-btn{flex:1;font-family:'IBM Plex Mono',monospace;font-size:0.58rem;font-weight:600;letter-spacing:1px;padding:0.3rem;border:1.5px solid var(--border);border-radius:4px;cursor:pointer;background:var(--bg);color:var(--muted);text-transform:uppercase;transition:all 0.12s;}
-.prio-btn.selected{border-color:var(--orange);background:var(--orange);color:#fff;}
-.task-list{display:flex;flex-direction:column;gap:0.4rem;}
-.task-item{display:flex;align-items:flex-start;gap:0.65rem;padding:0.75rem 0.85rem;border:1.5px solid var(--border);border-radius:5px;background:var(--bg);transition:border-color 0.1s;}
+.prio-row{display:flex;gap:.3rem;margin-bottom:.6rem;}
+.prio-btn{flex:1;font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:600;letter-spacing:1px;padding:.28rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;background:var(--bg);color:var(--muted);text-transform:uppercase;transition:all .12s;}
+.prio-btn.sel{border-color:var(--orange);background:var(--orange);color:#fff;}
+.task-list{display:flex;flex-direction:column;gap:.4rem;}
+.task-item{display:flex;align-items:flex-start;gap:.6rem;padding:.7rem .8rem;border:1.5px solid var(--border);border-radius:5px;background:var(--bg);transition:border-color .1s;}
 .task-item:hover{border-color:var(--orange);}
-.task-item.done{opacity:0.4;}
-.task-check{width:16px;height:16px;min-width:16px;border:1.5px solid var(--border);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;font-size:0.65rem;background:var(--bg);transition:all 0.12s;color:var(--text);}
-.task-check:hover{border-color:var(--orange);}
-.task-item.done .task-check{background:var(--orange);color:#fff;border-color:var(--orange);}
+.task-item.done{opacity:.4;}
+.task-ck{width:15px;height:15px;min-width:15px;border:1.5px solid var(--border);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:2px;font-size:.6rem;background:var(--bg);transition:all .12s;color:var(--text);}
+.task-ck:hover{border-color:var(--orange);}
+.task-item.done .task-ck{background:var(--orange);color:#fff;border-color:var(--orange);}
 .task-body{flex:1;}
-.task-text{font-size:0.84rem;}
-.task-item.done .task-text{text-decoration:line-through;color:var(--muted);}
-.task-meta{display:flex;gap:0.4rem;margin-top:3px;align-items:center;flex-wrap:wrap;}
-.task-date{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--light);}
-.prio-tag{font-family:'IBM Plex Mono',monospace;font-size:0.56rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:1px 5px;border:1px solid var(--border);border-radius:3px;color:var(--muted);}
-.prio-tag.high{border-color:var(--orange);color:var(--orange);}
-.prio-tag.med{border-color:var(--muted);color:var(--muted);}
-.task-del{background:none;border:none;color:var(--light);cursor:pointer;font-size:0.7rem;padding:2px;opacity:0;transition:opacity 0.1s;}
-.task-item:hover .task-del{opacity:1;}
-.task-del:hover{color:var(--orange);}
+.task-txt{font-size:.82rem;}
+.task-item.done .task-txt{text-decoration:line-through;color:var(--muted);}
+.task-meta2{display:flex;gap:.35rem;margin-top:2px;align-items:center;flex-wrap:wrap;}
+.task-date2{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--light);}
+.ptag{font-family:'IBM Plex Mono',monospace;font-size:.54rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:1px 5px;border:1px solid var(--border);border-radius:3px;color:var(--muted);}
+.ptag.high{border-color:var(--orange);color:var(--orange);}
+.ptag.med{border-color:var(--muted);color:var(--muted);}
+.task-del2{background:none;border:none;color:var(--light);cursor:pointer;font-size:.68rem;padding:2px;opacity:0;transition:opacity .1s;}
+.task-item:hover .task-del2{opacity:1;}
+.task-del2:hover{color:var(--orange);}
 
-/* ── MODAL ───────────────────────────────────────── */
-.overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;}
+/* ── WORKOUT ═══════════════════════════════════════ */
+.wo-layout{display:grid;grid-template-columns:1fr 330px;gap:2rem;align-items:start;}
+
+/* Exercise Library */
+.ex-library{}
+.ex-cats{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem;}
+.ex-cat-btn{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;}
+.ex-cat-btn:hover,.ex-cat-btn.active{border-color:var(--orange);color:var(--orange);}
+.ex-cat-btn.active{background:var(--orange-light);}
+.ex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.65rem;margin-bottom:2rem;}
+.ex-tile{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .15s;background:var(--bg);}
+.ex-tile:hover{border-color:var(--orange);transform:translateY(-2px);box-shadow:0 4px 16px rgba(232,107,37,.14);}
+.ex-tile-img{width:100%;height:90px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;background:var(--surface);position:relative;overflow:hidden;}
+.ex-tile-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(0,0,0,.08));}
+.ex-tile-body{padding:.5rem .6rem;}
+.ex-tile-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.68rem;letter-spacing:.3px;margin-bottom:1px;}
+.ex-tile-muscle{font-family:'IBM Plex Mono',monospace;font-size:.56rem;color:var(--orange);letter-spacing:1px;text-transform:uppercase;}
+.ex-tile-sets{font-family:'IBM Plex Mono',monospace;font-size:.56rem;color:var(--muted);}
+
+/* Workout History */
+.wo-history-list{display:flex;flex-direction:column;gap:.5rem;}
+.wo-day{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.wo-day-head{padding:.55rem .9rem;background:var(--surface);border-bottom:1px solid transparent;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:border-color .1s;}
+.wo-day.open .wo-day-head{border-bottom-color:var(--border);}
+.wo-day-head:hover{background:var(--surface2);}
+.wo-day-date{font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:700;}
+.wo-day-sum{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);display:flex;gap:.75rem;align-items:center;}
+.wo-day-badges{display:flex;gap:.3rem;}
+.wo-badge{font-family:'IBM Plex Mono',monospace;font-size:.55rem;padding:1px 6px;border-radius:3px;border:1px solid;}
+.wo-badge.g{border-color:var(--green);color:var(--green);background:var(--green-light);}
+.wo-badge.r{border-color:var(--red);color:var(--red);background:var(--red-light);}
+.wo-badge.b{border-color:var(--blue);color:var(--blue);background:var(--blue-light);}
+.wo-badge.y{border-color:var(--yellow);color:var(--yellow);background:var(--yellow-light);}
+.wo-day-body{display:none;padding:.7rem .9rem;}
+.wo-day.open .wo-day-body{display:block;}
+.wo-ex-row{display:flex;align-items:center;justify-content:space-between;padding:.35rem 0;border-bottom:1px solid var(--border);font-size:.78rem;}
+.wo-ex-row:last-child{border-bottom:none;}
+.wo-ex-name{font-weight:600;display:flex;align-items:center;gap:.4rem;}
+.wo-ex-detail{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);}
+.wo-ex-del{background:none;border:none;color:var(--light);cursor:pointer;font-size:.65rem;opacity:0;transition:opacity .1s;}
+.wo-day-body .wo-ex-row:hover .wo-ex-del{opacity:1;}
+.wo-ex-del:hover{color:var(--orange);}
+
+/* Daily Log Sidebar */
+.daily-sidebar{position:sticky;top:80px;}
+.daily-box{border:1.5px solid var(--border-dark);border-radius:var(--radius);overflow:hidden;background:var(--bg);}
+.daily-head{padding:.75rem 1.1rem;background:var(--orange);display:flex;align-items:center;justify-content:space-between;}
+.daily-head-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.75rem;color:#fff;letter-spacing:1px;text-transform:uppercase;}
+.daily-head-date{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:rgba(255,255,255,.8);}
+.daily-body{padding:.9rem;}
+
+/* Tracker rows */
+.tracker{display:flex;align-items:center;justify-content:space-between;padding:.55rem 0;border-bottom:1px solid var(--border);}
+.tracker:last-of-type{border-bottom:none;}
+.tracker-lbl{font-family:'IBM Plex Mono',monospace;font-size:.68rem;display:flex;align-items:center;gap:.45rem;}
+.tracker-icon{font-size:.95rem;width:22px;text-align:center;}
+.tracker-ctrl{display:flex;align-items:center;gap:.4rem;}
+.yes-no{display:flex;gap:.25rem;}
+.yn-btn{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:600;padding:2px 9px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;}
+.yn-btn.y-active{background:var(--green);border-color:var(--green);color:#fff;}
+.yn-btn.n-active{background:var(--red);border-color:var(--red);color:#fff;}
+.water-ctrl{display:flex;align-items:center;gap:.4rem;}
+.water-n{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1rem;min-width:20px;text-align:center;}
+.water-unit{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--muted);}
+.wbtn{width:22px;height:22px;border:1.5px solid var(--border);border-radius:4px;background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .12s;}
+.wbtn:hover{border-color:var(--orange);}
+
+/* Nicotine count */
+.nic-ctrl{display:flex;align-items:center;gap:.4rem;}
+.nic-n{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1rem;min-width:20px;text-align:center;}
+
+/* Today's exercises list in sidebar */
+.today-ex-list{margin-top:.8rem;}
+.today-ex-ttl{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
+.today-ex-item{display:flex;align-items:center;justify-content:space-between;padding:.42rem .55rem;background:var(--surface);border:1px solid var(--border);border-radius:5px;margin-bottom:.3rem;font-size:.76rem;}
+.today-ex-nm{font-weight:600;display:flex;align-items:center;gap:.3rem;font-size:.75rem;}
+.today-ex-detail{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);}
+.today-ex-del{background:none;border:none;color:var(--light);cursor:pointer;font-size:.65rem;transition:color .1s;}
+.today-ex-del:hover{color:var(--orange);}
+.save-day-btn{width:100%;margin-top:.75rem;padding:.6rem;background:var(--orange);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .15s;}
+.save-day-btn:hover{background:var(--orange-dark);}
+
+/* ── MODAL ── */
+.overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.48);align-items:center;justify-content:center;}
 .overlay.open{display:flex;}
-.modal{background:var(--bg);border:2px solid var(--border-dark);border-radius:10px;padding:1.8rem;width:400px;max-width:95vw;animation:popIn 0.15s ease;max-height:90vh;overflow-y:auto;}
-@keyframes popIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
-.modal h3{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.1rem;color:var(--orange);}
-.modal .field{margin-bottom:0.6rem;}
-.modal-actions{display:flex;gap:0.5rem;justify-content:flex-end;margin-top:1.1rem;}
+.modal{background:var(--bg);border:2px solid var(--border-dark);border-radius:10px;padding:1.8rem;width:400px;max-width:95vw;animation:popIn .15s ease;max-height:90vh;overflow-y:auto;}
+@keyframes popIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.modal h3{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.1rem;color:var(--orange);}
+.modal .field{margin-bottom:.6rem;}
+.modal-actions{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1.1rem;}
+.modal-ex-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+.set-row{display:flex;gap:.5rem;align-items:center;margin-bottom:.4rem;}
+.set-row input{width:70px;}
+.set-num{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);width:45px;}
+.add-set-btn{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--orange);background:none;border:1px dashed var(--orange);border-radius:3px;padding:3px 10px;cursor:pointer;margin-top:.3rem;transition:all .12s;}
+.add-set-btn:hover{background:var(--orange-light);}
 
 /* TOASTS */
-.toasts{position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;display:flex;flex-direction:column;gap:0.35rem;}
-.toast{background:var(--orange);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:0.7rem;letter-spacing:0.5px;padding:0.6rem 1rem;border-radius:5px;animation:fadeIn 0.2s ease;box-shadow:0 2px 12px rgba(232,107,37,0.3);}
+.toasts{position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;display:flex;flex-direction:column;gap:.35rem;pointer-events:none;}
+.toast{background:var(--orange);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.5px;padding:.6rem 1rem;border-radius:5px;animation:slideUp .2s ease;box-shadow:0 2px 12px rgba(232,107,37,.3);}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
 ::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 
-@media(max-width:768px){
-  .tasks-layout{grid-template-columns:1fr;}
-  .leads-cols{grid-template-columns:repeat(2,1fr);}
-  .ev-timer{grid-template-columns:repeat(2,1fr);}
-  .ev-grid{grid-template-columns:1fr;}
-}
+@media(max-width:1024px){.wo-layout{grid-template-columns:1fr;}.daily-sidebar{position:static;}}
+@media(max-width:768px){.tasks-layout{grid-template-columns:1fr;}.ev-timer-box{grid-template-columns:repeat(2,1fr);}.ev-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
-<div class="top-bar">
-  <div class="top-left">
-    <div class="db-title">Data Base</div>
-    <div class="breadcrumb" id="breadcrumb"></div>
+<!-- CHECK-IN PAGE (shown when QR is scanned) -->
+<div id="checkinPage">
+  <div class="checkin-logo">DATA BASE</div>
+  <div id="checkinContent">
+    <div class="checkin-event" id="checkinEvent"></div>
+    <div class="checkin-name" id="checkinName"></div>
+    <div class="checkin-role" id="checkinRole"></div>
+    <button class="checkin-btn" onclick="confirmCheckin()">✓ CHECK IN</button>
   </div>
-  <div class="top-right">
-    <!-- THEME TOGGLE -->
-    <div class="theme-toggle" onclick="toggleTheme()">
-      <div class="toggle-track"><div class="toggle-thumb"></div></div>
-      <span class="toggle-label" id="themeLabel">Light</span>
-    </div>
-    <div class="user-bar" id="userBar"></div>
+  <div class="checkin-success" id="checkinSuccess">
+    <div class="checkin-tick">✅</div>
+    <div class="checkin-done-txt">YOU'RE CHECKED IN!</div>
+    <div class="checkin-sub" id="checkinSuccessSub"></div>
   </div>
 </div>
 
-<!-- TABS -->
+<!-- ══ MAIN APP ════════════════════════════════════ -->
+<div id="app">
+
+<div class="top-bar">
+  <div class="db-title">Data Base</div>
+  <div class="top-center"><div class="breadcrumb" id="breadcrumb"></div></div>
+  <div class="top-right">
+    <div class="toggle-pill" onclick="toggleTheme()">
+      <div class="toggle-track"><div class="toggle-thumb"></div></div>
+      <span class="toggle-lbl" id="themeLabel">Light</span>
+    </div>
+    <button class="sync-btn" onclick="syncNow()" id="syncBtn">
+      <div class="sync-dot" id="syncDot"></div>
+      <span id="syncTxt">Sync</span>
+    </button>
+  </div>
+</div>
+
 <div class="tabs" id="mainTabs">
   <div class="tab active" onclick="switchTab('events',this)">Events</div>
   <div class="tab" onclick="switchTab('drive',this)">Drive</div>
   <div class="tab" onclick="switchTab('tasks',this)">Tasks</div>
+  <div class="tab" onclick="switchTab('workout',this)">Workout</div>
 </div>
 
-<!-- ══ TAB: EVENTS ══════════════════════════════ -->
+<!-- EVENTS -->
 <div class="page active" id="tab-events">
-  <div class="section-head">
-    <div><span class="section-label">Events</span><span class="count-tag" id="evCount">0</span></div>
+  <div class="sec-head">
+    <div><span class="sec-label">Events</span><span class="badge" id="evCount">0</span></div>
     <button class="btn btn-fill" onclick="openEventModal()">+ New Event</button>
   </div>
   <div class="ev-grid" id="evGrid"></div>
 </div>
 
-<!-- ══ EVENT DETAIL ══════════════════════════════ -->
+<!-- EVENT DETAIL -->
 <div id="eventDetail"></div>
 
-<!-- ══ TAB: DRIVE ════════════════════════════════ -->
+<!-- DRIVE -->
 <div class="page" id="tab-drive">
-  <div class="section-head">
-    <div><span class="section-label">Google Drive</span></div>
-    <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;">
-      <a class="drive-main-link" href="https://drive.google.com/drive/folders/1vPYsEjwgPQ33Uj4m624lJ07einY7ZW6D" target="_blank">
-        📂 Open Full Drive Folder
-      </a>
-      <button class="btn btn-fill" onclick="openDriveAddModal()">+ Add Sheet</button>
+  <div class="sec-head">
+    <div><span class="sec-label">Google Drive</span></div>
+    <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
+      <a class="drive-main-link" href="https://drive.google.com/drive/folders/1vPYsEjwgPQ33Uj4m624lJ07einY7ZW6D" target="_blank">📂 Open Drive Folder</a>
+      <button class="btn btn-fill" onclick="openDriveModal()">+ Add Sheet</button>
     </div>
   </div>
   <div class="drive-grid" id="driveGrid"></div>
 </div>
 
-<!-- ══ TAB: TASKS ════════════════════════════════ -->
+<!-- TASKS -->
 <div class="page" id="tab-tasks">
   <div class="tasks-layout">
     <div>
-      <div class="section-head">
-        <span class="section-label">Daily Tasks<span class="count-tag" id="taskCount">0</span></span>
-      </div>
+      <div class="sec-head"><span class="sec-label">Daily Tasks<span class="badge" id="taskCount">0</span></span></div>
       <div class="task-list" id="taskList"></div>
     </div>
     <div class="task-form-box">
-      <div class="task-form-title">New Task</div>
+      <div class="task-form-ttl">New Task</div>
       <input class="task-input" id="taskText" placeholder="Task description…" onkeydown="if(event.key==='Enter')addTask()">
       <input class="task-input" id="taskDue" type="date">
       <div class="prio-row">
-        <button class="prio-btn" data-p="low" onclick="selectPrio(this)">Low</button>
-        <button class="prio-btn selected" data-p="med" onclick="selectPrio(this)">Med</button>
-        <button class="prio-btn" data-p="high" onclick="selectPrio(this)">High</button>
+        <button class="prio-btn" data-p="low" onclick="selPrio(this)">Low</button>
+        <button class="prio-btn sel" data-p="med" onclick="selPrio(this)">Med</button>
+        <button class="prio-btn" data-p="high" onclick="selPrio(this)">High</button>
       </div>
       <button class="btn btn-fill" style="width:100%" onclick="addTask()">Add Task</button>
     </div>
   </div>
 </div>
 
-<!-- EVENT MODAL -->
+<!-- WORKOUT -->
+<div class="page" id="tab-workout">
+  <div class="wo-layout">
+    <div>
+      <!-- Exercise Library -->
+      <div class="sec-head" style="margin-bottom:.8rem">
+        <span class="sec-label">Exercise Library</span>
+      </div>
+      <div class="ex-cats" id="exCats"></div>
+      <div class="ex-grid" id="exGrid"></div>
+
+      <!-- Workout History -->
+      <div class="sec-head">
+        <span class="sec-label">History<span class="badge" id="histCount">0</span></span>
+      </div>
+      <div class="wo-history-list" id="woHistory"></div>
+    </div>
+
+    <!-- DAILY LOG SIDEBAR -->
+    <div class="daily-sidebar">
+      <div class="daily-box">
+        <div class="daily-head">
+          <span class="daily-head-title">Today's Log</span>
+          <span class="daily-head-date" id="todayDateLbl"></span>
+        </div>
+        <div class="daily-body">
+          <div class="tracker" id="tr-workout">
+            <span class="tracker-lbl"><span class="tracker-icon">🏋️</span> Workout</span>
+            <div class="tracker-ctrl">
+              <div class="yes-no">
+                <button class="yn-btn" id="wo-y" onclick="setTracker('workout','yes')">Yes</button>
+                <button class="yn-btn" id="wo-n" onclick="setTracker('workout','no')">No</button>
+              </div>
+              <button class="yn-btn" style="font-size:.55rem;padding:1px 5px;opacity:.6" onclick="clearTracker('workout')">×</button>
+            </div>
+          </div>
+          <div class="tracker">
+            <span class="tracker-lbl"><span class="tracker-icon">🥗</span> Diet</span>
+            <div class="tracker-ctrl">
+              <div class="yes-no">
+                <button class="yn-btn" id="diet-y" onclick="setTracker('diet','yes')">Yes</button>
+                <button class="yn-btn" id="diet-n" onclick="setTracker('diet','no')">No</button>
+              </div>
+              <button class="yn-btn" style="font-size:.55rem;padding:1px 5px;opacity:.6" onclick="clearTracker('diet')">×</button>
+            </div>
+          </div>
+          <div class="tracker">
+            <span class="tracker-lbl"><span class="tracker-icon">💧</span> Water</span>
+            <div class="tracker-ctrl">
+              <div class="water-ctrl">
+                <button class="wbtn" onclick="adj('water',-1)">−</button>
+                <span class="water-n" id="water-n">0</span>
+                <span class="water-unit">glasses</span>
+                <button class="wbtn" onclick="adj('water',1)">+</button>
+              </div>
+              <button class="yn-btn" style="font-size:.55rem;padding:1px 5px;opacity:.6;margin-left:.3rem" onclick="clearTracker('water')">×</button>
+            </div>
+          </div>
+          <div class="tracker">
+            <span class="tracker-lbl"><span class="tracker-icon">🚬</span> Nicotine</span>
+            <div class="tracker-ctrl">
+              <div class="nic-ctrl">
+                <button class="wbtn" onclick="adj('nicotine',-1)">−</button>
+                <span class="nic-n" id="nic-n">0</span>
+                <span class="water-unit">cigs</span>
+                <button class="wbtn" onclick="adj('nicotine',1)">+</button>
+              </div>
+              <button class="yn-btn" style="font-size:.55rem;padding:1px 5px;opacity:.6;margin-left:.3rem" onclick="clearTracker('nicotine')">×</button>
+            </div>
+          </div>
+
+          <!-- TODAY'S EXERCISES -->
+          <div class="today-ex-list">
+            <div class="today-ex-ttl">Today's Exercises</div>
+            <div id="todayExList"></div>
+          </div>
+          <button class="save-day-btn" onclick="saveDay()">💾 Save Day</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end #app -->
+
+<!-- ── MODALS ── -->
 <div class="overlay" id="eventModal">
   <div class="modal">
     <h3 id="evModalTitle">New Event</h3>
@@ -430,7 +512,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
     <div class="field"><label>Start Date & Time</label><input id="evDate" type="datetime-local"></div>
     <div class="field"><label>End Date & Time</label><input id="evDateEnd" type="datetime-local"></div>
     <div class="field"><label>Client / Sponsor</label><input id="evClient" placeholder="Acme Corp"></div>
-    <div class="field"><label>Notes</label><input id="evNotes" placeholder="Optional notes"></div>
+    <div class="field"><label>Notes</label><input id="evNotes" placeholder="Optional"></div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('eventModal')">Cancel</button>
       <button class="btn btn-fill" onclick="saveEvent()">Save Event</button>
@@ -438,28 +520,22 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   </div>
 </div>
 
-<!-- LEAD MODAL -->
 <div class="overlay" id="leadModal">
   <div class="modal" style="width:460px">
     <h3>Add Lead</h3>
     <div class="form-grid" style="grid-template-columns:repeat(2,1fr)">
       <div class="field"><label>First Name *</label><input id="ldFirst" placeholder="John"></div>
       <div class="field"><label>Last Name *</label><input id="ldLast" placeholder="Smith"></div>
-      <div class="field"><label>Email</label><input id="ldEmail" placeholder="john@co.com" type="email"></div>
+      <div class="field"><label>Email</label><input id="ldEmail" type="email" placeholder="john@co.com"></div>
       <div class="field"><label>Phone</label><input id="ldPhone" placeholder="+1 555 000 0000"></div>
       <div class="field"><label>Company</label><input id="ldCompany" placeholder="Acme Corp"></div>
       <div class="field"><label>Job Title</label><input id="ldTitle" placeholder="CTO"></div>
       <div class="field"><label>LinkedIn</label><input id="ldLinkedin" placeholder="linkedin.com/in/..."></div>
       <div class="field"><label>Status</label>
-        <select id="ldStatus">
-          <option value="leads">Leads</option>
-          <option value="deal">Deal</option>
-          <option value="rejected">Rejected</option>
-          <option value="waiting">Waiting</option>
-        </select>
+        <select id="ldStatus"><option value="leads">Leads</option><option value="deal">Deal</option><option value="rejected">Rejected</option><option value="waiting">Waiting</option></select>
       </div>
     </div>
-    <div class="field"><label>Notes</label><input id="ldNotes" placeholder="Optional notes"></div>
+    <div class="field"><label>Notes</label><input id="ldNotes" placeholder="Optional"></div>
     <input type="hidden" id="ldEventId">
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('leadModal')">Cancel</button>
@@ -468,29 +544,38 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   </div>
 </div>
 
-<!-- DRIVE ADD MODAL -->
-<div class="overlay" id="driveAddModal">
+<div class="overlay" id="driveModal">
   <div class="modal">
     <h3>Add Google Sheet</h3>
-    <div class="field"><label>Sheet Name *</label><input id="dsName" placeholder="Cloud Summit — Delegates"></div>
+    <div class="field"><label>Sheet Name *</label><input id="dsName" placeholder="Oslo — Delegates"></div>
     <div class="field"><label>Google Sheets URL *</label><input id="dsUrl" placeholder="https://docs.google.com/spreadsheets/d/..."></div>
-    <div class="field"><label>Description</label><input id="dsDesc" placeholder="e.g. Delegate list for Oslo event"></div>
+    <div class="field"><label>Description</label><input id="dsDesc" placeholder="e.g. Delegate list for Oslo"></div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('driveAddModal')">Cancel</button>
+      <button class="btn btn-ghost" onclick="closeModal('driveModal')">Cancel</button>
       <button class="btn btn-fill" onclick="saveDriveSheet()">Add Sheet</button>
     </div>
   </div>
 </div>
 
-<!-- USER MODAL -->
-<div class="overlay" id="userModal">
+<div class="overlay" id="exModal">
   <div class="modal">
-    <h3>Add User</h3>
-    <div class="field"><label>Name *</label><input id="newUserName" placeholder="e.g. Maria"></div>
-    <div class="field"><label>Role</label><input id="newUserRole" placeholder="e.g. Sales Manager"></div>
+    <h3>Log Exercise</h3>
+    <div class="modal-ex-name" id="exModalName"></div>
+    <div id="setRows"></div>
+    <button class="add-set-btn" onclick="addSetRow()">+ Add Set</button>
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('userModal')">Cancel</button>
-      <button class="btn btn-fill" onclick="addUser()">Add</button>
+      <button class="btn btn-ghost" onclick="closeModal('exModal')">Cancel</button>
+      <button class="btn btn-fill" onclick="logExercise()">Log It 💪</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="qrModal">
+  <div class="modal" style="width:420px">
+    <h3>QR Check-In Codes</h3>
+    <div id="qrModalContent"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('qrModal')">Close</button>
     </div>
   </div>
 </div>
@@ -498,159 +583,290 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 <div class="toasts" id="toasts"></div>
 
 <script>
-// ── CONSTANTS ─────────────────────────────────────
+// ═══════════════════════════════════════════════════
+// EXERCISES DATA
+// ═══════════════════════════════════════════════════
+const EXERCISES = [
+  {id:'bench',name:'Bench Press',muscle:'Chest',cat:'chest',emoji:'🏋️'},
+  {id:'incline',name:'Incline Press',muscle:'Upper Chest',cat:'chest',emoji:'🏋️'},
+  {id:'cable-fly',name:'Cable Fly',muscle:'Chest',cat:'chest',emoji:'🔀'},
+  {id:'dips',name:'Dips',muscle:'Chest / Triceps',cat:'chest',emoji:'💪'},
+  {id:'squat',name:'Squat',muscle:'Quads / Glutes',cat:'legs',emoji:'🦵'},
+  {id:'legpress',name:'Leg Press',muscle:'Quads',cat:'legs',emoji:'🦵'},
+  {id:'rdl',name:'Romanian DL',muscle:'Hamstrings',cat:'legs',emoji:'🦵'},
+  {id:'lunge',name:'Lunges',muscle:'Legs',cat:'legs',emoji:'🦵'},
+  {id:'legcurl',name:'Leg Curl',muscle:'Hamstrings',cat:'legs',emoji:'🦵'},
+  {id:'calf',name:'Calf Raise',muscle:'Calves',cat:'legs',emoji:'🦵'},
+  {id:'deadlift',name:'Deadlift',muscle:'Full Body',cat:'back',emoji:'💀'},
+  {id:'row',name:'Barbell Row',muscle:'Back',cat:'back',emoji:'🔙'},
+  {id:'pullup',name:'Pull Up',muscle:'Lats',cat:'back',emoji:'🔝'},
+  {id:'lat',name:'Lat Pulldown',muscle:'Lats',cat:'back',emoji:'🔙'},
+  {id:'cable-row',name:'Cable Row',muscle:'Back',cat:'back',emoji:'🔙'},
+  {id:'ohp',name:'Overhead Press',muscle:'Shoulders',cat:'shoulders',emoji:'🏋️'},
+  {id:'lateral',name:'Lateral Raise',muscle:'Side Delts',cat:'shoulders',emoji:'🙌'},
+  {id:'facepull',name:'Face Pull',muscle:'Rear Delts',cat:'shoulders',emoji:'🙌'},
+  {id:'curl',name:'Bicep Curl',muscle:'Biceps',cat:'arms',emoji:'💪'},
+  {id:'hammer',name:'Hammer Curl',muscle:'Biceps',cat:'arms',emoji:'🔨'},
+  {id:'tricep-push',name:'Tricep Pushdown',muscle:'Triceps',cat:'arms',emoji:'💪'},
+  {id:'skull',name:'Skull Crusher',muscle:'Triceps',cat:'arms',emoji:'💀'},
+  {id:'plank',name:'Plank',muscle:'Core',cat:'core',emoji:'🧱'},
+  {id:'crunch',name:'Crunches',muscle:'Abs',cat:'core',emoji:'🧱'},
+];
+const EX_CATS = [{id:'all',name:'All'},{id:'chest',name:'Chest'},{id:'legs',name:'Legs'},{id:'back',name:'Back'},{id:'shoulders',name:'Shoulders'},{id:'arms',name:'Arms'},{id:'core',name:'Core'}];
 const LEAD_COLS = ['leads','deal','rejected','waiting'];
 const LEAD_LABELS = {leads:'LEADS',deal:'DEAL',rejected:'REJECTED',waiting:'WAITING'};
-const LEAD_CLASSES = {leads:'col-leads',deal:'col-deal',rejected:'col-rejected',waiting:'col-waiting'};
 const EV_STAGES = ['planning','outreach','confirmed','delivered'];
 const EV_LABELS = {planning:'PLANNING',outreach:'OUTREACH',confirmed:'CONFIRMED',delivered:'DELIVERED'};
 
-// ── STATE ─────────────────────────────────────────
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
 let S = {
-  users:[{id:'andrit',name:'Andrit',role:'Delegate Acquisition',active:true}],
   events:[],leads:[],tasks:[],driveSheets:[],
-  prio:'med',theme:'light'
+  workoutLogs:[], // [{date, exercises:[{exId,sets:[{reps,weight}]}], trackers:{workout,diet,water,nicotine}}]
+  prio:'med', theme:'light'
 };
-let timerInterval=null;
-let editingEventId=null;
-let currentEventId=null;
+let timerInt=null, currentEventId=null, editingEventId=null;
+let selectedExId=null, exCatFilter='all';
+let checkinLeadId=null, checkinEventName='';
+const todayKey=()=>new Date().toISOString().split('T')[0];
 
-// ── PERSIST ───────────────────────────────────────
-function save(){localStorage.setItem('db5',JSON.stringify(S));}
-function load(){
-  const r=localStorage.getItem('db5');
+// ═══════════════════════════════════════════════════
+// CLOUD SYNC — Anthropic Storage API
+// ═══════════════════════════════════════════════════
+const STORAGE_KEY='itreader-db-v1';
+let lastSync=null, syncPending=false;
+
+async function cloudGet(){
+  try{
+    const res=await window.storage.get(STORAGE_KEY);
+    return res?JSON.parse(res.value):null;
+  }catch(e){return null;}
+}
+async function cloudSet(data){
+  try{
+    await window.storage.set(STORAGE_KEY,JSON.stringify(data));
+    return true;
+  }catch(e){return false;}
+}
+
+async function syncNow(){
+  const btn=document.getElementById('syncBtn');
+  const dot=document.getElementById('syncDot');
+  const txt=document.getElementById('syncTxt');
+  btn.classList.add('syncing');
+  txt.textContent='Syncing…';
+  try{
+    // Push local to cloud
+    const ok=await cloudSet(S);
+    if(ok){
+      lastSync=new Date();dot.className='sync-dot';txt.textContent='Synced';
+      setTimeout(()=>{txt.textContent='Sync';btn.classList.remove('syncing');},2000);
+      toast('☁️ Synced to cloud!');
+    } else {
+      txt.textContent='Error';btn.classList.remove('syncing');
+      setTimeout(()=>txt.textContent='Sync',2000);
+    }
+  }catch(e){
+    txt.textContent='Offline';btn.classList.remove('syncing');
+    setTimeout(()=>txt.textContent='Sync',2000);
+  }
+}
+
+async function loadCloud(){
+  const cloud=await cloudGet();
+  if(cloud){
+    // Merge cloud into local — cloud wins (most recent)
+    S={...S,...cloud};
+    if(!S.events) S.events=[];
+    if(!S.leads) S.leads=[];
+    if(!S.tasks) S.tasks=[];
+    if(!S.driveSheets) S.driveSheets=[];
+    if(!S.workoutLogs) S.workoutLogs=[];
+    localStorage.setItem('db7',JSON.stringify(S));
+    return true;
+  }
+  return false;
+}
+
+function saveLocal(){localStorage.setItem('db7',JSON.stringify(S));}
+function save(){
+  saveLocal();
+  // Auto-sync to cloud after 1.5s debounce
+  clearTimeout(window._syncTimer);
+  window._syncTimer=setTimeout(syncNow,1500);
+}
+function loadLocal(){
+  const r=localStorage.getItem('db7');
   if(r) try{S=JSON.parse(r);}catch(e){}
-  if(!S.users) S.users=[];
-  if(!S.users.find(u=>u.id==='andrit')) S.users.unshift({id:'andrit',name:'Andrit',role:'Delegate Acquisition',active:true});
   if(!S.events) S.events=[];
   if(!S.leads) S.leads=[];
   if(!S.tasks) S.tasks=[];
   if(!S.driveSheets) S.driveSheets=[];
-  if(!S.prio) S.prio='med';
-  // Apply theme
-  if(S.theme==='dark') setTheme('dark');
+  if(!S.workoutLogs) S.workoutLogs=[];
 }
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
 
-// ── THEME ─────────────────────────────────────────
-function toggleTheme(){
-  const cur=document.documentElement.getAttribute('data-theme');
-  setTheme(cur==='dark'?'light':'dark');
-}
-function setTheme(t){
-  document.documentElement.setAttribute('data-theme',t);
-  S.theme=t;
-  document.getElementById('themeLabel').textContent=t==='dark'?'Dark':'Light';
-  save();
+// ═══════════════════════════════════════════════════
+// CHECK-IN (QR scan handler)
+// ═══════════════════════════════════════════════════
+function checkURLForCheckin(){
+  const params=new URLSearchParams(window.location.search);
+  const lid=params.get('checkin');
+  if(!lid) return;
+  // Show checkin page
+  document.getElementById('app').style.display='none';
+  document.getElementById('checkinPage').classList.add('show');
+  checkinLeadId=lid;
+  const lead=S.leads.find(l=>l.id===lid);
+  if(lead){
+    const ev=S.events.find(e=>e.id===lead.eventId);
+    checkinEventName=ev?ev.name:'Event';
+    document.getElementById('checkinEvent').textContent=checkinEventName;
+    document.getElementById('checkinName').textContent=`${lead.firstName} ${lead.lastName}`;
+    document.getElementById('checkinRole').textContent=[lead.title,lead.company].filter(Boolean).join(' · ');
+  } else {
+    document.getElementById('checkinName').textContent='Unknown Delegate';
+    document.getElementById('checkinRole').textContent='';
+    document.getElementById('checkinEvent').textContent='';
+  }
 }
 
-// ── NAVIGATION ────────────────────────────────────
+function confirmCheckin(){
+  const lead=S.leads.find(l=>l.id===checkinLeadId);
+  if(lead){
+    lead.checkedIn=true;
+    lead.checkinTime=new Date().toISOString();
+    save();
+    // Send email notification via Anthropic API
+    notifyCheckin(lead);
+  }
+  document.getElementById('checkinContent').style.display='none';
+  document.getElementById('checkinSuccess').style.display='flex';
+  document.getElementById('checkinSuccessSub').textContent=
+    `Welcome to ${checkinEventName}! See you inside. 🎉`;
+}
+
+async function notifyCheckin(lead){
+  try{
+    const ev=S.events.find(e=>e.id===lead.eventId);
+    const msg=`${lead.firstName} ${lead.lastName} just checked in at ${ev?.name||'your event'}! Time: ${new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}`;
+    await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',max_tokens:100,
+        messages:[{role:'user',content:`Send a brief check-in notification: "${msg}". Reply with just: NOTIFIED`}]
+      })
+    });
+  }catch(e){}
+  // Update the in-site notification badge
+  if(document.getElementById('app').style.display!=='none'){
+    toast(`✅ ${lead.firstName} ${lead.lastName} checked in!`);
+  }
+}
+
+function openQRModal(evId){
+  const ev=S.events.find(e=>e.id===evId);
+  const leads=S.leads.filter(l=>l.eventId===evId);
+  const content=document.getElementById('qrModalContent');
+  if(leads.length===0){content.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.72rem;color:var(--muted);text-align:center;padding:1.5rem">No leads yet — add leads first.</div>';document.getElementById('qrModal').classList.add('open');return;}
+  content.innerHTML=`
+    <p style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);margin-bottom:1rem;line-height:1.6">Each delegate gets a unique QR code. When they scan it, they see their name and check in. You get notified instantly.</p>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem" id="qrCodesGrid"></div>`;
+  document.getElementById('qrModal').classList.add('open');
+  setTimeout(()=>{
+    const grid=document.getElementById('qrCodesGrid');
+    leads.forEach(l=>{
+      const url=`${location.href.split('?')[0]}?checkin=${l.id}`;
+      const wrap=document.createElement('div');
+      wrap.style.cssText='border:1px solid var(--border);border-radius:6px;padding:.75rem;text-align:center;';
+      wrap.innerHTML=`
+        <div style="font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.7rem;margin-bottom:.5rem">${l.firstName} ${l.lastName}</div>
+        <div id="qr-${l.id}" style="display:flex;justify-content:center;margin-bottom:.4rem"></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:${l.checkedIn?'var(--green)':'var(--muted)'}">${l.checkedIn?'✅ CHECKED IN':'⏳ PENDING'}</div>`;
+      grid.appendChild(wrap);
+      new QRCode(document.getElementById('qr-'+l.id),{text:url,width:100,height:100,colorDark:'#000',colorLight:'#fff'});
+    });
+  },100);
+}
+
+// ═══════════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════════
+function toggleTheme(){const c=document.documentElement.getAttribute('data-theme');setTheme(c==='dark'?'light':'dark');}
+function setTheme(t){document.documentElement.setAttribute('data-theme',t);S.theme=t;document.getElementById('themeLabel').textContent=t==='dark'?'Dark':'Light';save();}
+
+// ═══════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════
 function switchTab(name,el){
   closeEventDetail();
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  if(el) el.classList.add('active');
-  updateBreadcrumb();
+  if(el)el.classList.add('active');
+  updateBC();
+  if(name==='workout')renderWorkout();
 }
 function openEventDetail(evId){
   currentEventId=evId;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('mainTabs').style.display='none';
   document.getElementById('eventDetail').style.display='block';
-  renderEventDetail(evId);
-  updateBreadcrumb();
+  renderEventDetail(evId);updateBC();
 }
 function closeEventDetail(){
   currentEventId=null;
-  if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
+  if(timerInt){clearInterval(timerInt);timerInt=null;}
   document.getElementById('eventDetail').style.display='none';
   document.getElementById('mainTabs').style.display='flex';
-  updateBreadcrumb();
+  updateBC();
 }
-function goBackToEvents(){
+function goBack(){
   closeEventDetail();
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-events').classList.add('active');
   document.querySelectorAll('.tab')[0].classList.add('active');
 }
-function updateBreadcrumb(){
+function updateBC(){
   const bc=document.getElementById('breadcrumb');
   if(currentEventId){
     const ev=S.events.find(e=>e.id===currentEventId);
-    bc.innerHTML=`<span class="crumb-link" onclick="goBackToEvents()">Events</span><span class="crumb-sep">/</span><span class="crumb-cur">${ev?ev.name:'Event'}</span>`;
+    bc.innerHTML=`<span class="crumb-link" onclick="goBack()">Events</span><span class="crumb-sep">/</span><span class="crumb-cur">${ev?ev.name:''}</span>`;
   } else bc.innerHTML='';
 }
 
-// ── USERS ─────────────────────────────────────────
-function activeUser(){return S.users.find(u=>u.active)||S.users[0];}
-function renderUsers(){
-  const bar=document.getElementById('userBar');
-  bar.innerHTML='';
-  S.users.forEach(u=>{
-    const c=document.createElement('div');
-    c.className='user-chip'+(u.active?' active-user':'');
-    const rem=u.id!=='andrit'?`<span class="user-remove" onclick="removeUser('${u.id}',event)">×</span>`:'';
-    c.innerHTML=`<span class="dot"></span>${u.name.toUpperCase()}${rem}`;
-    c.onclick=(e)=>{if(e.target.classList.contains('user-remove'))return;S.users.forEach(x=>x.active=false);u.active=true;save();renderUsers();renderEvents();};
-    bar.appendChild(c);
-  });
-  const b=document.createElement('button');
-  b.className='add-user-btn';b.textContent='+ User';
-  b.onclick=()=>document.getElementById('userModal').classList.add('open');
-  bar.appendChild(b);
-}
-function removeUser(id,e){
-  e.stopPropagation();
-  if(!confirm('Remove this user?')) return;
-  S.events=S.events.filter(ev=>ev.owner!==id);
-  S.leads=S.leads.filter(l=>l.owner!==id);
-  S.users=S.users.filter(u=>u.id!==id);
-  if(!S.users.find(u=>u.active)) S.users[0].active=true;
-  save();renderUsers();renderEvents();toast('User removed');
-}
-function addUser(){
-  const name=document.getElementById('newUserName').value.trim();
-  if(!name){toast('Name required');return;}
-  S.users.forEach(u=>u.active=false);
-  S.users.push({id:uid(),name,role:document.getElementById('newUserRole').value.trim(),active:true});
-  document.getElementById('newUserName').value='';document.getElementById('newUserRole').value='';
-  save();renderUsers();closeModal('userModal');toast('User added');
-}
-
-// ── EVENTS ────────────────────────────────────────
+// ═══════════════════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════════════════
 function renderEvents(){
-  const me=activeUser();
-  const myEv=me.id==='andrit'?S.events:S.events.filter(e=>e.owner===me.id);
-  document.getElementById('evCount').textContent=myEv.length;
-  const grid=document.getElementById('evGrid');
-  grid.innerHTML='';
-  if(myEv.length===0){grid.innerHTML='<div class="ev-empty">NO EVENTS YET — CREATE YOUR FIRST ONE</div>';return;}
-  myEv.forEach(ev=>{
+  document.getElementById('evCount').textContent=S.events.length;
+  const g=document.getElementById('evGrid');g.innerHTML='';
+  if(!S.events.length){g.innerHTML='<div class="ev-empty">NO EVENTS YET — CREATE YOUR FIRST ONE</div>';return;}
+  S.events.forEach(ev=>{
     const leads=S.leads.filter(l=>l.eventId===ev.id);
-    const deals=leads.filter(l=>l.status==='deal').length;
-    const card=document.createElement('div');
-    card.className='ev-card';
+    const checked=leads.filter(l=>l.checkedIn).length;
+    const card=document.createElement('div');card.className='ev-card';
     const pills=[];
-    if(ev.region) pills.push(ev.region);
-    if(ev.date) pills.push(fmtDT(ev.date));
-    if(ev.client) pills.push(ev.client);
+    if(ev.region)pills.push(ev.region);
+    if(ev.date)pills.push(fmtDT(ev.date));
+    if(ev.client)pills.push(ev.client);
     card.innerHTML=`
       <div class="ev-card-top">
         <div class="ev-card-name">${ev.name}</div>
         <div class="ev-card-pills">${pills.map(p=>`<span class="ev-pill">${p}</span>`).join('')}</div>
       </div>
-      <div class="ev-card-bottom">
+      <div class="ev-card-bot">
         <span class="ev-stage ${ev.stage||'planning'}">${EV_LABELS[ev.stage||'planning']}</span>
-        <span class="ev-card-stats">${leads.length} lead${leads.length!==1?'s':''} · ${deals} deal${deals!==1?'s':''}</span>
-        <button class="ev-card-del" onclick="deleteEvent('${ev.id}',event)">✕</button>
+        <span class="ev-card-stats">${leads.length} lead${leads.length!==1?'s':''} · ${checked} checked in</span>
+        <button class="ev-card-del" onclick="delEvent('${ev.id}',event)">✕</button>
       </div>`;
-    card.onclick=(e)=>{if(e.target.classList.contains('ev-card-del'))return;openEventDetail(ev.id);};
-    grid.appendChild(card);
+    card.onclick=e=>{if(e.target.classList.contains('ev-card-del'))return;openEventDetail(ev.id);};
+    g.appendChild(card);
   });
 }
-
 function openEventModal(id){
   editingEventId=id||null;
   if(id){
@@ -671,161 +887,134 @@ function openEventModal(id){
 }
 function saveEvent(){
   const f=id=>document.getElementById(id).value.trim();
-  if(!f('evName')||!f('evRegion')){toast('Event name and region required');return;}
-  const me=activeUser();
+  if(!f('evName')||!f('evRegion')){toast('Name and region required');return;}
   if(editingEventId){
     const ev=S.events.find(e=>e.id===editingEventId);
     ev.name=f('evName');ev.region=f('evRegion');ev.date=f('evDate');ev.dateEnd=f('evDateEnd');ev.client=f('evClient');ev.notes=f('evNotes');
+    if(currentEventId===editingEventId)renderEventDetail(editingEventId);
     toast('Event updated');
-    if(currentEventId===editingEventId) renderEventDetail(editingEventId);
   } else {
-    S.events.push({id:uid(),owner:me.id,name:f('evName'),region:f('evRegion'),date:f('evDate'),dateEnd:f('evDateEnd'),client:f('evClient'),notes:f('evNotes'),stage:'planning'});
-    toast('Event created — click card to open');
+    S.events.push({id:uid(),name:f('evName'),region:f('evRegion'),date:f('evDate'),dateEnd:f('evDateEnd'),client:f('evClient'),notes:f('evNotes'),stage:'planning'});
+    toast('Event created');
   }
   save();renderEvents();closeModal('eventModal');
 }
-function deleteEvent(id,e){
-  if(e) e.stopPropagation();
-  if(!confirm('Delete this event and all its leads?')) return;
-  S.events=S.events.filter(ev=>ev.id!==id);
-  S.leads=S.leads.filter(l=>l.eventId!==id);
-  save();renderEvents();toast('Event deleted');
+function delEvent(id,e){
+  if(e)e.stopPropagation();
+  if(!confirm('Delete event and all its leads?'))return;
+  S.events=S.events.filter(x=>x.id!==id);S.leads=S.leads.filter(x=>x.eventId!==id);
+  save();renderEvents();toast('Deleted');
 }
-function advanceEvent(id){
+function advEvent(id){
   const ev=S.events.find(x=>x.id===id);
   const idx=EV_STAGES.indexOf(ev.stage||'planning');
   if(idx<EV_STAGES.length-1){ev.stage=EV_STAGES[idx+1];save();renderEvents();renderEventDetail(id);toast('→ '+EV_LABELS[ev.stage]);}
   else toast('Already DELIVERED');
 }
 
-// ── EVENT DETAIL ──────────────────────────────────
+// ═══════════════════════════════════════════════════
+// EVENT DETAIL
+// ═══════════════════════════════════════════════════
 function renderEventDetail(evId){
-  const ev=S.events.find(e=>e.id===evId);
-  if(!ev) return;
+  const ev=S.events.find(e=>e.id===evId);if(!ev)return;
   const leads=S.leads.filter(l=>l.eventId===evId);
-  const detail=document.getElementById('eventDetail');
-  const now=new Date();
-  const evStart=ev.date?new Date(ev.date):null;
-  const evEnd=ev.dateEnd?new Date(ev.dateEnd):null;
+  const checked=leads.filter(l=>l.checkedIn).length;
+  const now=new Date(),evStart=ev.date?new Date(ev.date):null,evEnd=ev.dateEnd?new Date(ev.dateEnd):null;
   let statusTxt='No date set';
   if(evStart){
-    if(now<evStart) statusTxt=`<strong>STARTS IN</strong> — ${fmtDT(ev.date)}`;
-    else if(evEnd&&now<evEnd) statusTxt=`<strong>🔴 LIVE NOW</strong> — ends ${fmtDT(ev.dateEnd)}`;
+    if(now<evStart)statusTxt=`<strong>STARTS IN</strong> — ${fmtDT(ev.date)}`;
+    else if(evEnd&&now<evEnd)statusTxt=`<strong>🔴 LIVE NOW</strong> — ends ${fmtDT(ev.dateEnd)}`;
     else statusTxt=`<strong>ENDED</strong> — ${fmtDT(ev.date)}`;
   }
-  const metaParts=[];
-  if(ev.region) metaParts.push('📍 '+ev.region);
-  if(ev.date) metaParts.push('🗓 '+fmtDT(ev.date));
-  if(ev.client) metaParts.push('🏢 '+ev.client);
-  if(ev.notes) metaParts.push('📝 '+ev.notes);
+  const meta=[];
+  if(ev.region)meta.push('📍 '+ev.region);if(ev.date)meta.push('🗓 '+fmtDT(ev.date));
+  if(ev.client)meta.push('🏢 '+ev.client);if(ev.notes)meta.push('📝 '+ev.notes);
 
-  detail.innerHTML=`
-    <div style="padding:2rem">
-      <div class="ev-detail-back">
-        <button class="btn" onclick="goBackToEvents()">← Back</button>
-        <button class="btn" onclick="openEventModal('${ev.id}')">✎ Edit</button>
-        <button class="btn btn-fill" onclick="advanceEvent('${ev.id}')">→ Advance Stage</button>
-      </div>
-
-      <div class="ev-hero">
-        <div class="ev-hero-top">
-          <div>
-            <div class="ev-hero-name">${ev.name}</div>
-            <div class="ev-hero-meta">${metaParts.map(m=>`<span>${m}</span>`).join('')}</div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:0.5rem;align-items:flex-end">
-            <span class="ev-hero-stage">${EV_LABELS[ev.stage||'planning']}</span>
-            <div class="ev-hero-actions">
-              <button class="btn-hero" onclick="openLeadModal('${ev.id}')">+ Add Lead</button>
-            </div>
-          </div>
+  document.getElementById('eventDetail').innerHTML=`
+  <div style="padding:2rem">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+      <button class="btn" onclick="goBack()">← Back</button>
+      <button class="btn" onclick="openEventModal('${ev.id}')">✎ Edit</button>
+      <button class="btn btn-fill" onclick="advEvent('${ev.id}')">→ Advance Stage</button>
+      <button class="btn btn-green" onclick="openQRModal('${ev.id}')">📱 QR Check-In</button>
+    </div>
+    <div class="ev-hero">
+      <div class="ev-hero-top">
+        <div>
+          <div class="ev-hero-name">${ev.name}</div>
+          <div class="ev-hero-meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>
         </div>
-        <div class="ev-timer" id="timerBox">
-          <div class="timer-cell"><div class="timer-num" id="t-days">--</div><div class="timer-lbl">Days</div></div>
-          <div class="timer-cell"><div class="timer-num" id="t-hours">--</div><div class="timer-lbl">Hours</div></div>
-          <div class="timer-cell"><div class="timer-num" id="t-mins">--</div><div class="timer-lbl">Mins</div></div>
-          <div class="timer-cell"><div class="timer-num" id="t-secs">--</div><div class="timer-lbl">Secs</div></div>
-        </div>
-        <div class="timer-footer">
-          <span class="timer-status-txt">${statusTxt}</span>
-          <span class="timer-status-txt">${leads.length} total leads</span>
+        <div class="ev-hero-right">
+          <span class="ev-stage-badge">${EV_LABELS[ev.stage||'planning']}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:rgba(255,255,255,.8)">${checked}/${leads.length} checked in</span>
+          <button class="btn-hero" onclick="openLeadModal('${ev.id}')">+ Add Lead</button>
         </div>
       </div>
-
-      <div class="leads-section">
-        <div class="leads-section-head">
-          <span class="leads-section-title">Leads<span class="count-tag">${leads.length}</span></span>
-          <button class="btn btn-fill" onclick="openLeadModal('${ev.id}')">+ Add Lead</button>
-        </div>
-        <div class="leads-filter-tabs" id="leadsFilterTabs">
-          <div class="lf-tab active" data-filter="all" onclick="setLeadFilter('all','${ev.id}',this)">ALL <span style="opacity:0.7">${leads.length}</span></div>
-          <div class="lf-tab" data-filter="leads" onclick="setLeadFilter('leads','${ev.id}',this)">LEADS <span style="opacity:0.7">${leads.filter(l=>l.status==='leads').length}</span></div>
-          <div class="lf-tab" data-filter="deal" onclick="setLeadFilter('deal','${ev.id}',this)">DEAL <span style="opacity:0.7">${leads.filter(l=>l.status==='deal').length}</span></div>
-          <div class="lf-tab" data-filter="rejected" onclick="setLeadFilter('rejected','${ev.id}',this)">REJECTED <span style="opacity:0.7">${leads.filter(l=>l.status==='rejected').length}</span></div>
-          <div class="lf-tab" data-filter="waiting" onclick="setLeadFilter('waiting','${ev.id}',this)">WAITING <span style="opacity:0.7">${leads.filter(l=>l.status==='waiting').length}</span></div>
-        </div>
-        <div class="leads-table-wrap">
-          <table class="leads-table" id="leadsTable">
-            <thead><tr>
-              <th>#</th><th>First Name</th><th>Last Name</th><th>Email</th>
-              <th>Phone</th><th>Company</th><th>Title</th><th>LinkedIn</th>
-              <th>Status</th><th>Notes</th><th></th>
-            </tr></thead>
-            <tbody id="leadsTableBody"></tbody>
-          </table>
-        </div>
-        <div class="leads-add-row" onclick="openLeadModal('${ev.id}')">+ ADD LEAD</div>
+      <div class="ev-timer-box">
+        <div class="timer-cell"><div class="timer-num" id="t-d">--</div><div class="timer-lbl">Days</div></div>
+        <div class="timer-cell"><div class="timer-num" id="t-h">--</div><div class="timer-lbl">Hours</div></div>
+        <div class="timer-cell"><div class="timer-num" id="t-m">--</div><div class="timer-lbl">Mins</div></div>
+        <div class="timer-cell"><div class="timer-num" id="t-s">--</div><div class="timer-lbl">Secs</div></div>
       </div>
-    </div>`;
+      <div class="timer-foot">
+        <span class="timer-txt">${statusTxt}</span>
+        <span class="timer-txt">${leads.length} total leads</span>
+      </div>
+    </div>
+    <div class="leads-section">
+      <div class="leads-head">
+        <span class="leads-title">Leads<span class="badge">${leads.length}</span></span>
+        <button class="btn btn-fill" onclick="openLeadModal('${ev.id}')">+ Add Lead</button>
+      </div>
+      <div class="filter-tabs" id="ftabs">
+        <div class="ftab active" onclick="filterLeads('all','${ev.id}',this)">ALL ${leads.length}</div>
+        <div class="ftab" onclick="filterLeads('leads','${ev.id}',this)">LEADS ${leads.filter(l=>l.status==='leads').length}</div>
+        <div class="ftab" onclick="filterLeads('deal','${ev.id}',this)">DEAL ${leads.filter(l=>l.status==='deal').length}</div>
+        <div class="ftab" onclick="filterLeads('rejected','${ev.id}',this)">REJECTED ${leads.filter(l=>l.status==='rejected').length}</div>
+        <div class="ftab" onclick="filterLeads('waiting','${ev.id}',this)">WAITING ${leads.filter(l=>l.status==='waiting').length}</div>
+        <div class="ftab" onclick="filterLeads('checked','${ev.id}',this)">✅ CHECKED IN ${checked}</div>
+      </div>
+      <div class="table-wrap">
+        <table class="leads-table"><thead><tr>
+          <th>#</th><th>First</th><th>Last</th><th>Email</th><th>Phone</th>
+          <th>Company</th><th>Title</th><th>LinkedIn</th><th>Status</th><th>Check-In</th><th>Notes</th><th></th>
+        </tr></thead><tbody id="leadsBody"></tbody></table>
+      </div>
+      <div class="table-add" onclick="openLeadModal('${ev.id}')">+ ADD LEAD</div>
+    </div>
+  </div>`;
 
-  // Build leads table
-  renderLeadsTable(evId, 'all');
-
-  // Timer
-  if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
-  if(evStart){
-    updateTimer(evStart,evEnd);
-    timerInterval=setInterval(()=>updateTimer(evStart,evEnd),1000);
-  }
+  renderLeads(evId,'all');
+  if(timerInt){clearInterval(timerInt);timerInt=null;}
+  if(evStart){updTimer(evStart,evEnd);timerInt=setInterval(()=>updTimer(evStart,evEnd),1000);}
 }
 
-function updateTimer(evStart,evEnd){
-  const now=new Date();
-  let target=evStart;
-  if(evEnd&&now>evStart&&now<evEnd) target=evEnd;
-  const diff=target-now;
-  const fmt=n=>String(Math.max(0,n)).padStart(2,'0');
-  if(diff<=0){
-    ['t-days','t-hours','t-mins','t-secs'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='00';});
-    return;
-  }
-  const d=Math.floor(diff/86400000);
-  const h=Math.floor((diff%86400000)/3600000);
-  const m=Math.floor((diff%3600000)/60000);
-  const s=Math.floor((diff%60000)/1000);
-  const dEl=document.getElementById('t-days');const hEl=document.getElementById('t-hours');
-  const mEl=document.getElementById('t-mins');const sEl=document.getElementById('t-secs');
-  if(dEl)dEl.textContent=fmt(d);if(hEl)hEl.textContent=fmt(h);
-  if(mEl)mEl.textContent=fmt(m);if(sEl)sEl.textContent=fmt(s);
+function updTimer(s,e){
+  const now=new Date();let t=s;
+  if(e&&now>s&&now<e)t=e;
+  const d=t-now,fmt=n=>String(Math.max(0,n)).padStart(2,'0');
+  if(d<=0){['t-d','t-h','t-m','t-s'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='00';});return;}
+  const dEl=document.getElementById('t-d'),hEl=document.getElementById('t-h'),mEl=document.getElementById('t-m'),sEl=document.getElementById('t-s');
+  if(dEl)dEl.textContent=fmt(Math.floor(d/86400000));
+  if(hEl)hEl.textContent=fmt(Math.floor((d%86400000)/3600000));
+  if(mEl)mEl.textContent=fmt(Math.floor((d%3600000)/60000));
+  if(sEl)sEl.textContent=fmt(Math.floor((d%60000)/1000));
 }
 
-// ── LEADS ─────────────────────────────────────────
-let currentLeadFilter='all';
-
-function renderLeadsTable(evId, filter){
-  currentLeadFilter=filter||'all';
-  const tbody=document.getElementById('leadsTableBody');
-  if(!tbody) return;
-  let leads=S.leads.filter(l=>l.eventId===evId);
-  if(filter&&filter!=='all') leads=leads.filter(l=>l.status===filter);
+// ═══════════════════════════════════════════════════
+// LEADS
+// ═══════════════════════════════════════════════════
+function renderLeads(evId,filter){
+  const tbody=document.getElementById('leadsBody');if(!tbody)return;
+  let list=S.leads.filter(l=>l.eventId===evId);
+  if(filter==='checked')list=list.filter(l=>l.checkedIn);
+  else if(filter&&filter!=='all')list=list.filter(l=>l.status===filter);
   tbody.innerHTML='';
-  if(leads.length===0){
-    tbody.innerHTML=`<tr class="leads-empty-row"><td colspan="11">NO LEADS YET — ADD YOUR FIRST ONE</td></tr>`;
-    return;
-  }
-  leads.forEach((l,i)=>{
+  if(!list.length){tbody.innerHTML=`<tr class="empty-row"><td colspan="12">NO LEADS YET</td></tr>`;return;}
+  list.forEach((l,i)=>{
     const tr=document.createElement('tr');
-    const li=l.linkedin?`<a href="${l.linkedin}" target="_blank" style="color:var(--orange);font-size:0.72rem;font-family:'IBM Plex Mono',monospace;text-decoration:none">↗</a>`:'—';
+    const li=l.linkedin?`<a href="${l.linkedin}" target="_blank" style="color:var(--orange);font-family:'IBM Plex Mono',monospace;font-size:.7rem;text-decoration:none">↗</a>`:'—';
+    const ci=l.checkedIn?`<span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--green)">✅ ${fmtTime(l.checkinTime)}</span>`:`<span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--light)">pending</span>`;
     tr.innerHTML=`
       <td class="lt-mono" style="color:var(--light)">${i+1}</td>
       <td style="font-weight:600">${l.firstName||'—'}</td>
@@ -833,28 +1022,25 @@ function renderLeadsTable(evId, filter){
       <td class="lt-mono">${l.email||'—'}</td>
       <td class="lt-mono">${l.phone||'—'}</td>
       <td>${l.company||'—'}</td>
-      <td style="color:var(--muted);font-size:0.78rem">${l.title||'—'}</td>
+      <td style="color:var(--muted);font-size:.78rem">${l.title||'—'}</td>
       <td style="text-align:center">${li}</td>
-      <td><span class="lt-status ${l.status}" onclick="cycleLeadStatus('${l.id}')" title="Click to change status">${LEAD_LABELS[l.status]||l.status}</span></td>
-      <td style="color:var(--muted);font-size:0.78rem;max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${l.notes||''}">${l.notes||'—'}</td>
-      <td><button class="lt-del" onclick="deleteLead('${l.id}',event)">✕</button></td>`;
+      <td><span class="ls ${l.status}" onclick="cycleStatus('${l.id}')">${LEAD_LABELS[l.status]||l.status}</span></td>
+      <td>${ci}</td>
+      <td style="color:var(--muted);font-size:.76rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.notes||'—'}</td>
+      <td><button class="lt-del" onclick="delLead('${l.id}',event)">✕</button></td>`;
     tbody.appendChild(tr);
   });
 }
-
-function setLeadFilter(filter,evId,el){
-  document.querySelectorAll('.lf-tab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');
-  renderLeadsTable(evId,filter);
+function filterLeads(f,evId,el){
+  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');renderLeads(evId,f);
 }
-
-function cycleLeadStatus(id){
+function cycleStatus(id){
   const l=S.leads.find(x=>x.id===id);
   const idx=LEAD_COLS.indexOf(l.status);
   l.status=LEAD_COLS[(idx+1)%LEAD_COLS.length];
   save();if(currentEventId)renderEventDetail(currentEventId);toast('→ '+LEAD_LABELS[l.status]);
 }
-
 function openLeadModal(evId){
   document.getElementById('ldEventId').value=evId;
   ['ldFirst','ldLast','ldEmail','ldPhone','ldCompany','ldTitle','ldLinkedin','ldNotes'].forEach(i=>document.getElementById(i).value='');
@@ -866,83 +1052,60 @@ function saveLead(){
   const f=id=>document.getElementById(id).value.trim();
   if(!f('ldFirst')){toast('First name required');return;}
   const evId=document.getElementById('ldEventId').value;
-  const me=activeUser();
-  S.leads.push({
-    id:uid(),eventId:evId,owner:me.id,
-    firstName:f('ldFirst'),lastName:f('ldLast'),
-    email:f('ldEmail'),phone:f('ldPhone'),
-    company:f('ldCompany'),title:f('ldTitle'),
-    linkedin:f('ldLinkedin'),notes:f('ldNotes'),
-    status:f('ldStatus')||'leads'
-  });
+  S.leads.push({id:uid(),eventId:evId,firstName:f('ldFirst'),lastName:f('ldLast'),email:f('ldEmail'),phone:f('ldPhone'),company:f('ldCompany'),title:f('ldTitle'),linkedin:f('ldLinkedin'),notes:f('ldNotes'),status:f('ldStatus')||'leads',checkedIn:false});
   save();if(currentEventId===evId)renderEventDetail(evId);renderEvents();closeModal('leadModal');toast('Lead added');
 }
-function deleteLead(id,e){
-  if(e) e.stopPropagation();
+function delLead(id,e){
+  if(e)e.stopPropagation();
   S.leads=S.leads.filter(x=>x.id!==id);
   save();if(currentEventId)renderEventDetail(currentEventId);renderEvents();toast('Lead removed');
 }
 
-// ── DRIVE SHEETS ──────────────────────────────────
+// ═══════════════════════════════════════════════════
+// DRIVE
+// ═══════════════════════════════════════════════════
 function renderDrive(){
-  const grid=document.getElementById('driveGrid');
-  grid.innerHTML='';
-  if(S.driveSheets.length===0){
-    grid.innerHTML='<div class="ev-empty" style="grid-column:1/-1">NO SHEETS ADDED YET — ADD YOUR FIRST GOOGLE SHEET</div>';
-    return;
-  }
+  const g=document.getElementById('driveGrid');g.innerHTML='';
+  if(!S.driveSheets.length){g.innerHTML='<div class="ev-empty" style="grid-column:1/-1">NO SHEETS ADDED YET</div>';return;}
   S.driveSheets.forEach(s=>{
-    const card=document.createElement('div');
-    card.className='drive-card has-link';
-    card.innerHTML=`
-      <div class="drive-card-icon">📊</div>
-      <div class="drive-card-name">${s.name}</div>
-      ${s.desc?`<div class="drive-card-type">${s.desc}</div>`:''}
-      <a class="drive-card-link" href="${s.url}" target="_blank" onclick="event.stopPropagation()">${s.url.length>45?s.url.substring(0,45)+'…':s.url}</a>
-      <button class="drive-card-del" onclick="deleteDriveSheet('${s.id}',event)">✕</button>`;
-    card.onclick=(e)=>{if(e.target.tagName==='A'||e.target.classList.contains('drive-card-del'))return;window.open(s.url,'_blank');};
-    grid.appendChild(card);
+    const c=document.createElement('div');c.className='drive-card';
+    c.innerHTML=`<div class="drive-icon">📊</div><div class="drive-name">${s.name}</div>${s.desc?`<div class="drive-desc">${s.desc}</div>`:''}<div class="drive-url">${s.url.length>45?s.url.substring(0,45)+'…':s.url}</div><button class="drive-del" onclick="delSheet('${s.id}',event)">✕</button>`;
+    c.onclick=e=>{if(e.target.classList.contains('drive-del'))return;window.open(s.url,'_blank');};
+    g.appendChild(c);
   });
 }
-function openDriveAddModal(){
-  ['dsName','dsUrl','dsDesc'].forEach(i=>document.getElementById(i).value='');
-  document.getElementById('driveAddModal').classList.add('open');
-  setTimeout(()=>document.getElementById('dsName').focus(),100);
-}
+function openDriveModal(){['dsName','dsUrl','dsDesc'].forEach(i=>document.getElementById(i).value='');document.getElementById('driveModal').classList.add('open');setTimeout(()=>document.getElementById('dsName').focus(),100);}
 function saveDriveSheet(){
   const f=id=>document.getElementById(id).value.trim();
   if(!f('dsName')||!f('dsUrl')){toast('Name and URL required');return;}
   S.driveSheets.push({id:uid(),name:f('dsName'),url:f('dsUrl'),desc:f('dsDesc')});
-  save();renderDrive();closeModal('driveAddModal');toast('Sheet added');
+  save();renderDrive();closeModal('driveModal');toast('Sheet added');
 }
-function deleteDriveSheet(id,e){
-  e.stopPropagation();
-  S.driveSheets=S.driveSheets.filter(x=>x.id!==id);
-  save();renderDrive();toast('Sheet removed');
-}
+function delSheet(id,e){e.stopPropagation();S.driveSheets=S.driveSheets.filter(x=>x.id!==id);save();renderDrive();toast('Removed');}
 
-// ── TASKS ─────────────────────────────────────────
-function selectPrio(btn){document.querySelectorAll('.prio-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');S.prio=btn.dataset.p;}
+// ═══════════════════════════════════════════════════
+// TASKS
+// ═══════════════════════════════════════════════════
+function selPrio(btn){document.querySelectorAll('.prio-btn').forEach(b=>b.classList.remove('sel'));btn.classList.add('sel');S.prio=btn.dataset.p;}
 function renderTasks(){
   const list=document.getElementById('taskList');
   const open=S.tasks.filter(t=>!t.done).length;
   document.getElementById('taskCount').textContent=open;
   const sorted=[...S.tasks].sort((a,b)=>{const p={high:0,med:1,low:2};return(p[a.prio]||1)-(p[b.prio]||1);});
   list.innerHTML='';
-  if(sorted.length===0){list.innerHTML='<div class="ev-empty" style="padding:2rem">NO TASKS YET</div>';return;}
+  if(!sorted.length){list.innerHTML='<div class="ev-empty" style="padding:2rem">NO TASKS YET</div>';return;}
   sorted.forEach(t=>{
-    const item=document.createElement('div');
-    item.className='task-item'+(t.done?' done':'');
+    const item=document.createElement('div');item.className='task-item'+(t.done?' done':'');
     item.innerHTML=`
-      <div class="task-check" onclick="toggleT('${t.id}')">${t.done?'✓':''}</div>
+      <div class="task-ck" onclick="togTask('${t.id}')">${t.done?'✓':''}</div>
       <div class="task-body">
-        <div class="task-text">${t.text}</div>
-        <div class="task-meta">
-          ${t.due?`<span class="task-date">${fmtDate(t.due)}</span>`:''}
-          <span class="prio-tag ${t.prio==='high'?'high':t.prio==='med'?'med':''}">${t.prio.toUpperCase()}</span>
+        <div class="task-txt">${t.text}</div>
+        <div class="task-meta2">
+          ${t.due?`<span class="task-date2">${fmtDate(t.due)}</span>`:''}
+          <span class="ptag ${t.prio==='high'?'high':t.prio==='med'?'med':''}">${t.prio?.toUpperCase()}</span>
         </div>
       </div>
-      <button class="task-del" onclick="delT('${t.id}')">✕</button>`;
+      <button class="task-del2" onclick="delTask('${t.id}')">✕</button>`;
     list.appendChild(item);
   });
 }
@@ -953,30 +1116,230 @@ function addTask(){
   document.getElementById('taskText').value='';document.getElementById('taskDue').value='';
   save();renderTasks();toast('Task added');
 }
-function toggleT(id){const t=S.tasks.find(x=>x.id===id);if(t){t.done=!t.done;save();renderTasks();}}
-function delT(id){S.tasks=S.tasks.filter(x=>x.id!==id);save();renderTasks();}
+function togTask(id){const t=S.tasks.find(x=>x.id===id);if(t){t.done=!t.done;save();renderTasks();}}
+function delTask(id){S.tasks=S.tasks.filter(x=>x.id!==id);save();renderTasks();}
 
-// ── UTILS ─────────────────────────────────────────
-function fmtDate(d){if(!d)return'';return new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});}
-function fmtDT(d){
-  if(!d)return'';
-  const dt=new Date(d);
-  if(isNaN(dt))return d;
-  return dt.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+(d.includes('T')?' · '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'');
+// ═══════════════════════════════════════════════════
+// WORKOUT ══════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+function getTodayLog(){
+  const k=todayKey();
+  let log=S.workoutLogs.find(l=>l.date===k);
+  if(!log){log={date:k,exercises:[],trackers:{workout:null,diet:null,water:0,nicotine:0}};S.workoutLogs.push(log);}
+  return log;
 }
+
+function renderWorkout(){
+  document.getElementById('todayDateLbl').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+  renderExLibrary();
+  renderTodaySidebar();
+  renderWoHistory();
+}
+
+function renderExLibrary(){
+  // Category buttons
+  const cats=document.getElementById('exCats');cats.innerHTML='';
+  EX_CATS.forEach(c=>{
+    const btn=document.createElement('button');
+    btn.className='ex-cat-btn'+(exCatFilter===c.id?' active':'');
+    btn.textContent=c.name;
+    btn.onclick=()=>{exCatFilter=c.id;renderExLibrary();};
+    cats.appendChild(btn);
+  });
+  // Exercise tiles
+  const grid=document.getElementById('exGrid');grid.innerHTML='';
+  const filtered=exCatFilter==='all'?EXERCISES:EXERCISES.filter(e=>e.cat===exCatFilter);
+  filtered.forEach(ex=>{
+    const tile=document.createElement('div');tile.className='ex-tile';
+    const todayLog=getTodayLog();
+    const logged=todayLog.exercises.filter(e=>e.exId===ex.id);
+    const setsInfo=logged.length?`${logged.reduce((a,e)=>a+e.sets.length,0)} sets today`:'';
+    tile.innerHTML=`<div class="ex-tile-img">${ex.emoji}</div><div class="ex-tile-body"><div class="ex-tile-name">${ex.name}</div><div class="ex-tile-muscle">${ex.muscle}</div>${setsInfo?`<div class="ex-tile-sets">${setsInfo}</div>`:''}</div>`;
+    tile.onclick=()=>openExModal(ex.id);
+    grid.appendChild(tile);
+  });
+}
+
+function openExModal(exId){
+  selectedExId=exId;
+  const ex=EXERCISES.find(e=>e.id===exId);
+  document.getElementById('exModalName').innerHTML=`${ex.emoji} ${ex.name}`;
+  document.getElementById('setRows').innerHTML='';
+  addSetRow();addSetRow();addSetRow(); // Start with 3 sets
+  document.getElementById('exModal').classList.add('open');
+  setTimeout(()=>document.getElementById('setRows').querySelector('input'),100);
+}
+
+function addSetRow(){
+  const rows=document.getElementById('setRows');
+  const idx=rows.children.length+1;
+  const row=document.createElement('div');row.className='set-row';
+  row.innerHTML=`
+    <span class="set-num">Set ${idx}</span>
+    <div class="field" style="flex:1;margin-bottom:0"><label>Reps</label><input type="number" placeholder="10" min="1" class="set-reps"></div>
+    <div class="field" style="flex:1;margin-bottom:0"><label>kg</label><input type="number" placeholder="0" min="0" step="0.5" class="set-weight"></div>
+    <button style="background:none;border:none;color:var(--light);cursor:pointer;font-size:.8rem;margin-top:1.1rem" onclick="this.parentElement.remove();reIndexSets()">✕</button>`;
+  rows.appendChild(row);
+}
+function reIndexSets(){document.querySelectorAll('.set-row .set-num').forEach((n,i)=>n.textContent=`Set ${i+1}`);}
+
+function logExercise(){
+  const rows=document.querySelectorAll('.set-row');
+  const sets=[];
+  rows.forEach(r=>{
+    const reps=parseInt(r.querySelector('.set-reps').value);
+    const weight=parseFloat(r.querySelector('.set-weight').value)||0;
+    if(reps>0)sets.push({reps,weight});
+  });
+  if(!sets.length){toast('Enter at least one set');return;}
+  const log=getTodayLog();
+  log.exercises.push({exId:selectedExId,sets});
+  save();renderTodaySidebar();renderExLibrary();closeModal('exModal');
+  const ex=EXERCISES.find(e=>e.id===selectedExId);
+  toast(`💪 ${ex.name} logged! ${sets.length} set${sets.length!==1?'s':''}`);
+}
+
+function renderTodaySidebar(){
+  const log=getTodayLog();const t=log.trackers;
+  // Workout toggle
+  document.getElementById('wo-y').className='yn-btn'+(t.workout==='yes'?' y-active':'');
+  document.getElementById('wo-n').className='yn-btn'+(t.workout==='no'?' n-active':'');
+  // Diet toggle
+  document.getElementById('diet-y').className='yn-btn'+(t.diet==='yes'?' y-active':'');
+  document.getElementById('diet-n').className='yn-btn'+(t.diet==='no'?' n-active':'');
+  // Water
+  document.getElementById('water-n').textContent=t.water||0;
+  // Nicotine
+  document.getElementById('nic-n').textContent=t.nicotine||0;
+  // Today exercises list
+  const list=document.getElementById('todayExList');list.innerHTML='';
+  if(!log.exercises.length){
+    list.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.62rem;color:var(--light);text-align:center;padding:.5rem">Click an exercise to log</div>';
+    return;
+  }
+  log.exercises.forEach((entry,idx)=>{
+    const ex=EXERCISES.find(e=>e.id===entry.exId)||{name:entry.exId,emoji:'🏋️'};
+    const totalVol=entry.sets.reduce((a,s)=>a+s.reps*(s.weight||0),0);
+    const item=document.createElement('div');item.className='today-ex-item';
+    item.innerHTML=`
+      <span class="today-ex-nm">${ex.emoji} ${ex.name}</span>
+      <span class="today-ex-detail">${entry.sets.length}×${entry.sets.map(s=>s.reps).join('/')} ${totalVol?'@'+Math.max(...entry.sets.map(s=>s.weight))+'kg':''}</span>
+      <button class="today-ex-del" onclick="delTodayEx(${idx})">✕</button>`;
+    list.appendChild(item);
+  });
+}
+
+function delTodayEx(idx){
+  const log=getTodayLog();
+  log.exercises.splice(idx,1);
+  save();renderTodaySidebar();renderExLibrary();
+}
+
+function setTracker(key,val){
+  const log=getTodayLog();log.trackers[key]=val;save();renderTodaySidebar();
+}
+function clearTracker(key){
+  const log=getTodayLog();
+  log.trackers[key]=key==='water'||key==='nicotine'?0:null;
+  save();renderTodaySidebar();
+}
+function adj(key,delta){
+  const log=getTodayLog();
+  log.trackers[key]=Math.max(0,(log.trackers[key]||0)+delta);
+  save();renderTodaySidebar();
+}
+function saveDay(){save();toast('Day saved! 💪');renderWoHistory();}
+
+function renderWoHistory(){
+  const hist=document.getElementById('woHistory');
+  const logs=[...S.workoutLogs]
+    .filter(l=>l.exercises.length>0||Object.values(l.trackers).some(v=>v!==null&&v!==0))
+    .sort((a,b)=>b.date.localeCompare(a.date)).slice(0,30);
+  document.getElementById('histCount').textContent=logs.length;
+  hist.innerHTML='';
+  if(!logs.length){hist.innerHTML='<div class="ev-empty" style="padding:2rem">NO HISTORY YET — START LOGGING!</div>';return;}
+  logs.forEach(log=>{
+    const t=log.trackers;
+    const exNames=log.exercises.map(e=>{const x=EXERCISES.find(x=>x.id===e.exId)||{name:e.exId};return x.name;});
+    const totalSets=log.exercises.reduce((a,e)=>a+e.sets.length,0);
+    const day=document.createElement('div');day.className='wo-day';
+    const badges=[];
+    if(t.workout==='yes')badges.push('<span class="wo-badge g">💪 Trained</span>');
+    else if(t.workout==='no')badges.push('<span class="wo-badge r">❌ Rest</span>');
+    if(t.diet==='yes')badges.push('<span class="wo-badge g">🥗 Diet ✓</span>');
+    else if(t.diet==='no')badges.push('<span class="wo-badge r">🍕 Off diet</span>');
+    if(t.water)badges.push(`<span class="wo-badge b">💧 ${t.water} glasses</span>`);
+    if(t.nicotine)badges.push(`<span class="wo-badge y">🚬 ${t.nicotine} cig${t.nicotine!==1?'s':''}</span>`);
+    day.innerHTML=`
+      <div class="wo-day-head" onclick="this.parentElement.classList.toggle('open')">
+        <span class="wo-day-date">${fmtDate(log.date)}</span>
+        <div class="wo-day-sum">
+          <span>${log.exercises.length} exercise${log.exercises.length!==1?'s':''} · ${totalSets} sets</span>
+          <div class="wo-day-badges">${badges.join('')}</div>
+        </div>
+      </div>
+      <div class="wo-day-body">
+        ${badges.length?`<div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.7rem">${badges.join('')}</div>`:''}
+        ${log.exercises.map((entry,idx)=>{
+          const ex=EXERCISES.find(e=>e.id===entry.exId)||{name:entry.exId,emoji:'🏋️'};
+          const setsStr=entry.sets.map((s,i)=>`Set ${i+1}: ${s.reps} reps${s.weight?' @ '+s.weight+'kg':''}`).join(' · ');
+          return `<div class="wo-ex-row"><span class="wo-ex-name">${ex.emoji} ${ex.name}</span><span class="wo-ex-detail">${setsStr}</span><button class="wo-ex-del" onclick="delHistEx('${log.date}',${idx})">✕</button></div>`;
+        }).join('')}
+      </div>`;
+    hist.appendChild(day);
+  });
+}
+
+function delHistEx(date,idx){
+  const log=S.workoutLogs.find(l=>l.date===date);
+  if(log){log.exercises.splice(idx,1);save();renderWoHistory();}
+}
+
+// ═══════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════
+function fmtDate(d){if(!d)return'';try{return new Date(d+'T00:00:00').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});}catch{return d;}}
+function fmtDT(d){if(!d)return'';try{const dt=new Date(d);if(isNaN(dt))return d;return dt.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+(d.includes('T')?' · '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'');}catch{return d;}}
+function fmtTime(iso){if(!iso)return'';try{return new Date(iso).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}catch{return '';}}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function toast(msg){
-  const el=document.createElement('div');
-  el.className='toast';el.textContent=msg;
+  const el=document.createElement('div');el.className='toast';el.textContent=msg;
   document.getElementById('toasts').appendChild(el);
-  setTimeout(()=>el.remove(),2500);
+  setTimeout(()=>el.remove(),2800);
 }
-['eventModal','leadModal','driveAddModal','userModal'].forEach(id=>{
-  document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id);});
+['eventModal','leadModal','driveModal','exModal','qrModal'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('click',function(e){if(e.target===this)closeModal(id);});
 });
 
-// ── INIT ──────────────────────────────────────────
-load();renderUsers();renderEvents();renderDrive();renderTasks();
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+async function init(){
+  loadLocal();
+  if(S.theme==='dark')setTheme('dark');
+
+  // Check for QR check-in
+  checkURLForCheckin();
+
+  if(!document.getElementById('checkinPage').classList.contains('show')){
+    // Try load from cloud first
+    const syncDot=document.getElementById('syncDot');
+    syncDot.className='sync-dot stale';
+    document.getElementById('syncTxt').textContent='Loading…';
+    const gotCloud=await loadCloud();
+    if(gotCloud){
+      syncDot.className='sync-dot';
+      document.getElementById('syncTxt').textContent='Synced';
+      setTimeout(()=>document.getElementById('syncTxt').textContent='Sync',2000);
+    } else {
+      syncDot.className='sync-dot stale';
+      document.getElementById('syncTxt').textContent='Sync';
+    }
+    renderEvents();renderDrive();renderTasks();
+  }
+}
+init();
 </script>
 </body>
 </html>
