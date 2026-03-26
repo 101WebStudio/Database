@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Base</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff;--surface:#f7f7f5;--surface2:#eeece8;
+  --border:#e0ddd8;--border-dark:#2a2a2a;
+  --text:#0a0a0a;--muted:#666;--light:#aaa;
+  --black:#0a0a0a;--white:#fff;
+  --orange:#E86B25;--orange-light:#fff0e8;--orange-mid:#f5a673;
+  --green:#22c55e;--red:#ef4444;--blue:#3b82f6;
+}
+[data-theme="dark"]{
+  --bg:#0f0e0d;--surface:#1a1714;--surface2:#231f1b;
+  --border:#2e2a26;--border-dark:#E86B25;
+  --text:#f5f0eb;--muted:#9a9088;--light:#5a5248;
+  --black:#f5f0eb;--white:#0f0e0d;--orange-light:#1f1208;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .25s,color .25s;}
+
+/* ── LOGIN SCREEN ─────────────────────────────────── */
+#loginScreen{
+  position:fixed;inset:0;z-index:1000;
+  background:var(--bg);display:flex;align-items:center;justify-content:center;
+}
+.login-box{
+  width:360px;border:2px solid var(--border-dark);border-radius:12px;
+  padding:2.5rem;text-align:center;
+}
+.login-logo{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.3rem;color:var(--orange);letter-spacing:3px;margin-bottom:0.5rem;}
+.login-sub{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:2rem;}
+.login-tabs{display:flex;border:1.5px solid var(--border);border-radius:6px;overflow:hidden;margin-bottom:1.5rem;}
+.login-tab{flex:1;padding:0.5rem;font-family:'IBM Plex Mono',monospace;font-size:0.65rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;cursor:pointer;background:var(--bg);color:var(--muted);border:none;transition:all .15s;}
+.login-tab.active{background:var(--orange);color:#fff;}
+.login-field{margin-bottom:0.75rem;text-align:left;}
+.login-field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:0.3rem;}
+.login-field input,.login-field select{width:100%;font-family:'IBM Plex Mono',monospace;font-size:0.82rem;padding:0.5rem 0.7rem;border:1.5px solid var(--border);border-radius:5px;background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;}
+.login-field input:focus{border-color:var(--orange);}
+.login-btn{width:100%;padding:0.65rem;background:var(--orange);color:#fff;border:none;border-radius:5px;font-family:'IBM Plex Mono',monospace;font-size:0.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:background .15s;margin-top:0.5rem;}
+.login-btn:hover{background:#c85a1a;}
+.login-msg{font-family:'IBM Plex Mono',monospace;font-size:0.65rem;margin-top:0.75rem;min-height:1rem;}
+.login-msg.err{color:var(--red);}
+.login-msg.ok{color:var(--green);}
+#pendingSection{display:none;}
+.pending-notice{font-family:'IBM Plex Mono',monospace;font-size:0.68rem;color:var(--muted);margin-top:0.75rem;line-height:1.6;}
+
+/* ── TOP BAR ──────────────────────────────────────── */
+.top-bar{border-bottom:2px solid var(--border-dark);padding:0.9rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--bg);z-index:100;transition:background .25s,border-color .25s;}
+.top-left{display:flex;align-items:center;gap:1rem;}
+.db-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1rem;letter-spacing:3px;text-transform:uppercase;color:var(--orange);}
+.breadcrumb{font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem;}
+.crumb-link{cursor:pointer;color:var(--muted);transition:color .1s;}
+.crumb-link:hover{color:var(--orange);}
+.crumb-cur{color:var(--text);font-weight:600;}
+.crumb-sep{color:var(--border);}
+.top-right{display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap;}
+.theme-toggle{display:flex;align-items:center;gap:0.4rem;background:var(--surface);border:1.5px solid var(--border);border-radius:20px;padding:0.22rem 0.55rem;cursor:pointer;transition:all .2s;}
+.theme-toggle:hover{border-color:var(--orange);}
+.toggle-track{width:30px;height:17px;border-radius:9px;background:var(--border);position:relative;transition:background .25s;}
+[data-theme="dark"] .toggle-track{background:var(--orange);}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;transition:transform .25s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+[data-theme="dark"] .toggle-thumb{transform:translateX(13px);}
+.toggle-label{font-family:'IBM Plex Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.user-bar{display:flex;align-items:center;gap:0.4rem;flex-wrap:wrap;}
+.user-chip{display:flex;align-items:center;gap:0.35rem;border:1.5px solid var(--border-dark);border-radius:20px;padding:0.22rem 0.65rem;font-size:0.68rem;font-weight:600;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px;cursor:pointer;background:var(--white);color:var(--text);transition:all .15s;}
+.user-chip .dot{width:5px;height:5px;border-radius:50%;background:var(--border-dark);opacity:.4;}
+.user-chip.active-user{background:var(--orange);color:#fff;border-color:var(--orange);}
+.user-chip.active-user .dot{background:#fff;}
+.user-remove{margin-left:3px;font-size:.8rem;opacity:.5;cursor:pointer;transition:opacity .1s;}
+.user-remove:hover{opacity:1;}
+.add-user-btn{border:1.5px dashed var(--border);border-radius:20px;padding:.22rem .65rem;font-size:.68rem;font-family:'IBM Plex Mono',monospace;background:transparent;cursor:pointer;color:var(--muted);transition:all .15s;}
+.add-user-btn:hover{color:var(--orange);border-color:var(--orange);}
+.export-btn{font-family:'IBM Plex Mono',monospace;font-size:.65rem;font-weight:600;padding:.28rem .75rem;border:1.5px solid var(--border);border-radius:4px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .15s;}
+.export-btn:hover{border-color:var(--orange);color:var(--orange);}
+
+/* ── TABS ─────────────────────────────────────────── */
+.tabs{display:flex;border-bottom:1.5px solid var(--border);padding:0 2rem;background:var(--bg);overflow-x:auto;transition:background .25s;}
+.tab{font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:.8rem 1.2rem;cursor:pointer;border-bottom:2.5px solid transparent;margin-bottom:-1.5px;color:var(--muted);transition:all .1s;user-select:none;white-space:nowrap;}
+.tab:hover{color:var(--orange);}
+.tab.active{color:var(--orange);border-bottom-color:var(--orange);}
+
+/* ── PAGES ────────────────────────────────────────── */
+.page{display:none;padding:2rem;}
+.page.active{display:block;}
+
+/* ── COMMON ───────────────────────────────────────── */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.3rem;flex-wrap:wrap;gap:1rem;}
+.section-label{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+.count-tag{font-family:'IBM Plex Mono',monospace;font-size:.68rem;background:var(--orange);color:#fff;padding:2px 7px;margin-left:.5rem;border-radius:3px;}
+.btn{font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:600;letter-spacing:1px;padding:.42rem .9rem;border:1.5px solid var(--border-dark);border-radius:4px;cursor:pointer;transition:all .15s;background:var(--white);color:var(--text);}
+.btn:hover{background:var(--text);color:var(--white);}
+.btn-fill{background:var(--orange);color:#fff;border-color:var(--orange);}
+.btn-fill:hover{background:#c85a1a;border-color:#c85a1a;}
+.btn-ghost{background:transparent;color:var(--muted);border-color:var(--border);}
+.btn-ghost:hover{color:var(--orange);border-color:var(--orange);}
+.inline-form{display:none;background:var(--surface);border:1.5px solid var(--border-dark);border-radius:6px;padding:1.1rem 1.3rem;margin-bottom:1.3rem;animation:fadeIn .15s ease;}
+.inline-form.open{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:.65rem;margin-bottom:.9rem;}
+.field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.25rem;}
+.field input,.field select,.field textarea{width:100%;font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:.4rem .6rem;border:1.5px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--orange);}
+.form-actions{display:flex;gap:.5rem;justify-content:flex-end;}
+
+/* ── EVENT CARDS ──────────────────────────────────── */
+.ev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;}
+.ev-card{border:2px solid var(--border);border-radius:8px;background:var(--bg);cursor:pointer;transition:all .18s;overflow:hidden;}
+.ev-card:hover{border-color:var(--orange);box-shadow:0 4px 20px rgba(232,107,37,.15);transform:translateY(-2px);}
+.ev-card-top{padding:1rem 1.1rem .8rem;}
+.ev-card-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.92rem;margin-bottom:.5rem;}
+.ev-card-pills{display:flex;flex-wrap:wrap;gap:.35rem;}
+.ev-pill{font-family:'IBM Plex Mono',monospace;font-size:.58rem;padding:2px 7px;border:1px solid var(--border);border-radius:3px;color:var(--muted);}
+.ev-card-bottom{padding:.65rem 1.1rem;display:flex;align-items:center;justify-content:space-between;background:var(--surface);border-top:1px solid var(--border);}
+.ev-stage{font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:3px 8px;border:1.5px solid;border-radius:3px;}
+.ev-stage.planning{border-color:var(--border);color:var(--muted);}
+.ev-stage.outreach{border-color:var(--orange-mid);color:var(--orange);}
+.ev-stage.confirmed{background:var(--orange);border-color:var(--orange);color:#fff;}
+.ev-stage.delivered{background:var(--text);border-color:var(--text);color:var(--white);}
+.ev-card-stats{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);}
+.ev-card-del{font-size:.68rem;background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--light);padding:2px 6px;font-family:'IBM Plex Mono',monospace;transition:all .1s;}
+.ev-card-del:hover{border-color:var(--orange);color:var(--orange);}
+.ev-empty{text-align:center;padding:5rem 2rem;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--light);letter-spacing:2px;grid-column:1/-1;}
+
+/* ── EVENT DETAIL ─────────────────────────────────── */
+#eventDetail{display:none;padding:2rem;}
+.ev-hero{background:var(--orange);border-radius:10px;overflow:hidden;margin-bottom:1.5rem;box-shadow:0 4px 24px rgba(232,107,37,.25);}
+.ev-hero-top{padding:1.5rem 1.8rem 1rem;display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.ev-hero-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.3rem;color:#fff;letter-spacing:.5px;}
+.ev-hero-meta{display:flex;gap:1rem;flex-wrap:wrap;margin-top:.4rem;}
+.ev-hero-meta span{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:rgba(255,255,255,.75);}
+.ev-hero-stage{font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border:1.5px solid rgba(255,255,255,.5);border-radius:4px;color:#fff;background:rgba(255,255,255,.15);}
+.ev-hero-actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+.btn-hero{font-family:'IBM Plex Mono',monospace;font-size:.65rem;font-weight:600;letter-spacing:1px;padding:.38rem .85rem;border:1.5px solid rgba(255,255,255,.5);border-radius:4px;cursor:pointer;background:transparent;color:#fff;transition:all .15s;}
+.btn-hero:hover{background:rgba(255,255,255,.2);}
+.ev-timer{display:grid;grid-template-columns:repeat(4,1fr);background:rgba(0,0,0,.2);}
+.timer-cell{text-align:center;padding:1rem .5rem;border-right:1px solid rgba(255,255,255,.1);}
+.timer-cell:last-child{border-right:none;}
+.timer-num{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:2.2rem;color:#fff;line-height:1;letter-spacing:2px;}
+.timer-lbl{font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:.3rem;}
+.timer-footer{padding:.6rem 1.8rem;background:rgba(0,0,0,.15);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.timer-status-txt{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:rgba(255,255,255,.8);}
+.timer-status-txt strong{color:#fff;}
+
+/* ── LEADS TABLE ──────────────────────────────────── */
+.leads-section{margin-bottom:1.5rem;}
+.leads-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem;}
+.leads-section-title{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);}
+.leads-filter-tabs{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.75rem;}
+.lf-tab{font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;}
+.lf-tab:hover{border-color:var(--orange);color:var(--orange);}
+.lf-tab.active{background:var(--orange);border-color:var(--orange);color:#fff;}
+.leads-table-wrap{border:1.5px solid var(--border);border-radius:8px;overflow:auto;margin-bottom:.5rem;}
+.leads-table{width:100%;border-collapse:collapse;min-width:900px;}
+.leads-table thead tr{background:var(--surface);}
+.leads-table thead th{padding:.55rem .85rem;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--border);white-space:nowrap;}
+.leads-table tbody tr{border-bottom:1px solid var(--border);transition:background .08s;}
+.leads-table tbody tr:last-child{border-bottom:none;}
+.leads-table tbody tr:hover{background:var(--orange-light);}
+.leads-table td{padding:.6rem .85rem;font-size:.82rem;vertical-align:middle;}
+.lt-mono{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted);}
+.lt-status{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border:1.5px solid;border-radius:3px;cursor:pointer;transition:all .12s;white-space:nowrap;}
+.lt-status.leads{border-color:var(--orange);color:var(--orange);background:var(--orange-light);}
+.lt-status.deal{border-color:#2e7d32;color:#2e7d32;background:#e8f5e9;}
+[data-theme="dark"] .lt-status.deal{background:#0d1f0e;}
+.lt-status.rejected{border-color:#c62828;color:#c62828;background:#fce4ec;}
+[data-theme="dark"] .lt-status.rejected{background:#1a0509;}
+.lt-status.waiting{border-color:#e65100;color:#e65100;background:#fff8e1;}
+[data-theme="dark"] .lt-status.waiting{background:#1a1200;}
+.lt-del{background:none;border:none;font-size:.7rem;color:var(--light);cursor:pointer;padding:3px 5px;transition:color .1s;border-radius:3px;}
+.lt-del:hover{color:var(--orange);background:var(--orange-light);}
+.leads-empty-row td{text-align:center;padding:3rem;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--light);letter-spacing:2px;}
+.leads-add-row{padding:.5rem;border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);text-align:center;cursor:pointer;transition:all .1s;letter-spacing:1px;}
+.leads-add-row:hover{background:var(--orange-light);color:var(--orange);}
+
+/* ── DRIVE ────────────────────────────────────────── */
+.drive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;}
+.drive-card{border:1.5px solid var(--border);border-radius:6px;background:var(--bg);padding:.9rem 1rem;transition:all .15s;position:relative;display:flex;flex-direction:column;gap:.4rem;cursor:pointer;}
+.drive-card:hover{border-color:var(--orange);box-shadow:0 2px 12px rgba(232,107,37,.1);}
+.drive-card-icon{font-size:1.2rem;}
+.drive-card-name{font-weight:600;font-size:.82rem;}
+.drive-card-type{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+.drive-card-link{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--orange);word-break:break-all;}
+.drive-main-link{display:inline-flex;align-items:center;gap:.5rem;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--orange);text-decoration:none;border:1.5px solid var(--orange);border-radius:4px;padding:.4rem .9rem;transition:all .15s;}
+.drive-main-link:hover{background:var(--orange);color:#fff;}
+.drive-card-del{position:absolute;top:6px;right:8px;background:none;border:none;font-size:.65rem;color:var(--light);cursor:pointer;opacity:0;transition:opacity .1s;}
+.drive-card:hover .drive-card-del{opacity:1;}
+.drive-card-del:hover{color:var(--orange);}
+
+/* ── TASKS ────────────────────────────────────────── */
+.tasks-layout{display:grid;grid-template-columns:1fr 280px;gap:2rem;}
+.task-form-box{border:1.5px solid var(--border);border-radius:6px;padding:1.1rem;background:var(--surface);height:fit-content;}
+.task-form-title{font-family:'IBM Plex Mono',monospace;font-size:.63rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.85rem;}
+.task-input{width:100%;font-family:'IBM Plex Sans',sans-serif;font-size:.84rem;padding:.45rem .65rem;border:1.5px solid var(--border);border-radius:4px;outline:none;background:var(--bg);color:var(--text);margin-bottom:.5rem;transition:border-color .15s;}
+.task-input:focus{border-color:var(--orange);}
+.prio-row{display:flex;gap:.3rem;margin-bottom:.65rem;}
+.prio-btn{flex:1;font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:600;letter-spacing:1px;padding:.3rem;border:1.5px solid var(--border);border-radius:4px;cursor:pointer;background:var(--bg);color:var(--muted);text-transform:uppercase;transition:all .12s;}
+.prio-btn.selected{border-color:var(--orange);background:var(--orange);color:#fff;}
+.task-list{display:flex;flex-direction:column;gap:.4rem;}
+.task-item{display:flex;align-items:flex-start;gap:.65rem;padding:.75rem .85rem;border:1.5px solid var(--border);border-radius:5px;background:var(--bg);transition:border-color .1s;}
+.task-item:hover{border-color:var(--orange);}
+.task-item.done{opacity:.4;}
+.task-check{width:16px;height:16px;min-width:16px;border:1.5px solid var(--border);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:1px;font-size:.65rem;background:var(--bg);transition:all .12s;color:var(--text);}
+.task-check:hover{border-color:var(--orange);}
+.task-item.done .task-check{background:var(--orange);color:#fff;border-color:var(--orange);}
+.task-body{flex:1;}
+.task-text{font-size:.84rem;}
+.task-item.done .task-text{text-decoration:line-through;color:var(--muted);}
+.task-meta{display:flex;gap:.4rem;margin-top:3px;align-items:center;flex-wrap:wrap;}
+.task-date{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--light);}
+.prio-tag{font-family:'IBM Plex Mono',monospace;font-size:.56rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:1px 5px;border:1px solid var(--border);border-radius:3px;color:var(--muted);}
+.prio-tag.high{border-color:var(--orange);color:var(--orange);}
+.prio-tag.med{border-color:var(--muted);color:var(--muted);}
+.task-del{background:none;border:none;color:var(--light);cursor:pointer;font-size:.7rem;padding:2px;opacity:0;transition:opacity .1s;}
+.task-item:hover .task-del{opacity:1;}
+.task-del:hover{color:var(--orange);}
+
+/* ── WORKOUT ──────────────────────────────────────── */
+.workout-layout{display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start;}
+.exercise-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.75rem;margin-bottom:1.5rem;}
+.ex-card{border:1.5px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:all .15s;background:var(--bg);}
+.ex-card:hover{border-color:var(--orange);transform:translateY(-2px);box-shadow:0 4px 16px rgba(232,107,37,.15);}
+.ex-card-img{width:100%;height:110px;object-fit:cover;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:2.5rem;}
+.ex-card-body{padding:.6rem .7rem;}
+.ex-card-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.72rem;letter-spacing:.5px;margin-bottom:2px;}
+.ex-card-muscle{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--orange);letter-spacing:1px;text-transform:uppercase;}
+
+/* DAILY LOG */
+.daily-log-box{border:1.5px solid var(--border);border-radius:8px;overflow:hidden;}
+.daily-log-head{padding:.75rem 1rem;background:var(--surface);border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.daily-log-title{font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.daily-log-date{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);}
+.daily-log-body{padding:1rem;}
+.tracker-row{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);}
+.tracker-row:last-child{border-bottom:none;}
+.tracker-label{font-family:'IBM Plex Mono',monospace;font-size:.7rem;display:flex;align-items:center;gap:.5rem;}
+.tracker-label .icon{font-size:1rem;}
+.tracker-btns{display:flex;gap:.35rem;}
+.t-btn{font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:600;padding:3px 10px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;}
+.t-btn.active-yes{background:var(--green);border-color:var(--green);color:#fff;}
+.t-btn.active-no{background:var(--red);border-color:var(--red);color:#fff;}
+.t-btn:hover{border-color:var(--orange);}
+.water-counter{display:flex;align-items:center;gap:.5rem;}
+.water-num{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1rem;min-width:24px;text-align:center;}
+.water-btn{width:24px;height:24px;border:1.5px solid var(--border);border-radius:4px;background:var(--bg);cursor:pointer;font-size:.9rem;display:flex;align-items:center;justify-content:center;transition:all .12s;}
+.water-btn:hover{border-color:var(--orange);}
+.workout-log-list{margin-top:.75rem;}
+.wlog-item{display:flex;align-items:center;justify-content:space-between;padding:.5rem .6rem;background:var(--surface);border:1px solid var(--border);border-radius:5px;margin-bottom:.4rem;font-size:.78rem;}
+.wlog-ex{font-weight:600;}
+.wlog-sets{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);}
+.wlog-del{background:none;border:none;color:var(--light);cursor:pointer;font-size:.7rem;transition:color .1s;}
+.wlog-del:hover{color:var(--orange);}
+.workout-history{margin-top:1.5rem;}
+.wh-day{border:1.5px solid var(--border);border-radius:6px;margin-bottom:.6rem;overflow:hidden;}
+.wh-day-head{padding:.5rem .85rem;background:var(--surface);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;cursor:pointer;}
+.wh-day-date{font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:700;}
+.wh-day-summary{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);}
+.wh-day-body{padding:.6rem .85rem;display:none;}
+.wh-day-body.open{display:block;}
+.wh-tracker-badges{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.5rem;}
+.wh-badge{font-family:'IBM Plex Mono',monospace;font-size:.58rem;padding:2px 7px;border-radius:3px;border:1px solid;}
+.wh-badge.yes{border-color:var(--green);color:var(--green);}
+.wh-badge.no{border-color:var(--red);color:var(--red);}
+.wh-badge.water{border-color:var(--blue);color:var(--blue);}
+.wh-ex-list{font-size:.78rem;color:var(--muted);}
+
+/* ── ADMIN PANEL ──────────────────────────────────── */
+.pending-list{display:flex;flex-direction:column;gap:.5rem;}
+.pending-item{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1rem;border:1.5px solid var(--border);border-radius:6px;background:var(--bg);}
+.pending-item-info{font-family:'IBM Plex Mono',monospace;font-size:.72rem;}
+.pending-item-role{font-size:.62rem;color:var(--muted);margin-top:2px;}
+.pending-actions{display:flex;gap:.4rem;}
+
+/* ── MODAL ────────────────────────────────────────── */
+.overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.5);align-items:center;justify-content:center;}
+.overlay.open{display:flex;}
+.modal{background:var(--bg);border:2px solid var(--border-dark);border-radius:10px;padding:1.8rem;width:400px;max-width:95vw;animation:popIn .15s ease;max-height:90vh;overflow-y:auto;}
+@keyframes popIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.modal h3{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.1rem;color:var(--orange);}
+.modal .field{margin-bottom:.6rem;}
+.modal-actions{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1.1rem;}
+.modal-log-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1rem;margin-bottom:1rem;color:var(--orange);}
+
+/* TOASTS */
+.toasts{position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;display:flex;flex-direction:column;gap:.35rem;}
+.toast{background:var(--orange);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:.7rem;letter-spacing:.5px;padding:.6rem 1rem;border-radius:5px;animation:fadeIn .2s ease;box-shadow:0 2px 12px rgba(232,107,37,.3);}
+
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+@media(max-width:900px){.workout-layout{grid-template-columns:1fr;}.tasks-layout{grid-template-columns:1fr;}.ev-timer{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:500px){.ev-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN SCREEN ════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">DATA BASE</div>
+    <div class="login-sub">IT Reader · Delegate Hub</div>
+    <div class="login-tabs">
+      <button class="login-tab active" onclick="switchLoginTab('login',this)">Sign In</button>
+      <button class="login-tab" onclick="switchLoginTab('register',this)">Register</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div id="loginForm">
+      <div class="login-field"><label>Your Name</label>
+        <select id="loginUserSelect"></select>
+      </div>
+      <div class="login-field"><label>PIN</label>
+        <input type="password" id="loginPin" placeholder="Enter your PIN" maxlength="6" onkeydown="if(event.key==='Enter')doLogin()">
+      </div>
+      <button class="login-btn" onclick="doLogin()">ENTER</button>
+      <div class="login-msg" id="loginMsg"></div>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div id="registerForm" style="display:none">
+      <div class="login-field"><label>Full Name *</label><input id="regName" placeholder="Your name"></div>
+      <div class="login-field"><label>Role</label><input id="regRole" placeholder="e.g. Sales Manager"></div>
+      <div class="login-field"><label>Create PIN (4–6 digits) *</label><input type="password" id="regPin" placeholder="Choose a PIN" maxlength="6"></div>
+      <button class="login-btn" onclick="doRegister()">REQUEST ACCESS</button>
+      <div id="pendingSection">
+        <div class="pending-notice">✅ Request sent! Waiting for admin approval.<br>Ask Andrit to approve your account.</div>
+      </div>
+      <div class="login-msg" id="regMsg"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APP ════════════════════════════════════════ -->
+<div id="app" style="display:none">
+
+<div class="top-bar">
+  <div class="top-left">
+    <div class="db-title">Data Base</div>
+    <div class="breadcrumb" id="breadcrumb"></div>
+  </div>
+  <div class="top-right">
+    <div class="theme-toggle" onclick="toggleTheme()">
+      <div class="toggle-track"><div class="toggle-thumb"></div></div>
+      <span class="toggle-label" id="themeLabel">Light</span>
+    </div>
+    <button class="export-btn" onclick="exportData()" title="Export all data">⬇ Export</button>
+    <label class="export-btn" style="cursor:pointer" title="Import data">⬆ Import<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
+    <div class="user-bar" id="userBar"></div>
+  </div>
+</div>
+
+<div class="tabs" id="mainTabs">
+  <div class="tab active" onclick="switchTab('events',this)">Events</div>
+  <div class="tab" onclick="switchTab('drive',this)">Drive</div>
+  <div class="tab" onclick="switchTab('tasks',this)">Tasks</div>
+  <div class="tab" onclick="switchTab('workout',this)">Workout</div>
+  <div class="tab" id="adminTab" style="display:none" onclick="switchTab('admin',this)">Admin ●</div>
+</div>
+
+<!-- EVENTS -->
+<div class="page active" id="tab-events">
+  <div class="section-head">
+    <div><span class="section-label">Events</span><span class="count-tag" id="evCount">0</span></div>
+    <button class="btn btn-fill" onclick="openEventModal()">+ New Event</button>
+  </div>
+  <div class="ev-grid" id="evGrid"></div>
+</div>
+
+<!-- EVENT DETAIL -->
+<div id="eventDetail"></div>
+
+<!-- DRIVE -->
+<div class="page" id="tab-drive">
+  <div class="section-head">
+    <div><span class="section-label">Google Drive</span></div>
+    <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
+      <a class="drive-main-link" href="https://drive.google.com/drive/folders/1vPYsEjwgPQ33Uj4m624lJ07einY7ZW6D" target="_blank">📂 Open Drive Folder</a>
+      <button class="btn btn-fill" onclick="openDriveModal()">+ Add Sheet</button>
+    </div>
+  </div>
+  <div class="drive-grid" id="driveGrid"></div>
+</div>
+
+<!-- TASKS -->
+<div class="page" id="tab-tasks">
+  <div class="tasks-layout">
+    <div>
+      <div class="section-head"><span class="section-label">Daily Tasks<span class="count-tag" id="taskCount">0</span></span></div>
+      <div class="task-list" id="taskList"></div>
+    </div>
+    <div class="task-form-box">
+      <div class="task-form-title">New Task</div>
+      <input class="task-input" id="taskText" placeholder="Task description…" onkeydown="if(event.key==='Enter')addTask()">
+      <input class="task-input" id="taskDue" type="date">
+      <div class="prio-row">
+        <button class="prio-btn" data-p="low" onclick="selectPrio(this)">Low</button>
+        <button class="prio-btn selected" data-p="med" onclick="selectPrio(this)">Med</button>
+        <button class="prio-btn" data-p="high" onclick="selectPrio(this)">High</button>
+      </div>
+      <button class="btn btn-fill" style="width:100%" onclick="addTask()">Add Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- WORKOUT -->
+<div class="page" id="tab-workout">
+  <div class="workout-layout">
+    <div>
+      <!-- EXERCISES -->
+      <div class="section-head">
+        <span class="section-label">Exercises</span>
+      </div>
+      <div class="exercise-gallery" id="exerciseGallery"></div>
+
+      <!-- HISTORY -->
+      <div class="section-head" style="margin-top:1rem">
+        <span class="section-label">Workout History</span>
+      </div>
+      <div class="workout-history" id="workoutHistory"></div>
+    </div>
+
+    <!-- DAILY LOG SIDEBAR -->
+    <div>
+      <div class="daily-log-box">
+        <div class="daily-log-head">
+          <span class="daily-log-title">Today's Log</span>
+          <span class="daily-log-date" id="todayDate"></span>
+        </div>
+        <div class="daily-log-body">
+          <!-- TRACKERS -->
+          <div class="tracker-row">
+            <span class="tracker-label"><span class="icon">🥗</span> Diet</span>
+            <div class="tracker-btns">
+              <button class="t-btn" id="diet-yes" onclick="setTracker('diet','yes')">✓ Yes</button>
+              <button class="t-btn" id="diet-no" onclick="setTracker('diet','no')">✕ No</button>
+            </div>
+          </div>
+          <div class="tracker-row">
+            <span class="tracker-label"><span class="icon">💧</span> Water</span>
+            <div class="water-counter">
+              <button class="water-btn" onclick="adjustWater(-1)">−</button>
+              <span class="water-num" id="waterNum">0</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted)">glasses</span>
+              <button class="water-btn" onclick="adjustWater(1)">+</button>
+            </div>
+          </div>
+          <div class="tracker-row">
+            <span class="tracker-label"><span class="icon">🚬</span> Nicotine</span>
+            <div class="tracker-btns">
+              <button class="t-btn" id="nic-yes" onclick="setTracker('nicotine','yes')">Yes</button>
+              <button class="t-btn" id="nic-no" onclick="setTracker('nicotine','no')">✓ No</button>
+            </div>
+          </div>
+          <div class="tracker-row">
+            <span class="tracker-label"><span class="icon">🏋️</span> Workout</span>
+            <div class="tracker-btns">
+              <button class="t-btn" id="wo-yes" onclick="setTracker('workout','yes')">✓ Yes</button>
+              <button class="t-btn" id="wo-no" onclick="setTracker('workout','no')">✕ No</button>
+            </div>
+          </div>
+
+          <!-- TODAY'S EXERCISES LOG -->
+          <div style="margin-top:.85rem;margin-bottom:.4rem;font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);">Today's Exercises</div>
+          <div class="workout-log-list" id="todayExercises"></div>
+          <button class="btn btn-fill" style="width:100%;margin-top:.5rem" onclick="saveWorkoutDay()">💾 Save Day</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN -->
+<div class="page" id="tab-admin">
+  <div class="section-head">
+    <span class="section-label">Admin Panel — Pending Requests</span>
+  </div>
+  <div class="pending-list" id="pendingList"></div>
+  <div style="margin-top:2rem">
+    <div class="section-head"><span class="section-label">All Users</span></div>
+    <div class="pending-list" id="allUsersList"></div>
+  </div>
+</div>
+
+</div><!-- end #app -->
+
+<!-- MODALS -->
+<div class="overlay" id="eventModal">
+  <div class="modal">
+    <h3 id="evModalTitle">New Event</h3>
+    <div class="field"><label>Event Name *</label><input id="evName" placeholder="Oslo Tech Summit 2026"></div>
+    <div class="field"><label>Region / City *</label><input id="evRegion" placeholder="Oslo, Norway"></div>
+    <div class="field"><label>Start Date & Time</label><input id="evDate" type="datetime-local"></div>
+    <div class="field"><label>End Date & Time</label><input id="evDateEnd" type="datetime-local"></div>
+    <div class="field"><label>Client / Sponsor</label><input id="evClient" placeholder="Acme Corp"></div>
+    <div class="field"><label>Notes</label><input id="evNotes" placeholder="Optional notes"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('eventModal')">Cancel</button>
+      <button class="btn btn-fill" onclick="saveEvent()">Save Event</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="leadModal">
+  <div class="modal" style="width:460px">
+    <h3>Add Lead</h3>
+    <div class="form-grid" style="grid-template-columns:repeat(2,1fr)">
+      <div class="field"><label>First Name *</label><input id="ldFirst" placeholder="John"></div>
+      <div class="field"><label>Last Name *</label><input id="ldLast" placeholder="Smith"></div>
+      <div class="field"><label>Email</label><input id="ldEmail" placeholder="john@co.com" type="email"></div>
+      <div class="field"><label>Phone</label><input id="ldPhone" placeholder="+1 555 000 0000"></div>
+      <div class="field"><label>Company</label><input id="ldCompany" placeholder="Acme Corp"></div>
+      <div class="field"><label>Job Title</label><input id="ldTitle" placeholder="CTO"></div>
+      <div class="field"><label>LinkedIn</label><input id="ldLinkedin" placeholder="linkedin.com/in/..."></div>
+      <div class="field"><label>Status</label>
+        <select id="ldStatus"><option value="leads">Leads</option><option value="deal">Deal</option><option value="rejected">Rejected</option><option value="waiting">Waiting</option></select>
+      </div>
+    </div>
+    <div class="field"><label>Notes</label><input id="ldNotes" placeholder="Optional notes"></div>
+    <input type="hidden" id="ldEventId">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('leadModal')">Cancel</button>
+      <button class="btn btn-fill" onclick="saveLead()">Save Lead</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="driveModal">
+  <div class="modal">
+    <h3>Add Google Sheet</h3>
+    <div class="field"><label>Sheet Name *</label><input id="dsName" placeholder="Cloud Summit — Delegates"></div>
+    <div class="field"><label>Google Sheets URL *</label><input id="dsUrl" placeholder="https://docs.google.com/spreadsheets/d/..."></div>
+    <div class="field"><label>Description</label><input id="dsDesc" placeholder="e.g. Oslo delegate list"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('driveModal')">Cancel</button>
+      <button class="btn btn-fill" onclick="saveDriveSheet()">Add Sheet</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="logExModal">
+  <div class="modal">
+    <h3>Log Exercise</h3>
+    <div class="modal-log-name" id="logExName"></div>
+    <div class="field"><label>Sets</label><input id="logSets" type="number" placeholder="3" min="1"></div>
+    <div class="field"><label>Reps</label><input id="logReps" type="number" placeholder="10" min="1"></div>
+    <div class="field"><label>Weight (kg)</label><input id="logWeight" type="number" placeholder="60" min="0"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('logExModal')">Cancel</button>
+      <button class="btn btn-fill" onclick="addExerciseLog()">Log It</button>
+    </div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts"></div>
+
+<script>
+// ── EXERCISES ─────────────────────────────────────
+const EXERCISES=[
+  {id:'bench',name:'Bench Press',muscle:'Chest',emoji:'🏋️'},
+  {id:'squat',name:'Squat',muscle:'Legs',emoji:'🦵'},
+  {id:'deadlift',name:'Deadlift',muscle:'Back',emoji:'💪'},
+  {id:'legpress',name:'Leg Press',muscle:'Legs',emoji:'🦵'},
+  {id:'ohp',name:'Overhead Press',muscle:'Shoulders',emoji:'🏋️'},
+  {id:'row',name:'Barbell Row',muscle:'Back',emoji:'🔙'},
+  {id:'pullup',name:'Pull Up',muscle:'Back',emoji:'🔝'},
+  {id:'curl',name:'Bicep Curl',muscle:'Arms',emoji:'💪'},
+  {id:'tricep',name:'Tricep Push',muscle:'Arms',emoji:'💪'},
+  {id:'lunge',name:'Lunges',muscle:'Legs',emoji:'🦵'},
+  {id:'incline',name:'Incline Press',muscle:'Chest',emoji:'🏋️'},
+  {id:'cable',name:'Cable Fly',muscle:'Chest',emoji:'🔀'},
+];
+const LEAD_COLS=['leads','deal','rejected','waiting'];
+const LEAD_LABELS={leads:'LEADS',deal:'DEAL',rejected:'REJECTED',waiting:'WAITING'};
+const EV_STAGES=['planning','outreach','confirmed','delivered'];
+const EV_LABELS={planning:'PLANNING',outreach:'OUTREACH',confirmed:'CONFIRMED',delivered:'DELIVERED'};
+
+// ── STATE ─────────────────────────────────────────
+let S={
+  users:[{id:'andrit',name:'Andrit',role:'Admin · Delegate Acquisition',pin:'1234',active:true,approved:true}],
+  pendingUsers:[],
+  events:[],leads:[],tasks:[],driveSheets:[],
+  workoutLogs:[],  // [{date, exercises:[{id,sets,reps,weight}], trackers:{diet,water,nicotine,workout}}]
+  prio:'med',theme:'light'
+};
+let timerInterval=null;
+let editingEventId=null;
+let currentEventId=null;
+let currentUser=null;
+let selectedExerciseId=null;
+let todayKey=()=>new Date().toISOString().split('T')[0];
+
+// ── PERSIST ───────────────────────────────────────
+function save(){localStorage.setItem('db6',JSON.stringify(S));}
+function load(){
+  const r=localStorage.getItem('db6');
+  if(r) try{S=JSON.parse(r);}catch(e){}
+  if(!S.users) S.users=[];
+  if(!S.pendingUsers) S.pendingUsers=[];
+  const a=S.users.find(u=>u.id==='andrit');
+  if(!a) S.users.unshift({id:'andrit',name:'Andrit',role:'Admin · Delegate Acquisition',pin:'1234',active:true,approved:true});
+  else if(!a.pin) a.pin='1234';
+  if(!S.events) S.events=[];
+  if(!S.leads) S.leads=[];
+  if(!S.tasks) S.tasks=[];
+  if(!S.driveSheets) S.driveSheets=[];
+  if(!S.workoutLogs) S.workoutLogs=[];
+}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
+
+// ── LOGIN ──────────────────────────────────────────
+function switchLoginTab(tab,el){
+  document.querySelectorAll('.login-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('loginForm').style.display=tab==='login'?'block':'none';
+  document.getElementById('registerForm').style.display=tab==='register'?'block':'none';
+  document.getElementById('loginMsg').textContent='';
+  document.getElementById('regMsg').textContent='';
+}
+
+function populateLoginSelect(){
+  const sel=document.getElementById('loginUserSelect');
+  sel.innerHTML='';
+  S.users.filter(u=>u.approved!==false).forEach(u=>{
+    const o=document.createElement('option');
+    o.value=u.id;o.textContent=u.name;
+    sel.appendChild(o);
+  });
+}
+
+function doLogin(){
+  const uid_=document.getElementById('loginUserSelect').value;
+  const pin=document.getElementById('loginPin').value.trim();
+  const msg=document.getElementById('loginMsg');
+  const user=S.users.find(u=>u.id===uid_);
+  if(!user){msg.className='login-msg err';msg.textContent='User not found.';return;}
+  if(user.pin!==pin){msg.className='login-msg err';msg.textContent='Wrong PIN.';return;}
+  currentUser=user;
+  S.users.forEach(u=>u.active=false);user.active=true;
+  save();
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='block';
+  if(currentUser.id==='andrit') document.getElementById('adminTab').style.display='block';
+  if(S.theme==='dark') setTheme('dark');
+  renderAll();
+}
+
+function doRegister(){
+  const name=document.getElementById('regName').value.trim();
+  const role=document.getElementById('regRole').value.trim();
+  const pin=document.getElementById('regPin').value.trim();
+  const msg=document.getElementById('regMsg');
+  if(!name||!pin){msg.className='login-msg err';msg.textContent='Name and PIN required.';return;}
+  if(pin.length<4){msg.className='login-msg err';msg.textContent='PIN must be at least 4 digits.';return;}
+  if(S.pendingUsers.find(u=>u.name.toLowerCase()===name.toLowerCase())){msg.className='login-msg err';msg.textContent='Already requested.';return;}
+  S.pendingUsers.push({id:uid(),name,role,pin,requestedAt:new Date().toISOString()});
+  save();
+  document.getElementById('pendingSection').style.display='block';
+  msg.className='login-msg ok';msg.textContent='';
+  document.getElementById('regName').value='';
+  document.getElementById('regRole').value='';
+  document.getElementById('regPin').value='';
+}
+
+// ── ADMIN ──────────────────────────────────────────
+function renderAdmin(){
+  const list=document.getElementById('pendingList');
+  list.innerHTML='';
+  if(S.pendingUsers.length===0){
+    list.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.72rem;color:var(--muted);padding:1rem">No pending requests.</div>';
+  } else {
+    S.pendingUsers.forEach(u=>{
+      const item=document.createElement('div');
+      item.className='pending-item';
+      item.innerHTML=`
+        <div class="pending-item-info">
+          ${u.name}
+          <div class="pending-item-role">${u.role||'No role'} · Requested ${fmtDate(u.requestedAt?.split('T')[0])}</div>
+        </div>
+        <div class="pending-actions">
+          <button class="btn btn-fill" style="font-size:.62rem;padding:.3rem .7rem" onclick="approveUser('${u.id}')">✓ Approve</button>
+          <button class="btn btn-ghost" style="font-size:.62rem;padding:.3rem .7rem" onclick="rejectUser('${u.id}')">✕ Reject</button>
+        </div>`;
+      list.appendChild(item);
+    });
+  }
+  // All users
+  const all=document.getElementById('allUsersList');
+  all.innerHTML='';
+  S.users.forEach(u=>{
+    const item=document.createElement('div');
+    item.className='pending-item';
+    const isMe=u.id===currentUser?.id;
+    item.innerHTML=`
+      <div class="pending-item-info">
+        ${u.name} ${u.id==='andrit'?'👑':''}
+        <div class="pending-item-role">${u.role||'No role'}</div>
+      </div>
+      <div class="pending-actions">
+        ${!isMe&&u.id!=='andrit'?`<button class="btn btn-ghost" style="font-size:.62rem;padding:.3rem .7rem;color:var(--red);border-color:var(--red)" onclick="removeUserAdmin('${u.id}')">Remove</button>`:''}
+      </div>`;
+    all.appendChild(item);
+  });
+  // update admin tab badge
+  const tab=document.getElementById('adminTab');
+  if(tab) tab.textContent=S.pendingUsers.length>0?`Admin ● (${S.pendingUsers.length})`:'Admin';
+}
+
+function approveUser(id){
+  const u=S.pendingUsers.find(x=>x.id===id);
+  if(!u) return;
+  S.users.push({...u,approved:true});
+  S.pendingUsers=S.pendingUsers.filter(x=>x.id!==id);
+  save();renderAdmin();populateLoginSelect();toast(`✅ ${u.name} approved`);
+}
+function rejectUser(id){
+  S.pendingUsers=S.pendingUsers.filter(x=>x.id!==id);
+  save();renderAdmin();toast('Request rejected');
+}
+function removeUserAdmin(id){
+  if(!confirm('Remove this user?')) return;
+  S.users=S.users.filter(u=>u.id!==id);
+  save();renderAdmin();renderUsers();toast('User removed');
+}
+
+// ── THEME ──────────────────────────────────────────
+function toggleTheme(){const c=document.documentElement.getAttribute('data-theme');setTheme(c==='dark'?'light':'dark');}
+function setTheme(t){document.documentElement.setAttribute('data-theme',t);S.theme=t;document.getElementById('themeLabel').textContent=t==='dark'?'Dark':'Light';save();}
+
+// ── NAVIGATION ────────────────────────────────────
+function switchTab(name,el){
+  closeEventDetail();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(el) el.classList.add('active');
+  updateBreadcrumb();
+  if(name==='workout') renderWorkout();
+  if(name==='admin') renderAdmin();
+}
+function openEventDetail(evId){
+  currentEventId=evId;
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('mainTabs').style.display='none';
+  document.getElementById('eventDetail').style.display='block';
+  renderEventDetail(evId);updateBreadcrumb();
+}
+function closeEventDetail(){
+  currentEventId=null;
+  if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
+  document.getElementById('eventDetail').style.display='none';
+  document.getElementById('mainTabs').style.display='flex';
+  updateBreadcrumb();
+}
+function goBackToEvents(){
+  closeEventDetail();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-events').classList.add('active');
+  document.querySelectorAll('.tab')[0].classList.add('active');
+}
+function updateBreadcrumb(){
+  const bc=document.getElementById('breadcrumb');
+  if(currentEventId){
+    const ev=S.events.find(e=>e.id===currentEventId);
+    bc.innerHTML=`<span class="crumb-link" onclick="goBackToEvents()">Events</span><span class="crumb-sep">/</span><span class="crumb-cur">${ev?ev.name:'Event'}</span>`;
+  } else bc.innerHTML='';
+}
+
+// ── USERS BAR ─────────────────────────────────────
+function activeUser(){return currentUser||S.users[0];}
+function renderUsers(){
+  const bar=document.getElementById('userBar');
+  bar.innerHTML='';
+  const me=activeUser();
+  // Just show current user chip + logout
+  const c=document.createElement('div');
+  c.className='user-chip active-user';
+  c.innerHTML=`<span class="dot"></span>${me.name.toUpperCase()}`;
+  bar.appendChild(c);
+  const out=document.createElement('button');
+  out.className='add-user-btn';out.textContent='Sign Out';
+  out.onclick=()=>{currentUser=null;location.reload();};
+  bar.appendChild(out);
+}
+
+// ── EVENTS ────────────────────────────────────────
+function renderEvents(){
+  const me=activeUser();
+  const myEv=me.id==='andrit'?S.events:S.events.filter(e=>e.owner===me.id);
+  document.getElementById('evCount').textContent=myEv.length;
+  const grid=document.getElementById('evGrid');grid.innerHTML='';
+  if(myEv.length===0){grid.innerHTML='<div class="ev-empty">NO EVENTS YET — CREATE YOUR FIRST ONE</div>';return;}
+  myEv.forEach(ev=>{
+    const leads=S.leads.filter(l=>l.eventId===ev.id);
+    const deals=leads.filter(l=>l.status==='deal').length;
+    const card=document.createElement('div');card.className='ev-card';
+    const pills=[];
+    if(ev.region) pills.push(ev.region);
+    if(ev.date) pills.push(fmtDT(ev.date));
+    if(ev.client) pills.push(ev.client);
+    card.innerHTML=`
+      <div class="ev-card-top">
+        <div class="ev-card-name">${ev.name}</div>
+        <div class="ev-card-pills">${pills.map(p=>`<span class="ev-pill">${p}</span>`).join('')}</div>
+      </div>
+      <div class="ev-card-bottom">
+        <span class="ev-stage ${ev.stage||'planning'}">${EV_LABELS[ev.stage||'planning']}</span>
+        <span class="ev-card-stats">${leads.length} lead${leads.length!==1?'s':''} · ${deals} deal${deals!==1?'s':''}</span>
+        <button class="ev-card-del" onclick="deleteEvent('${ev.id}',event)">✕</button>
+      </div>`;
+    card.onclick=(e)=>{if(e.target.classList.contains('ev-card-del'))return;openEventDetail(ev.id);};
+    grid.appendChild(card);
+  });
+}
+function openEventModal(id){
+  editingEventId=id||null;
+  if(id){
+    const ev=S.events.find(e=>e.id===id);
+    document.getElementById('evModalTitle').textContent='Edit Event';
+    document.getElementById('evName').value=ev.name;
+    document.getElementById('evRegion').value=ev.region||'';
+    document.getElementById('evDate').value=ev.date||'';
+    document.getElementById('evDateEnd').value=ev.dateEnd||'';
+    document.getElementById('evClient').value=ev.client||'';
+    document.getElementById('evNotes').value=ev.notes||'';
+  } else {
+    document.getElementById('evModalTitle').textContent='New Event';
+    ['evName','evRegion','evDate','evDateEnd','evClient','evNotes'].forEach(i=>document.getElementById(i).value='');
+  }
+  document.getElementById('eventModal').classList.add('open');
+  setTimeout(()=>document.getElementById('evName').focus(),100);
+}
+function saveEvent(){
+  const f=id=>document.getElementById(id).value.trim();
+  if(!f('evName')||!f('evRegion')){toast('Event name and region required');return;}
+  const me=activeUser();
+  if(editingEventId){
+    const ev=S.events.find(e=>e.id===editingEventId);
+    ev.name=f('evName');ev.region=f('evRegion');ev.date=f('evDate');ev.dateEnd=f('evDateEnd');ev.client=f('evClient');ev.notes=f('evNotes');
+    toast('Event updated');
+    if(currentEventId===editingEventId) renderEventDetail(editingEventId);
+  } else {
+    S.events.push({id:uid(),owner:me.id,name:f('evName'),region:f('evRegion'),date:f('evDate'),dateEnd:f('evDateEnd'),client:f('evClient'),notes:f('evNotes'),stage:'planning'});
+    toast('Event created — click card to open');
+  }
+  save();renderEvents();closeModal('eventModal');
+}
+function deleteEvent(id,e){
+  if(e) e.stopPropagation();
+  if(!confirm('Delete this event?')) return;
+  S.events=S.events.filter(ev=>ev.id!==id);S.leads=S.leads.filter(l=>l.eventId!==id);
+  save();renderEvents();toast('Event deleted');
+}
+function advanceEvent(id){
+  const ev=S.events.find(x=>x.id===id);
+  const idx=EV_STAGES.indexOf(ev.stage||'planning');
+  if(idx<EV_STAGES.length-1){ev.stage=EV_STAGES[idx+1];save();renderEvents();renderEventDetail(id);toast('→ '+EV_LABELS[ev.stage]);}
+  else toast('Already DELIVERED');
+}
+
+// ── EVENT DETAIL ──────────────────────────────────
+function renderEventDetail(evId){
+  const ev=S.events.find(e=>e.id===evId);if(!ev)return;
+  const leads=S.leads.filter(l=>l.eventId===evId);
+  const detail=document.getElementById('eventDetail');
+  const now=new Date();
+  const evStart=ev.date?new Date(ev.date):null;
+  const evEnd=ev.dateEnd?new Date(ev.dateEnd):null;
+  let statusTxt='No date set';
+  if(evStart){
+    if(now<evStart) statusTxt=`<strong>STARTS IN</strong> — ${fmtDT(ev.date)}`;
+    else if(evEnd&&now<evEnd) statusTxt=`<strong>🔴 LIVE NOW</strong> — ends ${fmtDT(ev.dateEnd)}`;
+    else statusTxt=`<strong>ENDED</strong> — ${fmtDT(ev.date)}`;
+  }
+  const metaParts=[];
+  if(ev.region) metaParts.push('📍 '+ev.region);
+  if(ev.date) metaParts.push('🗓 '+fmtDT(ev.date));
+  if(ev.client) metaParts.push('🏢 '+ev.client);
+  if(ev.notes) metaParts.push('📝 '+ev.notes);
+
+  detail.innerHTML=`
+    <div style="padding:2rem">
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+        <button class="btn" onclick="goBackToEvents()">← Back</button>
+        <button class="btn" onclick="openEventModal('${ev.id}')">✎ Edit</button>
+        <button class="btn btn-fill" onclick="advanceEvent('${ev.id}')">→ Advance Stage</button>
+      </div>
+      <div class="ev-hero">
+        <div class="ev-hero-top">
+          <div>
+            <div class="ev-hero-name">${ev.name}</div>
+            <div class="ev-hero-meta">${metaParts.map(m=>`<span>${m}</span>`).join('')}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:.5rem;align-items:flex-end">
+            <span class="ev-hero-stage">${EV_LABELS[ev.stage||'planning']}</span>
+            <button class="btn-hero" onclick="openLeadModal('${ev.id}')">+ Add Lead</button>
+          </div>
+        </div>
+        <div class="ev-timer">
+          <div class="timer-cell"><div class="timer-num" id="t-days">--</div><div class="timer-lbl">Days</div></div>
+          <div class="timer-cell"><div class="timer-num" id="t-hours">--</div><div class="timer-lbl">Hours</div></div>
+          <div class="timer-cell"><div class="timer-num" id="t-mins">--</div><div class="timer-lbl">Mins</div></div>
+          <div class="timer-cell"><div class="timer-num" id="t-secs">--</div><div class="timer-lbl">Secs</div></div>
+        </div>
+        <div class="timer-footer">
+          <span class="timer-status-txt">${statusTxt}</span>
+          <span class="timer-status-txt">${leads.length} total leads</span>
+        </div>
+      </div>
+      <div class="leads-section">
+        <div class="leads-section-head">
+          <span class="leads-section-title">Leads<span class="count-tag">${leads.length}</span></span>
+          <button class="btn btn-fill" onclick="openLeadModal('${ev.id}')">+ Add Lead</button>
+        </div>
+        <div class="leads-filter-tabs" id="leadsFilterTabs">
+          <div class="lf-tab active" onclick="setLeadFilter('all','${ev.id}',this)">ALL <span style="opacity:.7">${leads.length}</span></div>
+          <div class="lf-tab" onclick="setLeadFilter('leads','${ev.id}',this)">LEADS <span style="opacity:.7">${leads.filter(l=>l.status==='leads').length}</span></div>
+          <div class="lf-tab" onclick="setLeadFilter('deal','${ev.id}',this)">DEAL <span style="opacity:.7">${leads.filter(l=>l.status==='deal').length}</span></div>
+          <div class="lf-tab" onclick="setLeadFilter('rejected','${ev.id}',this)">REJECTED <span style="opacity:.7">${leads.filter(l=>l.status==='rejected').length}</span></div>
+          <div class="lf-tab" onclick="setLeadFilter('waiting','${ev.id}',this)">WAITING <span style="opacity:.7">${leads.filter(l=>l.status==='waiting').length}</span></div>
+        </div>
+        <div class="leads-table-wrap">
+          <table class="leads-table"><thead><tr>
+            <th>#</th><th>First Name</th><th>Last Name</th><th>Email</th>
+            <th>Phone</th><th>Company</th><th>Title</th><th>LinkedIn</th>
+            <th>Status</th><th>Notes</th><th></th>
+          </tr></thead><tbody id="leadsTableBody"></tbody></table>
+        </div>
+        <div class="leads-add-row" onclick="openLeadModal('${ev.id}')">+ ADD LEAD</div>
+      </div>
+    </div>`;
+  renderLeadsTable(evId,'all');
+  if(timerInterval){clearInterval(timerInterval);timerInterval=null;}
+  if(evStart){updateTimer(evStart,evEnd);timerInterval=setInterval(()=>updateTimer(evStart,evEnd),1000);}
+}
+function updateTimer(evStart,evEnd){
+  const now=new Date();
+  let target=evStart;
+  if(evEnd&&now>evStart&&now<evEnd) target=evEnd;
+  const diff=target-now;
+  const fmt=n=>String(Math.max(0,n)).padStart(2,'0');
+  if(diff<=0){['t-days','t-hours','t-mins','t-secs'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='00';});return;}
+  const dEl=document.getElementById('t-days'),hEl=document.getElementById('t-hours'),mEl=document.getElementById('t-mins'),sEl=document.getElementById('t-secs');
+  if(dEl)dEl.textContent=fmt(Math.floor(diff/86400000));
+  if(hEl)hEl.textContent=fmt(Math.floor((diff%86400000)/3600000));
+  if(mEl)mEl.textContent=fmt(Math.floor((diff%3600000)/60000));
+  if(sEl)sEl.textContent=fmt(Math.floor((diff%60000)/1000));
+}
+
+// ── LEADS ─────────────────────────────────────────
+function renderLeadsTable(evId,filter){
+  const tbody=document.getElementById('leadsTableBody');if(!tbody)return;
+  let leads=S.leads.filter(l=>l.eventId===evId);
+  if(filter&&filter!=='all') leads=leads.filter(l=>l.status===filter);
+  tbody.innerHTML='';
+  if(leads.length===0){tbody.innerHTML=`<tr class="leads-empty-row"><td colspan="11">NO LEADS YET</td></tr>`;return;}
+  leads.forEach((l,i)=>{
+    const tr=document.createElement('tr');
+    const li=l.linkedin?`<a href="${l.linkedin}" target="_blank" style="color:var(--orange);font-family:'IBM Plex Mono',monospace;font-size:.72rem;text-decoration:none">↗</a>`:'—';
+    tr.innerHTML=`
+      <td class="lt-mono" style="color:var(--light)">${i+1}</td>
+      <td style="font-weight:600">${l.firstName||'—'}</td>
+      <td>${l.lastName||'—'}</td>
+      <td class="lt-mono">${l.email||'—'}</td>
+      <td class="lt-mono">${l.phone||'—'}</td>
+      <td>${l.company||'—'}</td>
+      <td style="color:var(--muted);font-size:.78rem">${l.title||'—'}</td>
+      <td style="text-align:center">${li}</td>
+      <td><span class="lt-status ${l.status}" onclick="cycleLeadStatus('${l.id}')" title="Click to change">${LEAD_LABELS[l.status]||l.status}</span></td>
+      <td style="color:var(--muted);font-size:.78rem;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${l.notes||''}">${l.notes||'—'}</td>
+      <td><button class="lt-del" onclick="deleteLead('${l.id}',event)">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+function setLeadFilter(filter,evId,el){
+  document.querySelectorAll('.lf-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');renderLeadsTable(evId,filter);
+}
+function cycleLeadStatus(id){
+  const l=S.leads.find(x=>x.id===id);
+  const idx=LEAD_COLS.indexOf(l.status);
+  l.status=LEAD_COLS[(idx+1)%LEAD_COLS.length];
+  save();if(currentEventId)renderEventDetail(currentEventId);toast('→ '+LEAD_LABELS[l.status]);
+}
+function openLeadModal(evId){
+  document.getElementById('ldEventId').value=evId;
+  ['ldFirst','ldLast','ldEmail','ldPhone','ldCompany','ldTitle','ldLinkedin','ldNotes'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('ldStatus').value='leads';
+  document.getElementById('leadModal').classList.add('open');
+  setTimeout(()=>document.getElementById('ldFirst').focus(),100);
+}
+function saveLead(){
+  const f=id=>document.getElementById(id).value.trim();
+  if(!f('ldFirst')){toast('First name required');return;}
+  const evId=document.getElementById('ldEventId').value;
+  const me=activeUser();
+  S.leads.push({id:uid(),eventId:evId,owner:me.id,firstName:f('ldFirst'),lastName:f('ldLast'),email:f('ldEmail'),phone:f('ldPhone'),company:f('ldCompany'),title:f('ldTitle'),linkedin:f('ldLinkedin'),notes:f('ldNotes'),status:f('ldStatus')||'leads'});
+  save();if(currentEventId===evId)renderEventDetail(evId);renderEvents();closeModal('leadModal');toast('Lead added');
+}
+function deleteLead(id,e){
+  if(e) e.stopPropagation();
+  S.leads=S.leads.filter(x=>x.id!==id);
+  save();if(currentEventId)renderEventDetail(currentEventId);renderEvents();toast('Lead removed');
+}
+
+// ── DRIVE ──────────────────────────────────────────
+function renderDrive(){
+  const grid=document.getElementById('driveGrid');grid.innerHTML='';
+  if(S.driveSheets.length===0){grid.innerHTML='<div class="ev-empty" style="grid-column:1/-1">NO SHEETS ADDED YET</div>';return;}
+  S.driveSheets.forEach(s=>{
+    const card=document.createElement('div');card.className='drive-card';
+    card.innerHTML=`<div class="drive-card-icon">📊</div><div class="drive-card-name">${s.name}</div>${s.desc?`<div class="drive-card-type">${s.desc}</div>`:''}<div class="drive-card-link">${s.url.length>45?s.url.substring(0,45)+'…':s.url}</div><button class="drive-card-del" onclick="deleteDriveSheet('${s.id}',event)">✕</button>`;
+    card.onclick=(e)=>{if(e.target.classList.contains('drive-card-del'))return;window.open(s.url,'_blank');};
+    grid.appendChild(card);
+  });
+}
+function openDriveModal(){['dsName','dsUrl','dsDesc'].forEach(i=>document.getElementById(i).value='');document.getElementById('driveModal').classList.add('open');setTimeout(()=>document.getElementById('dsName').focus(),100);}
+function saveDriveSheet(){
+  const f=id=>document.getElementById(id).value.trim();
+  if(!f('dsName')||!f('dsUrl')){toast('Name and URL required');return;}
+  S.driveSheets.push({id:uid(),name:f('dsName'),url:f('dsUrl'),desc:f('dsDesc')});
+  save();renderDrive();closeModal('driveModal');toast('Sheet added');
+}
+function deleteDriveSheet(id,e){e.stopPropagation();S.driveSheets=S.driveSheets.filter(x=>x.id!==id);save();renderDrive();toast('Sheet removed');}
+
+// ── TASKS ──────────────────────────────────────────
+function selectPrio(btn){document.querySelectorAll('.prio-btn').forEach(b=>b.classList.remove('selected'));btn.classList.add('selected');S.prio=btn.dataset.p;}
+function renderTasks(){
+  const list=document.getElementById('taskList');
+  const open=S.tasks.filter(t=>!t.done).length;
+  document.getElementById('taskCount').textContent=open;
+  const sorted=[...S.tasks].sort((a,b)=>{const p={high:0,med:1,low:2};return(p[a.prio]||1)-(p[b.prio]||1);});
+  list.innerHTML='';
+  if(sorted.length===0){list.innerHTML='<div class="ev-empty" style="padding:2rem">NO TASKS YET</div>';return;}
+  sorted.forEach(t=>{
+    const item=document.createElement('div');item.className='task-item'+(t.done?' done':'');
+    item.innerHTML=`
+      <div class="task-check" onclick="toggleT('${t.id}')">${t.done?'✓':''}</div>
+      <div class="task-body">
+        <div class="task-text">${t.text}</div>
+        <div class="task-meta">
+          ${t.due?`<span class="task-date">${fmtDate(t.due)}</span>`:''}
+          <span class="prio-tag ${t.prio==='high'?'high':t.prio==='med'?'med':''}">${t.prio.toUpperCase()}</span>
+        </div>
+      </div>
+      <button class="task-del" onclick="delT('${t.id}')">✕</button>`;
+    list.appendChild(item);
+  });
+}
+function addTask(){
+  const text=document.getElementById('taskText').value.trim();
+  if(!text){toast('Task text required');return;}
+  S.tasks.push({id:uid(),text,due:document.getElementById('taskDue').value,prio:S.prio||'med',done:false});
+  document.getElementById('taskText').value='';document.getElementById('taskDue').value='';
+  save();renderTasks();toast('Task added');
+}
+function toggleT(id){const t=S.tasks.find(x=>x.id===id);if(t){t.done=!t.done;save();renderTasks();}}
+function delT(id){S.tasks=S.tasks.filter(x=>x.id!==id);save();renderTasks();}
+
+// ── WORKOUT ────────────────────────────────────────
+function getTodayLog(){
+  const k=todayKey();
+  let log=S.workoutLogs.find(l=>l.date===k);
+  if(!log){log={date:k,exercises:[],trackers:{diet:null,water:0,nicotine:null,workout:null}};S.workoutLogs.push(log);save();}
+  return log;
+}
+function renderWorkout(){
+  document.getElementById('todayDate').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+  // Exercises gallery
+  const gallery=document.getElementById('exerciseGallery');
+  gallery.innerHTML='';
+  EXERCISES.forEach(ex=>{
+    const card=document.createElement('div');card.className='ex-card';
+    card.innerHTML=`<div class="ex-card-img">${ex.emoji}</div><div class="ex-card-body"><div class="ex-card-name">${ex.name}</div><div class="ex-card-muscle">${ex.muscle}</div></div>`;
+    card.onclick=()=>openLogEx(ex.id);
+    gallery.appendChild(card);
+  });
+  renderTodayTrackers();
+  renderWorkoutHistory();
+}
+function renderTodayTrackers(){
+  const log=getTodayLog();
+  const t=log.trackers;
+  // Diet
+  document.getElementById('diet-yes').className='t-btn'+(t.diet==='yes'?' active-yes':'');
+  document.getElementById('diet-no').className='t-btn'+(t.diet==='no'?' active-no':'');
+  // Nicotine
+  document.getElementById('nic-yes').className='t-btn'+(t.nicotine==='yes'?' active-yes':'');
+  document.getElementById('nic-no').className='t-btn'+(t.nicotine==='no'?' active-yes':'');
+  // Workout
+  document.getElementById('wo-yes').className='t-btn'+(t.workout==='yes'?' active-yes':'');
+  document.getElementById('wo-no').className='t-btn'+(t.workout==='no'?' active-no':'');
+  // Water
+  document.getElementById('waterNum').textContent=t.water||0;
+  // Today exercises
+  const exList=document.getElementById('todayExercises');
+  exList.innerHTML='';
+  if(log.exercises.length===0){exList.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.65rem;color:var(--light);text-align:center;padding:.5rem">Click an exercise to log</div>';return;}
+  log.exercises.forEach((e,i)=>{
+    const ex=EXERCISES.find(x=>x.id===e.id)||{name:e.id,emoji:'🏋️'};
+    const item=document.createElement('div');item.className='wlog-item';
+    item.innerHTML=`<span class="wlog-ex">${ex.emoji} ${ex.name}</span><span class="wlog-sets">${e.sets}×${e.reps} ${e.weight?'@ '+e.weight+'kg':''}</span><button class="wlog-del" onclick="removeExLog(${i})">✕</button>`;
+    exList.appendChild(item);
+  });
+}
+function setTracker(key,val){
+  const log=getTodayLog();
+  log.trackers[key]=val;
+  save();renderTodayTrackers();
+}
+function adjustWater(delta){
+  const log=getTodayLog();
+  log.trackers.water=Math.max(0,(log.trackers.water||0)+delta);
+  save();renderTodayTrackers();
+}
+function openLogEx(exId){
+  selectedExerciseId=exId;
+  const ex=EXERCISES.find(x=>x.id===exId);
+  document.getElementById('logExName').textContent=ex?ex.emoji+' '+ex.name:'Exercise';
+  ['logSets','logReps','logWeight'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('logExModal').classList.add('open');
+  setTimeout(()=>document.getElementById('logSets').focus(),100);
+}
+function addExerciseLog(){
+  const sets=document.getElementById('logSets').value;
+  const reps=document.getElementById('logReps').value;
+  const weight=document.getElementById('logWeight').value;
+  if(!sets||!reps){toast('Sets and reps required');return;}
+  const log=getTodayLog();
+  log.exercises.push({id:selectedExerciseId,sets:parseInt(sets),reps:parseInt(reps),weight:weight?parseFloat(weight):null});
+  save();renderTodayTrackers();closeModal('logExModal');toast('Exercise logged!');
+}
+function removeExLog(idx){
+  const log=getTodayLog();
+  log.exercises.splice(idx,1);
+  save();renderTodayTrackers();
+}
+function saveWorkoutDay(){
+  save();toast('Day saved! 💪');renderWorkoutHistory();
+}
+function renderWorkoutHistory(){
+  const hist=document.getElementById('workoutHistory');
+  const logs=[...S.workoutLogs].filter(l=>l.exercises.length>0||Object.values(l.trackers).some(v=>v!==null&&v!==0)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,14);
+  hist.innerHTML='';
+  if(logs.length===0){hist.innerHTML='<div class="ev-empty" style="padding:2rem">NO WORKOUT HISTORY YET</div>';return;}
+  logs.forEach(log=>{
+    const ex=log.exercises.map(e=>{const x=EXERCISES.find(x=>x.id===e.id)||{name:e.id};return x.name;}).join(', ');
+    const t=log.trackers;
+    const day=document.createElement('div');day.className='wh-day';
+    day.innerHTML=`
+      <div class="wh-day-head" onclick="this.nextElementSibling.classList.toggle('open')">
+        <span class="wh-day-date">${fmtDate(log.date)}</span>
+        <span class="wh-day-summary">${log.exercises.length} exercise${log.exercises.length!==1?'s':''} · ${ex||'rest day'}</span>
+      </div>
+      <div class="wh-day-body">
+        <div class="wh-tracker-badges">
+          ${t.diet?`<span class="wh-badge ${t.diet==='yes'?'yes':'no'}">🥗 Diet: ${t.diet==='yes'?'✓':'✕'}</span>`:''}
+          ${t.water?`<span class="wh-badge water">💧 ${t.water} glasses</span>`:''}
+          ${t.nicotine!==null?`<span class="wh-badge ${t.nicotine==='no'?'yes':'no'}">🚬 Nicotine: ${t.nicotine==='no'?'✕ Clean':'⚠ Yes'}</span>`:''}
+          ${t.workout?`<span class="wh-badge ${t.workout==='yes'?'yes':'no'}">🏋️ Workout: ${t.workout==='yes'?'✓':'✕'}</span>`:''}
+        </div>
+        <div class="wh-ex-list">${log.exercises.map(e=>{const x=EXERCISES.find(x=>x.id===e.id)||{name:e.id,emoji:'🏋️'};return `${x.emoji} ${x.name}: ${e.sets}×${e.reps}${e.weight?' @ '+e.weight+'kg':''}`;}).join('<br>')}</div>
+      </div>`;
+    hist.appendChild(day);
+  });
+}
+
+// ── EXPORT / IMPORT ────────────────────────────────
+function exportData(){
+  const data=JSON.stringify(S,null,2);
+  const blob=new Blob([data],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='database-backup-'+todayKey()+'.json';
+  a.click();toast('Data exported!');
+}
+function importData(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=(ev)=>{
+    try{
+      const imported=JSON.parse(ev.target.result);
+      if(!imported.events&&!imported.leads){toast('⚠ Invalid file');return;}
+      // Merge — keep current user, import data
+      const myUser=currentUser;
+      S={...imported};
+      // Re-login as same user if exists
+      const stillExists=S.users.find(u=>u.id===myUser?.id);
+      if(stillExists) currentUser=stillExists;
+      if(S.theme==='dark') setTheme('dark');
+      save();renderAll();toast('✅ Data imported!');
+    }catch(err){toast('⚠ Error reading file');}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+// ── UTILS ──────────────────────────────────────────
+function fmtDate(d){if(!d)return'';try{return new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'numeric',month:'short'});}catch{return d;}}
+function fmtDT(d){
+  if(!d)return'';
+  try{
+    const dt=new Date(d);
+    if(isNaN(dt))return d;
+    return dt.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+(d.includes('T')?' · '+dt.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'}):'');
+  }catch{return d;}
+}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function toast(msg){
+  const el=document.createElement('div');el.className='toast';el.textContent=msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>el.remove(),2500);
+}
+['eventModal','leadModal','driveModal','logExModal'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id);});
+});
+
+function renderAll(){renderUsers();renderEvents();renderDrive();renderTasks();}
+
+// ── INIT ───────────────────────────────────────────
+load();
+populateLoginSelect();
+// Auto-login as Andrit if already visited (optional convenience)
+// Show login screen always for security
+document.getElementById('loginScreen').style.display='flex';
+</script>
+</body>
+</html>
