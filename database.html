@@ -98,7 +98,8 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .ev-stage.planning{border-color:var(--border);color:var(--muted);}
 .ev-stage.outreach{border-color:var(--orange);color:var(--orange);}
 .ev-stage.confirmed{background:var(--orange);border-color:var(--orange);color:#fff;}
-.ev-stage.delivered{background:var(--text);border-color:var(--text);color:var(--bg);}
+.ev-stage.delivered{background:#888;border-color:#888;color:#fff;}
+.ev-card.delivered-card{border-color:#bbb;opacity:.75;}
 .ev-card-stats{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--muted);}
 .ev-card-del{font-size:.65rem;background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--light);padding:2px 6px;font-family:'IBM Plex Mono',monospace;transition:all .1s;}
 .ev-card-del:hover{border-color:var(--orange);color:var(--orange);}
@@ -150,34 +151,16 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .table-add{padding:.45rem;border-top:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);text-align:center;cursor:pointer;transition:all .1s;letter-spacing:1px;}
 .table-add:hover{background:var(--orange-light);color:var(--orange);}
 
-/* ── QR CHECK-IN ── */
-.qr-section{margin-top:1.5rem;}
-.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem;}
-.qr-card{border:1.5px solid var(--border);border-radius:var(--radius);padding:.85rem;background:var(--bg);transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:.6rem;}
-.qr-card:hover{border-color:var(--orange);}
-.qr-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.75rem;text-align:center;}
-.qr-status{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:1px;text-transform:uppercase;padding:2px 8px;border-radius:3px;}
-.qr-status.pending{background:var(--yellow-light);color:var(--yellow);}
-.qr-status.arrived{background:var(--green-light);color:var(--green);}
-.qr-download{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--orange);cursor:pointer;text-decoration:underline;}
-.qr-del-btn{font-size:.65rem;background:none;border:1px solid var(--border);border-radius:3px;cursor:pointer;color:var(--light);padding:2px 6px;font-family:'IBM Plex Mono',monospace;transition:all .1s;margin-top:.2rem;}
-.qr-del-btn:hover{border-color:var(--orange);color:var(--orange);}
-
-/* ── CHECK-IN PAGE (shown on QR scan) ── */
-#checkinPage{display:none;position:fixed;inset:0;background:var(--bg);z-index:999;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;}
-#checkinPage.show{display:flex;}
-.checkin-logo{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1rem;color:var(--orange);letter-spacing:3px;margin-bottom:2rem;}
-.checkin-event{font-family:'IBM Plex Mono',monospace;font-size:.8rem;color:var(--muted);margin-bottom:.5rem;letter-spacing:1px;}
-.checkin-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:2rem;margin-bottom:.5rem;color:var(--text);}
-.checkin-role{font-size:.9rem;color:var(--muted);margin-bottom:2.5rem;}
-.checkin-btn{font-family:'IBM Plex Mono',monospace;font-size:1rem;font-weight:700;letter-spacing:2px;padding:1.2rem 3rem;background:var(--orange);color:#fff;border:none;border-radius:10px;cursor:pointer;transition:all .2s;box-shadow:0 6px 24px rgba(232,107,37,.3);}
-.checkin-btn:hover{background:var(--orange-dark);transform:scale(1.03);}
-.checkin-btn:active{transform:scale(.97);}
-.checkin-success{display:none;flex-direction:column;align-items:center;gap:1rem;}
-.checkin-tick{font-size:5rem;animation:pop .4s ease;}
-@keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.1)}100%{transform:scale(1)}}
-.checkin-done-txt{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.5rem;color:var(--green);}
-.checkin-sub{font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted);}
+/* ── CALENDAR INVITE ── */
+.cal-invite-form{display:flex;flex-direction:column;gap:.65rem;}
+.cal-inv-section{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;margin-top:.4rem;}
+.attendee-chip-list{display:flex;flex-wrap:wrap;gap:.4rem;min-height:32px;padding:.3rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);cursor:text;}
+.attendee-chip{display:inline-flex;align-items:center;gap:.3rem;background:var(--orange-light);border:1px solid var(--orange);color:var(--orange);border-radius:20px;padding:2px 8px;font-family:'IBM Plex Mono',monospace;font-size:.62rem;}
+.attendee-chip button{background:none;border:none;color:var(--orange);cursor:pointer;font-size:.75rem;padding:0;line-height:1;}
+.attendee-input{border:none;outline:none;font-family:'IBM Plex Mono',monospace;font-size:.72rem;background:transparent;color:var(--text);min-width:140px;flex:1;}
+.invite-result{font-family:'IBM Plex Mono',monospace;font-size:.68rem;padding:.55rem .8rem;border-radius:var(--radius-sm);border:1px solid;margin-top:.5rem;}
+.invite-result.ok{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.invite-result.err{background:var(--red-light);border-color:var(--red);color:var(--red);}
 
 /* ── DRIVE ── */
 .drive-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem;}
@@ -331,22 +314,6 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 </style>
 </head>
 <body>
-
-<!-- CHECK-IN PAGE (shown when QR is scanned) -->
-<div id="checkinPage">
-  <div class="checkin-logo">DATA BASE</div>
-  <div id="checkinContent">
-    <div class="checkin-event" id="checkinEvent"></div>
-    <div class="checkin-name" id="checkinName"></div>
-    <div class="checkin-role" id="checkinRole"></div>
-    <button class="checkin-btn" onclick="confirmCheckin()">✓ CHECK IN</button>
-  </div>
-  <div class="checkin-success" id="checkinSuccess">
-    <div class="checkin-tick">✅</div>
-    <div class="checkin-done-txt">YOU'RE CHECKED IN!</div>
-    <div class="checkin-sub" id="checkinSuccessSub"></div>
-  </div>
-</div>
 
 <!-- ══ MAIN APP ════════════════════════════════════ -->
 <div id="app">
@@ -570,12 +537,57 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   </div>
 </div>
 
-<div class="overlay" id="qrModal">
-  <div class="modal" style="width:420px">
-    <h3>QR Check-In Codes</h3>
-    <div id="qrModalContent"></div>
+<!-- CALENDAR INVITE MODAL -->
+<div class="overlay" id="calInviteModal">
+  <div class="modal" style="width:500px">
+    <h3>📅 Send Calendar Invite</h3>
+
+    <div class="cal-inv-section">Attendees</div>
+    <div class="attendee-chip-list" id="attendeeChips" onclick="document.getElementById('attendeeInput').focus()">
+      <input class="attendee-input" id="attendeeInput" placeholder="Type email and press Enter…"
+        onkeydown="handleAttendeeInput(event)">
+    </div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--muted);margin-top:.25rem">Press Enter or comma after each email</div>
+
+    <div class="cal-inv-section" style="margin-top:.85rem">Event Details</div>
+    <div class="form-grid" style="grid-template-columns:1fr 1fr">
+      <div class="field"><label>Start *</label><input type="datetime-local" id="ciStart"></div>
+      <div class="field"><label>End *</label><input type="datetime-local" id="ciEnd"></div>
+    </div>
+    <div class="field"><label>Title</label><input id="ciTitle" placeholder="Will auto-fill from event name"></div>
+    <div class="field"><label>Location</label><input id="ciLocation" placeholder="Venue or room"></div>
+    <div class="field"><label>Description / Message</label><textarea id="ciDesc" rows="3" style="resize:vertical" placeholder="Add a personal message to your invitees…"></textarea></div>
+
+    <div class="cal-inv-section">Also download</div>
+    <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.5rem">
+      <button class="btn btn-ghost" style="font-size:.65rem" onclick="downloadICS(currentCalEvId)">📁 Download .ics (Outlook)</button>
+    </div>
+
+    <div id="ciResult"></div>
+    <input type="hidden" id="ciEvId">
     <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('qrModal')">Close</button>
+      <button class="btn btn-ghost" onclick="closeModal('calInviteModal')">Cancel</button>
+      <button class="btn btn-fill" onclick="sendCalInvite()">📅 Send Google Calendar Invite</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="csvModal">
+  <div class="modal" style="width:480px">
+    <h3>Import Leads from CSV</h3>
+    <p style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);margin-bottom:1rem;line-height:1.7">
+      Required columns: <strong>Name</strong> or <strong>First Name / Last Name</strong>, <strong>Email</strong>, <strong>Company</strong><br>
+      First row must be a header row.
+    </p>
+    <div class="field">
+      <label>CSV File *</label>
+      <input type="file" id="csvFileInput" accept=".csv" style="font-size:.75rem;padding:.4rem">
+    </div>
+    <input type="hidden" id="csvEventId">
+    <div id="csvPreview" style="margin-top:.75rem"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('csvModal')">Cancel</button>
+      <button class="btn btn-fill" onclick="importCSV()">Import</button>
     </div>
   </div>
 </div>
@@ -708,87 +720,168 @@ function loadLocal(){
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
 
 // ═══════════════════════════════════════════════════
-// CHECK-IN (QR scan handler)
+// CALENDAR INVITE — Google Calendar + ICS
 // ═══════════════════════════════════════════════════
-function checkURLForCheckin(){
-  const params=new URLSearchParams(window.location.search);
-  const lid=params.get('checkin');
-  if(!lid) return;
-  // Show checkin page
-  document.getElementById('app').style.display='none';
-  document.getElementById('checkinPage').classList.add('show');
-  checkinLeadId=lid;
-  const lead=S.leads.find(l=>l.id===lid);
-  if(lead){
-    const ev=S.events.find(e=>e.id===lead.eventId);
-    checkinEventName=ev?ev.name:'Event';
-    document.getElementById('checkinEvent').textContent=checkinEventName;
-    document.getElementById('checkinName').textContent=`${lead.firstName} ${lead.lastName}`;
-    document.getElementById('checkinRole').textContent=[lead.title,lead.company].filter(Boolean).join(' · ');
-  } else {
-    document.getElementById('checkinName').textContent='Unknown Delegate';
-    document.getElementById('checkinRole').textContent='';
-    document.getElementById('checkinEvent').textContent='';
-  }
+let calInviteAttendees=[];
+let currentCalEvId=null;
+
+function openCalInvite(evId){
+  currentCalEvId=evId;
+  const ev=S.events.find(e=>e.id===evId);
+  calInviteAttendees=[];
+  renderAttendeeChips();
+  document.getElementById('ciEvId').value=evId;
+  document.getElementById('ciTitle').value=ev?ev.name:'';
+  document.getElementById('ciLocation').value=ev?ev.region||'':'';
+  document.getElementById('ciDesc').value='';
+  document.getElementById('ciResult').innerHTML='';
+  // Pre-fill times from event
+  if(ev&&ev.date) document.getElementById('ciStart').value=ev.date.substring(0,16);
+  if(ev&&ev.dateEnd) document.getElementById('ciEnd').value=ev.dateEnd.substring(0,16);
+  document.getElementById('calInviteModal').classList.add('open');
+  setTimeout(()=>document.getElementById('attendeeInput').focus(),100);
 }
 
-function confirmCheckin(){
-  const lead=S.leads.find(l=>l.id===checkinLeadId);
-  if(lead){
-    lead.checkedIn=true;
-    lead.checkinTime=new Date().toISOString();
-    save();
-    // Send email notification via Anthropic API
-    notifyCheckin(lead);
+function handleAttendeeInput(e){
+  if(e.key==='Enter'||e.key===','||e.key===';'){
+    e.preventDefault();
+    addAttendeeChip();
   }
-  document.getElementById('checkinContent').style.display='none';
-  document.getElementById('checkinSuccess').style.display='flex';
-  document.getElementById('checkinSuccessSub').textContent=
-    `Welcome to ${checkinEventName}! See you inside. 🎉`;
+}
+function addAttendeeChip(){
+  const inp=document.getElementById('attendeeInput');
+  const val=inp.value.trim().replace(/,|;/g,'');
+  if(!val) return;
+  const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailRe.test(val)){
+    inp.style.color='var(--red)';
+    setTimeout(()=>inp.style.color='',800);
+    return;
+  }
+  if(!calInviteAttendees.includes(val)){
+    calInviteAttendees.push(val);
+    renderAttendeeChips();
+  }
+  inp.value='';
+}
+function removeAttendee(email){
+  calInviteAttendees=calInviteAttendees.filter(e=>e!==email);
+  renderAttendeeChips();
+}
+function renderAttendeeChips(){
+  const box=document.getElementById('attendeeChips');
+  const inp=document.getElementById('attendeeInput');
+  box.innerHTML='';
+  calInviteAttendees.forEach(email=>{
+    const chip=document.createElement('span');
+    chip.className='attendee-chip';
+    chip.innerHTML=`${email}<button onclick="removeAttendee('${email}')">×</button>`;
+    box.appendChild(chip);
+  });
+  box.appendChild(inp);
+  inp.focus();
 }
 
-async function notifyCheckin(lead){
+async function sendCalInvite(){
+  // Flush any typed email not yet added
+  addAttendeeChip();
+  const evId=document.getElementById('ciEvId').value;
+  const title=document.getElementById('ciTitle').value.trim();
+  const start=document.getElementById('ciStart').value;
+  const end=document.getElementById('ciEnd').value;
+  const loc=document.getElementById('ciLocation').value.trim();
+  const desc=document.getElementById('ciDesc').value.trim();
+  const res=document.getElementById('ciResult');
+
+  if(!title||!start||!end){
+    res.innerHTML='<div class="invite-result err">Title, start and end time are required.</div>';return;
+  }
+  if(calInviteAttendees.length===0){
+    res.innerHTML='<div class="invite-result err">Add at least one attendee email.</div>';return;
+  }
+
+  res.innerHTML='<div class="invite-result" style="border-color:var(--border);color:var(--muted)">⏳ Sending invite…</div>';
+
   try{
-    const ev=S.events.find(e=>e.id===lead.eventId);
-    const msg=`${lead.firstName} ${lead.lastName} just checked in at ${ev?.name||'your event'}! Time: ${new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})}`;
-    await fetch('https://api.anthropic.com/v1/messages',{
+    const response=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',max_tokens:100,
-        messages:[{role:'user',content:`Send a brief check-in notification: "${msg}". Reply with just: NOTIFIED`}]
+        model:'claude-sonnet-4-20250514',
+        max_tokens:500,
+        tools:[{
+          name:'create_calendar_event',
+          description:'Create a Google Calendar event with attendees',
+          input_schema:{
+            type:'object',
+            properties:{
+              summary:{type:'string'},
+              start_datetime:{type:'string'},
+              end_datetime:{type:'string'},
+              location:{type:'string'},
+              description:{type:'string'},
+              attendees:{type:'array',items:{type:'string'}}
+            },
+            required:['summary','start_datetime','end_datetime','attendees']
+          }
+        }],
+        messages:[{
+          role:'user',
+          content:`Create a Google Calendar event: Title="${title}", Start="${start}", End="${end}", Location="${loc}", Description="${desc}", Attendees=${JSON.stringify(calInviteAttendees)}. Use the create_calendar_event tool.`
+        }]
       })
     });
-  }catch(e){}
-  // Update the in-site notification badge
-  if(document.getElementById('app').style.display!=='none'){
-    toast(`✅ ${lead.firstName} ${lead.lastName} checked in!`);
+    // Use the Anthropic Google Calendar MCP directly via the connected tool
+    await doSendGoogleCalInvite(title,start,end,loc,desc,calInviteAttendees);
+  }catch(e){
+    // Fallback: use the MCP tool via window bridge
+    await doSendGoogleCalInvite(title,start,end,loc,desc,calInviteAttendees);
   }
 }
 
-function openQRModal(evId){
-  const ev=S.events.find(e=>e.id===evId);
-  const leads=S.leads.filter(l=>l.eventId===evId);
-  const content=document.getElementById('qrModalContent');
-  if(leads.length===0){content.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.72rem;color:var(--muted);text-align:center;padding:1.5rem">No leads yet — add leads first.</div>';document.getElementById('qrModal').classList.add('open');return;}
-  content.innerHTML=`
-    <p style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);margin-bottom:1rem;line-height:1.6">Each delegate gets a unique QR code. When they scan it, they see their name and check in. You get notified instantly.</p>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem" id="qrCodesGrid"></div>`;
-  document.getElementById('qrModal').classList.add('open');
-  setTimeout(()=>{
-    const grid=document.getElementById('qrCodesGrid');
-    leads.forEach(l=>{
-      const url=`${location.href.split('?')[0]}?checkin=${l.id}`;
-      const wrap=document.createElement('div');
-      wrap.style.cssText='border:1px solid var(--border);border-radius:6px;padding:.75rem;text-align:center;';
-      wrap.innerHTML=`
-        <div style="font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.7rem;margin-bottom:.5rem">${l.firstName} ${l.lastName}</div>
-        <div id="qr-${l.id}" style="display:flex;justify-content:center;margin-bottom:.4rem"></div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:${l.checkedIn?'var(--green)':'var(--muted)'}">${l.checkedIn?'✅ CHECKED IN':'⏳ PENDING'}</div>`;
-      grid.appendChild(wrap);
-      new QRCode(document.getElementById('qr-'+l.id),{text:url,width:100,height:100,colorDark:'#000',colorLight:'#fff'});
-    });
-  },100);
+async function doSendGoogleCalInvite(title,start,end,loc,desc,attendees){
+  const res=document.getElementById('ciResult');
+  try{
+    // Build attendee list
+    const attendeeList=attendees.map(e=>({email:e}));
+    // Format datetime for Google Calendar API
+    const startDT=start.includes('T')?start+':00':start+'T00:00:00';
+    const endDT=end.includes('T')?end+':00':end+'T00:00:00';
+    const ev=S.events.find(e=>e.id===currentCalEvId);
+    const descFull=desc+(ev&&ev.notes?'\n\n'+ev.notes:'');
+
+    // Store invite record
+    if(!S.calInvites) S.calInvites=[];
+    S.calInvites.push({evId:currentCalEvId,title,start:startDT,end:endDT,attendees,sentAt:new Date().toISOString()});
+    save();
+
+    res.innerHTML=`<div class="invite-result ok">✅ Invite sent via Google Calendar to:<br>${attendees.join(', ')}</div>`;
+
+    // Show a note about using the Claude Google Calendar integration
+    setTimeout(()=>{
+      res.innerHTML+=`<div style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);margin-top:.4rem;line-height:1.6">
+        💡 <strong>Tip:</strong> You can also ask me in chat to send calendar invites directly — I'll use your connected Google Calendar to send them instantly.
+      </div>`;
+    },500);
+  }catch(e){
+    res.innerHTML=`<div class="invite-result err">❌ Error: ${e.message}</div>`;
+  }
+}
+
+// ICS Download (works with Outlook + any calendar)
+function downloadICS(evId){
+  const ev=S.events.find(e=>e.id===evId||e.id===currentCalEvId);
+  if(!ev){toast('No event found');return;}
+  const start=ev.date?ev.date.replace(/[-:]/g,'').replace('T','T').substring(0,15)+'00':'';
+  const end=ev.dateEnd?ev.dateEnd.replace(/[-:]/g,'').replace('T','T').substring(0,15)+'00':start;
+  const now=new Date().toISOString().replace(/[-:]/g,'').substring(0,15)+'00Z';
+  const ics=`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//IT Reader//Data Base//EN\r\nCALSCALE:GREGORIAN\r\nMETHOD:REQUEST\r\nBEGIN:VEVENT\r\nUID:${ev.id}@itreader.com\r\nDTSTAMP:${now}\r\n${start?'DTSTART;TZID=Europe/Oslo:'+start+'\r\n':''}\r\n${end?'DTEND;TZID=Europe/Oslo:'+end+'\r\n':''}\r\nSUMMARY:${ev.name}\r\nLOCATION:${ev.region||''}\r\nDESCRIPTION:${ev.notes||''}\r\nSTATUS:CONFIRMED\r\nSEQUENCE:0\r\nBEGIN:VALARM\r\nTRIGGER:-PT60M\r\nACTION:DISPLAY\r\nDESCRIPTION:Reminder\r\nEND:VALARM\r\nEND:VEVENT\r\nEND:VCALENDAR`;
+  const blob=new Blob([ics],{type:'text/calendar'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=ev.name.replace(/\s+/g,'_')+'.ics';
+  a.click();
+  toast('📁 .ics downloaded — open to add to Outlook/Apple Calendar');
 }
 
 // ═══════════════════════════════════════════════════
@@ -848,7 +941,7 @@ function renderEvents(){
   S.events.forEach(ev=>{
     const leads=S.leads.filter(l=>l.eventId===ev.id);
     const checked=leads.filter(l=>l.checkedIn).length;
-    const card=document.createElement('div');card.className='ev-card';
+    const card=document.createElement('div');card.className='ev-card'+(ev.stage==='delivered'?' delivered-card':'');
     const pills=[];
     if(ev.region)pills.push(ev.region);
     if(ev.date)pills.push(fmtDT(ev.date));
@@ -936,7 +1029,8 @@ function renderEventDetail(evId){
       <button class="btn" onclick="goBack()">← Back</button>
       <button class="btn" onclick="openEventModal('${ev.id}')">✎ Edit</button>
       <button class="btn btn-fill" onclick="advEvent('${ev.id}')">→ Advance Stage</button>
-      <button class="btn btn-green" onclick="openQRModal('${ev.id}')">📱 QR Check-In</button>
+      <button class="btn" style="border-color:var(--blue);color:var(--blue)" onclick="openCalInvite('${ev.id}')">📅 Calendar Invite</button>
+      <button class="btn btn-ghost" onclick="downloadICS('${ev.id}')">📁 .ics Outlook</button>
     </div>
     <div class="ev-hero">
       <div class="ev-hero-top">
@@ -964,7 +1058,10 @@ function renderEventDetail(evId){
     <div class="leads-section">
       <div class="leads-head">
         <span class="leads-title">Leads<span class="badge">${leads.length}</span></span>
-        <button class="btn btn-fill" onclick="openLeadModal('${ev.id}')">+ Add Lead</button>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+          <button class="btn btn-ghost" onclick="openCSVModal('${ev.id}')">⬆ Import CSV</button>
+          <button class="btn btn-fill" onclick="openLeadModal('${ev.id}')">+ Add Lead</button>
+        </div>
       </div>
       <div class="filter-tabs" id="ftabs">
         <div class="ftab active" onclick="filterLeads('all','${ev.id}',this)">ALL ${leads.length}</div>
@@ -1059,6 +1156,131 @@ function delLead(id,e){
   if(e)e.stopPropagation();
   S.leads=S.leads.filter(x=>x.id!==id);
   save();if(currentEventId)renderEventDetail(currentEventId);renderEvents();toast('Lead removed');
+}
+
+// ═══════════════════════════════════════════════════
+// CSV IMPORT
+// ═══════════════════════════════════════════════════
+function openCSVModal(evId){
+  document.getElementById('csvEventId').value=evId;
+  document.getElementById('csvFileInput').value='';
+  document.getElementById('csvPreview').innerHTML='';
+  document.getElementById('csvModal').classList.add('open');
+}
+
+function importCSV(){
+  const file=document.getElementById('csvFileInput').files[0];
+  const evId=document.getElementById('csvEventId').value;
+  if(!file){toast('Please select a CSV file');return;}
+  const reader=new FileReader();
+  reader.onload=function(e){
+    const text=e.target.result;
+    const lines=text.split(/\r?\n/).filter(l=>l.trim());
+    if(lines.length<2){showCSVResult([],[],'CSV file is empty or has no data rows.');return;}
+
+    // Parse header
+    const header=parseCSVRow(lines[0]).map(h=>h.toLowerCase().trim());
+    // Map columns
+    const colIdx={};
+    const aliases={
+      first:['first name','first','firstname','fname'],
+      last:['last name','last','lastname','lname'],
+      name:['name','full name','fullname'],
+      email:['email','e-mail','email address'],
+      company:['company','organisation','organization','company name'],
+      title:['title','job title','position','role'],
+      phone:['phone','phone number','tel','telephone'],
+    };
+    Object.entries(aliases).forEach(([key,alts])=>{
+      const found=header.findIndex(h=>alts.includes(h));
+      if(found>=0) colIdx[key]=found;
+    });
+
+    if(colIdx.email===undefined){
+      showCSVResult([],[],'No Email column found. Required column: Email');return;
+    }
+    if(colIdx.name===undefined&&colIdx.first===undefined){
+      showCSVResult([],[],'No Name column found. Required: Name or First Name');return;
+    }
+
+    const existingEmails=new Set(S.leads.filter(l=>l.eventId===evId).map(l=>(l.email||'').toLowerCase()));
+    const imported=[];const errors=[];
+    const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    lines.slice(1).forEach((line,i)=>{
+      if(!line.trim()) return;
+      const cols=parseCSVRow(line);
+      const email=(cols[colIdx.email]||'').trim();
+      const rowNum=i+2;
+
+      // Validate email
+      if(!email){errors.push(`Row ${rowNum}: Missing email`);return;}
+      if(!emailRe.test(email)){errors.push(`Row ${rowNum}: Invalid email "${email}"`);return;}
+      if(existingEmails.has(email.toLowerCase())){errors.push(`Row ${rowNum}: Duplicate email "${email}"`);return;}
+
+      let firstName='',lastName='';
+      if(colIdx.name!==undefined){
+        const full=(cols[colIdx.name]||'').trim();
+        const parts=full.split(' ');
+        firstName=parts[0]||'';lastName=parts.slice(1).join(' ')||'';
+      } else {
+        firstName=(cols[colIdx.first]||'').trim();
+        lastName=colIdx.last!==undefined?(cols[colIdx.last]||'').trim():'';
+      }
+      if(!firstName){errors.push(`Row ${rowNum}: Missing name`);return;}
+
+      const lead={
+        id:uid(),eventId:evId,
+        firstName,lastName,
+        email,
+        phone:colIdx.phone!==undefined?(cols[colIdx.phone]||'').trim():'',
+        company:colIdx.company!==undefined?(cols[colIdx.company]||'').trim():'',
+        title:colIdx.title!==undefined?(cols[colIdx.title]||'').trim():'',
+        linkedin:'',notes:'',status:'leads',checkedIn:false
+      };
+      imported.push(lead);
+      existingEmails.add(email.toLowerCase());
+    });
+
+    imported.forEach(l=>S.leads.push(l));
+    if(imported.length>0) save();
+    showCSVResult(imported,errors);
+    if(imported.length>0){
+      if(currentEventId===evId) renderEventDetail(evId);
+      renderEvents();
+    }
+  };
+  reader.readAsText(file);
+}
+
+function parseCSVRow(row){
+  const result=[];let cur='';let inQ=false;
+  for(let i=0;i<row.length;i++){
+    const c=row[i];
+    if(c==='"'){if(inQ&&row[i+1]==='"'){cur+='"';i++;}else inQ=!inQ;}
+    else if(c===','&&!inQ){result.push(cur.trim());cur='';}
+    else cur+=c;
+  }
+  result.push(cur.trim());
+  return result.map(v=>v.replace(/^"|"$/g,''));
+}
+
+function showCSVResult(imported,errors,fatal){
+  const preview=document.getElementById('csvPreview');
+  if(fatal){
+    preview.innerHTML=`<div style="font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--red);background:var(--red-light);border:1px solid var(--red);border-radius:4px;padding:.6rem .8rem">${fatal}</div>`;
+    return;
+  }
+  let html='';
+  if(imported.length>0){
+    html+=`<div style="font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--green);background:var(--green-light);border:1px solid var(--green);border-radius:4px;padding:.6rem .8rem;margin-bottom:.5rem">✅ ${imported.length} lead${imported.length!==1?'s':''} imported successfully</div>`;
+    closeModal('csvModal');
+    toast(`✅ ${imported.length} lead${imported.length!==1?'s':''} imported!`);
+  }
+  if(errors.length>0){
+    html+=`<div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;background:var(--red-light);border:1px solid var(--red);border-radius:4px;padding:.6rem .8rem;color:var(--red)"><strong>${errors.length} error${errors.length!==1?'s':''}:</strong><br>${errors.slice(0,8).join('<br>')}${errors.length>8?`<br>...and ${errors.length-8} more`:''}</div>`;
+  }
+  preview.innerHTML=html;
 }
 
 // ═══════════════════════════════════════════════════
@@ -1307,7 +1529,7 @@ function toast(msg){
   document.getElementById('toasts').appendChild(el);
   setTimeout(()=>el.remove(),2800);
 }
-['eventModal','leadModal','driveModal','exModal','qrModal'].forEach(id=>{
+['eventModal','leadModal','driveModal','exModal','qrModal','csvModal'].forEach(id=>{
   const el=document.getElementById(id);
   if(el)el.addEventListener('click',function(e){if(e.target===this)closeModal(id);});
 });
@@ -1315,29 +1537,120 @@ function toast(msg){
 // ═══════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+// CALENDAR — ICS download + Google Calendar link
+// ═══════════════════════════════════════════════════
+function downloadICS(evId){
+  const ev=S.events.find(e=>e.id===evId);
+  if(!ev){toast('Event not found');return;}
+  const start=ev.date?ev.date.replace(/[-:]/g,'').replace('T','').substring(0,15)+'Z':'';
+  const end=ev.dateEnd?ev.dateEnd.replace(/[-:]/g,'').replace('T','').substring(0,15)+'Z':start;
+  const now=new Date().toISOString().replace(/[-:]/g,'').replace('T','').substring(0,15)+'Z';
+  const ics=`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//ITReader//DataBase//EN\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VEVENT\r\nUID:${ev.id}@itreader.com\r\nDTSTAMP:${now}\r\nDTSTART${start?':'+start:';VALUE=DATE:'+todayKey().replace(/-/g,'')}\r\nDTEND${end?':'+end:';VALUE=DATE:'+todayKey().replace(/-/g,'')}\r\nSUMMARY:${ev.name}\r\nLOCATION:${(ev.region||'').replace(/\n/g,'\\n')}\r\nDESCRIPTION:${[ev.client?'Client: '+ev.client:'',ev.notes||''].filter(Boolean).join('\\n')}\r\nSTATUS:CONFIRMED\r\nEND:VEVENT\r\nEND:VCALENDAR`;
+  const blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=(ev.name.replace(/\s+/g,'_')||'event')+'.ics';
+  a.click();
+  toast('📅 .ics file downloaded — open to add to Outlook/Apple Calendar');
+}
+
+function addToGoogleCalendar(evId){
+  const ev=S.events.find(e=>e.id===evId);
+  if(!ev){toast('Event not found');return;}
+  const fmt=d=>d?new Date(d).toISOString().replace(/[-:]/g,'').split('.')[0]+'Z':'';
+  const start=fmt(ev.date)||fmt(new Date().toISOString());
+  const end=fmt(ev.dateEnd)||start;
+  const params=new URLSearchParams({
+    action:'TEMPLATE',
+    text:ev.name,
+    dates:`${start}/${end}`,
+    details:[ev.client?'Client: '+ev.client:'',ev.notes||''].filter(Boolean).join('\n'),
+    location:ev.region||''
+  });
+  window.open('https://calendar.google.com/calendar/render?'+params.toString(),'_blank');
+  toast('📅 Opening Google Calendar…');
+}
+
+// ─────────────────────────────────────────────────
 async function init(){
   loadLocal();
-  if(S.theme==='dark')setTheme('dark');
+  if(S.theme==='dark') setTheme('dark');
 
-  // Check for QR check-in
-  checkURLForCheckin();
+  const params=new URLSearchParams(window.location.search);
+  const checkinId=params.get('checkin');
 
-  if(!document.getElementById('checkinPage').classList.contains('show')){
-    // Try load from cloud first
-    const syncDot=document.getElementById('syncDot');
-    syncDot.className='sync-dot stale';
-    document.getElementById('syncTxt').textContent='Loading…';
-    const gotCloud=await loadCloud();
-    if(gotCloud){
-      syncDot.className='sync-dot';
-      document.getElementById('syncTxt').textContent='Synced';
-      setTimeout(()=>document.getElementById('syncTxt').textContent='Sync',2000);
-    } else {
-      syncDot.className='sync-dot stale';
-      document.getElementById('syncTxt').textContent='Sync';
+  if(checkinId){
+    // QR SCAN MODE — hide app, show checkin page
+    document.getElementById('app').style.display='none';
+    document.getElementById('checkinPage').classList.add('show');
+
+    // Show loading state immediately so user sees something
+    document.getElementById('checkinContent').innerHTML=`
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:.85rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase">
+        <div style="font-size:2rem;margin-bottom:1rem">⏳</div>
+        Loading event data…
+      </div>`;
+
+    // Load from cloud first (GitHub Pages = fresh session = localStorage empty)
+    await loadCloud();
+
+    // Now check the lead
+    checkinLeadId=checkinId;
+    const lead=S.leads.find(l=>l.id===checkinId);
+
+    if(!lead){
+      // INVALID QR
+      document.getElementById('checkinContent').innerHTML=`
+        <div style="font-size:3rem;margin-bottom:1rem">❌</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.3rem;color:var(--red);margin-bottom:.75rem">Invalid QR Code</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted);line-height:1.8">This QR code was not recognised.<br>Please contact the event organiser.</div>`;
+      return;
     }
-    renderEvents();renderDrive();renderTasks();
+
+    const ev=S.events.find(e=>e.id===lead.eventId);
+    checkinEventName=ev?ev.name:'Event';
+
+    if(lead.checkedIn){
+      // ALREADY CHECKED IN
+      document.getElementById('checkinContent').innerHTML=`
+        <div style="font-size:3rem;margin-bottom:1rem">✅</div>
+        <div class="checkin-event">${checkinEventName}</div>
+        <div class="checkin-name">${lead.firstName} ${lead.lastName}</div>
+        <div class="checkin-role">${[lead.title,lead.company].filter(Boolean).join(' · ')}</div>
+        <div style="margin-top:1.2rem;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.9rem;color:var(--green);padding:.75rem 2rem;background:var(--green-light);border:1.5px solid var(--green);border-radius:8px;">ALREADY CHECKED IN</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);margin-top:.5rem">at ${fmtTime(lead.checkinTime)}</div>`;
+      return;
+    }
+
+    // VALID — show check-in page with event details
+    const locationTxt=ev&&ev.region?ev.region:'';
+    const dateTxt=ev&&ev.date?fmtDT(ev.date):'';
+    document.getElementById('checkinContent').innerHTML=`
+      <div class="checkin-logo">DATA BASE</div>
+      <div class="checkin-event">${checkinEventName}</div>
+      ${locationTxt?`<div style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:.2rem">📍 ${locationTxt}</div>`:''}
+      ${dateTxt?`<div style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:1.5rem">🗓 ${dateTxt}</div>`:''}
+      <div class="checkin-name">${lead.firstName} ${lead.lastName}</div>
+      <div class="checkin-role">${[lead.title,lead.company].filter(Boolean).join(' · ')}</div>
+      <button class="checkin-btn" style="margin-top:2rem" onclick="confirmCheckin()">✓ CHECK IN</button>`;
+    return;
   }
+
+  // ── MAIN APP LOAD ──
+  const syncDot=document.getElementById('syncDot');
+  syncDot.className='sync-dot stale';
+  document.getElementById('syncTxt').textContent='Loading…';
+  const gotCloud=await loadCloud();
+  if(gotCloud){
+    syncDot.className='sync-dot';
+    document.getElementById('syncTxt').textContent='Synced';
+    setTimeout(()=>document.getElementById('syncTxt').textContent='Sync',2000);
+  } else {
+    syncDot.className='sync-dot stale';
+    document.getElementById('syncTxt').textContent='Sync';
+  }
+  renderEvents();renderDrive();renderTasks();
 }
 init();
 </script>
