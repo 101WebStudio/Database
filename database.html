@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Data Base — IT Reader</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root{
   --bg:#fff;--surface:#f7f7f5;--surface2:#eeece8;
@@ -783,8 +782,7 @@ function renderAttendeeChips(){
 }
 
 async function sendCalInvite(){
-  // Flush any typed email not yet added
-  addAttendeeChip();
+  addAttendeeChip(); // flush any typed email
   const evId=document.getElementById('ciEvId').value;
   const title=document.getElementById('ciTitle').value.trim();
   const start=document.getElementById('ciStart').value;
@@ -793,78 +791,50 @@ async function sendCalInvite(){
   const desc=document.getElementById('ciDesc').value.trim();
   const res=document.getElementById('ciResult');
 
-  if(!title||!start||!end){
-    res.innerHTML='<div class="invite-result err">Title, start and end time are required.</div>';return;
-  }
-  if(calInviteAttendees.length===0){
-    res.innerHTML='<div class="invite-result err">Add at least one attendee email.</div>';return;
-  }
+  if(!title||!start||!end){res.innerHTML='<div class="invite-result err">Title, start and end time required.</div>';return;}
+  if(calInviteAttendees.length===0){res.innerHTML='<div class="invite-result err">Add at least one attendee email.</div>';return;}
 
-  res.innerHTML='<div class="invite-result" style="border-color:var(--border);color:var(--muted)">⏳ Sending invite…</div>';
+  res.innerHTML='<div class="invite-result" style="border-color:var(--border);color:var(--muted)">⏳ Sending via Google Calendar…</div>';
 
   try{
+    const startISO=start.length===16?start+':00':start;
+    const endISO=end.length===16?end+':00':end;
+    const attendeeList=calInviteAttendees.map(e=>({email:e}));
+    const fullDesc=desc+'\n\nSent via IT Reader Data Base';
+
+    // Call Anthropic API which routes through the connected Google Calendar MCP
     const response=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
         model:'claude-sonnet-4-20250514',
-        max_tokens:500,
-        tools:[{
-          name:'create_calendar_event',
-          description:'Create a Google Calendar event with attendees',
-          input_schema:{
-            type:'object',
-            properties:{
-              summary:{type:'string'},
-              start_datetime:{type:'string'},
-              end_datetime:{type:'string'},
-              location:{type:'string'},
-              description:{type:'string'},
-              attendees:{type:'array',items:{type:'string'}}
-            },
-            required:['summary','start_datetime','end_datetime','attendees']
-          }
-        }],
+        max_tokens:400,
+        mcp_servers:[{type:'url',url:'https://gcal.mcp.claude.com/mcp',name:'gcal'}],
         messages:[{
           role:'user',
-          content:`Create a Google Calendar event: Title="${title}", Start="${start}", End="${end}", Location="${loc}", Description="${desc}", Attendees=${JSON.stringify(calInviteAttendees)}. Use the create_calendar_event tool.`
+          content:`Create a Google Calendar event with these exact details:
+Title: ${title}
+Start: ${startISO} (use Europe/Oslo timezone)
+End: ${endISO} (use Europe/Oslo timezone)
+Location: ${loc||''}
+Description: ${fullDesc}
+Attendees: ${calInviteAttendees.join(', ')}
+Send invites to all attendees. Reply with just the event link when done.`
         }]
       })
     });
-    // Use the Anthropic Google Calendar MCP directly via the connected tool
-    await doSendGoogleCalInvite(title,start,end,loc,desc,calInviteAttendees);
-  }catch(e){
-    // Fallback: use the MCP tool via window bridge
-    await doSendGoogleCalInvite(title,start,end,loc,desc,calInviteAttendees);
-  }
-}
+    const data=await response.json();
+    const txt=data.content?.map(c=>c.text||'').join('')||'';
+    const link=txt.match(/https:\/\/calendar\.google\.com[^\s]*/)?.[0]||'';
 
-async function doSendGoogleCalInvite(title,start,end,loc,desc,attendees){
-  const res=document.getElementById('ciResult');
-  try{
-    // Build attendee list
-    const attendeeList=attendees.map(e=>({email:e}));
-    // Format datetime for Google Calendar API
-    const startDT=start.includes('T')?start+':00':start+'T00:00:00';
-    const endDT=end.includes('T')?end+':00':end+'T00:00:00';
-    const ev=S.events.find(e=>e.id===currentCalEvId);
-    const descFull=desc+(ev&&ev.notes?'\n\n'+ev.notes:'');
-
-    // Store invite record
+    // Save record locally
     if(!S.calInvites) S.calInvites=[];
-    S.calInvites.push({evId:currentCalEvId,title,start:startDT,end:endDT,attendees,sentAt:new Date().toISOString()});
+    S.calInvites.push({evId,title,start:startISO,end:endISO,attendees:calInviteAttendees,sentAt:new Date().toISOString()});
     save();
 
-    res.innerHTML=`<div class="invite-result ok">✅ Invite sent via Google Calendar to:<br>${attendees.join(', ')}</div>`;
-
-    // Show a note about using the Claude Google Calendar integration
-    setTimeout(()=>{
-      res.innerHTML+=`<div style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);margin-top:.4rem;line-height:1.6">
-        💡 <strong>Tip:</strong> You can also ask me in chat to send calendar invites directly — I'll use your connected Google Calendar to send them instantly.
-      </div>`;
-    },500);
+    res.innerHTML=`<div class="invite-result ok">✅ Invite sent to: ${calInviteAttendees.join(', ')}${link?`<br><a href="${link}" target="_blank" style="color:var(--green);text-decoration:underline">View in Google Calendar ↗</a>`:''}</div>`;
   }catch(e){
-    res.innerHTML=`<div class="invite-result err">❌ Error: ${e.message}</div>`;
+    res.innerHTML=`<div class="invite-result err">❌ ${e.message||'Error sending invite'}. Try downloading the .ics file instead.</div>`;
   }
 }
 
@@ -1555,89 +1525,22 @@ function downloadICS(evId){
   toast('📅 .ics file downloaded — open to add to Outlook/Apple Calendar');
 }
 
-function addToGoogleCalendar(evId){
-  const ev=S.events.find(e=>e.id===evId);
-  if(!ev){toast('Event not found');return;}
-  const fmt=d=>d?new Date(d).toISOString().replace(/[-:]/g,'').split('.')[0]+'Z':'';
-  const start=fmt(ev.date)||fmt(new Date().toISOString());
-  const end=fmt(ev.dateEnd)||start;
-  const params=new URLSearchParams({
-    action:'TEMPLATE',
-    text:ev.name,
-    dates:`${start}/${end}`,
-    details:[ev.client?'Client: '+ev.client:'',ev.notes||''].filter(Boolean).join('\n'),
-    location:ev.region||''
-  });
-  window.open('https://calendar.google.com/calendar/render?'+params.toString(),'_blank');
-  toast('📅 Opening Google Calendar…');
-}
+// ─────────────────────────────────────────────────
+// OVERLAY CLOSE ON CLICK OUTSIDE
+// ─────────────────────────────────────────────────
+['eventModal','leadModal','driveModal','exModal','calInviteModal','csvModal'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el) el.addEventListener('click',function(e){if(e.target===this)closeModal(id);});
+});
 
+// ─────────────────────────────────────────────────
+// INIT
 // ─────────────────────────────────────────────────
 async function init(){
   loadLocal();
   if(S.theme==='dark') setTheme('dark');
 
-  const params=new URLSearchParams(window.location.search);
-  const checkinId=params.get('checkin');
-
-  if(checkinId){
-    // QR SCAN MODE — hide app, show checkin page
-    document.getElementById('app').style.display='none';
-    document.getElementById('checkinPage').classList.add('show');
-
-    // Show loading state immediately so user sees something
-    document.getElementById('checkinContent').innerHTML=`
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:.85rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase">
-        <div style="font-size:2rem;margin-bottom:1rem">⏳</div>
-        Loading event data…
-      </div>`;
-
-    // Load from cloud first (GitHub Pages = fresh session = localStorage empty)
-    await loadCloud();
-
-    // Now check the lead
-    checkinLeadId=checkinId;
-    const lead=S.leads.find(l=>l.id===checkinId);
-
-    if(!lead){
-      // INVALID QR
-      document.getElementById('checkinContent').innerHTML=`
-        <div style="font-size:3rem;margin-bottom:1rem">❌</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.3rem;color:var(--red);margin-bottom:.75rem">Invalid QR Code</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted);line-height:1.8">This QR code was not recognised.<br>Please contact the event organiser.</div>`;
-      return;
-    }
-
-    const ev=S.events.find(e=>e.id===lead.eventId);
-    checkinEventName=ev?ev.name:'Event';
-
-    if(lead.checkedIn){
-      // ALREADY CHECKED IN
-      document.getElementById('checkinContent').innerHTML=`
-        <div style="font-size:3rem;margin-bottom:1rem">✅</div>
-        <div class="checkin-event">${checkinEventName}</div>
-        <div class="checkin-name">${lead.firstName} ${lead.lastName}</div>
-        <div class="checkin-role">${[lead.title,lead.company].filter(Boolean).join(' · ')}</div>
-        <div style="margin-top:1.2rem;font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.9rem;color:var(--green);padding:.75rem 2rem;background:var(--green-light);border:1.5px solid var(--green);border-radius:8px;">ALREADY CHECKED IN</div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);margin-top:.5rem">at ${fmtTime(lead.checkinTime)}</div>`;
-      return;
-    }
-
-    // VALID — show check-in page with event details
-    const locationTxt=ev&&ev.region?ev.region:'';
-    const dateTxt=ev&&ev.date?fmtDT(ev.date):'';
-    document.getElementById('checkinContent').innerHTML=`
-      <div class="checkin-logo">DATA BASE</div>
-      <div class="checkin-event">${checkinEventName}</div>
-      ${locationTxt?`<div style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:.2rem">📍 ${locationTxt}</div>`:''}
-      ${dateTxt?`<div style="font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--muted);margin-bottom:1.5rem">🗓 ${dateTxt}</div>`:''}
-      <div class="checkin-name">${lead.firstName} ${lead.lastName}</div>
-      <div class="checkin-role">${[lead.title,lead.company].filter(Boolean).join(' · ')}</div>
-      <button class="checkin-btn" style="margin-top:2rem" onclick="confirmCheckin()">✓ CHECK IN</button>`;
-    return;
-  }
-
-  // ── MAIN APP LOAD ──
+  // Load from cloud (so data syncs across all computers)
   const syncDot=document.getElementById('syncDot');
   syncDot.className='sync-dot stale';
   document.getElementById('syncTxt').textContent='Loading…';
