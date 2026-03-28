@@ -660,11 +660,19 @@ const EXERCISES = [
   {id:'plank',name:'Plank',muscle:'Core',cat:'core',emoji:'🧱'},
   {id:'crunch',name:'Crunches',muscle:'Abs',cat:'core',emoji:'🧱'},
 ];
-const EX_CATS = [{id:'all',name:'All'},{id:'chest',name:'Chest'},{id:'legs',name:'Legs'},{id:'back',name:'Back'},{id:'shoulders',name:'Shoulders'},{id:'arms',name:'Arms'},{id:'core',name:'Core'}];
-const LEAD_COLS = ['leads','deal','rejected','waiting'];
-const LEAD_LABELS = {leads:'LEADS',deal:'DEAL',rejected:'REJECTED',waiting:'WAITING'};
-const EV_STAGES = ['planning','outreach','confirmed','delivered'];
-const EV_LABELS = {planning:'PLANNING',outreach:'OUTREACH',confirmed:'CONFIRMED',delivered:'DELIVERED'};
+// ═══════════════════════════════════════════════════
+// 1. CONSTANTS & STATE
+// ═══════════════════════════════════════════════════
+const LEAD_COLS = ['leads', 'deal', 'rejected', 'waiting'];
+const LEAD_LABELS = {leads: 'LEADS', deal: 'DEAL', rejected: 'REJECTED', waiting: 'WAITING'};
+const EV_STAGES = ['planning', 'outreach', 'confirmed', 'delivered'];
+const EV_LABELS = {planning: 'PLANNING', outreach: 'OUTREACH', confirmed: 'CONFIRMED', delivered: 'DELIVERED'};
+const STORAGE_KEY = 'itreader-db-v1';
+
+let S = {
+    events: [], leads: [], tasks: [], theme: 'light'
+};
+let timerInt = null, currentEventId = null, editingEventId = null;
 
 // ═══════════════════════════════════════════════════
 // STATE
