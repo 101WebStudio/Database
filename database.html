@@ -1296,6 +1296,9 @@ async function showCheckinPage(leadId) {
       <div class="ci-delegate-name">${lead.firstName}<br>${lead.lastName}</div>
       <div class="ci-company">${[lead.company, lead.title].filter(Boolean).join(' · ')}</div>
       <div class="ci-already">✅ Already checked in at ${fmtTime(lead.checkinTime)}</div>
+      <!-- Linku i kthimit është HEQUR -->
+    `;
+    return;
   }
 
   body.innerHTML = `
@@ -1305,9 +1308,9 @@ async function showCheckinPage(leadId) {
     <button class="ci-checkin-btn" id="doCheckinBtn" onclick="performCheckin('${leadId}')">
       ✅ Check Me In
     </button>
-    <div id="ciStatusBox"></div>`;
+    <div id="ciStatusBox"></div>
+  `;
 }
-
 async function performCheckin(leadId) {
   const btn = document.getElementById('doCheckinBtn');
   const statusBox = document.getElementById('ciStatusBox');
