@@ -203,11 +203,8 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .task-item:hover .task-del2{opacity:1;}
 .task-del2:hover{color:var(--orange);}
 
-/* ── WORKOUT ═══════════════════════════════════════ */
+/* ── WORKOUT ── */
 .wo-layout{display:grid;grid-template-columns:1fr 330px;gap:2rem;align-items:start;}
-
-/* Exercise Library */
-.ex-library{}
 .ex-cats{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem;}
 .ex-cat-btn{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:3px 10px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;}
 .ex-cat-btn:hover,.ex-cat-btn.active{border-color:var(--orange);color:var(--orange);}
@@ -215,14 +212,11 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .ex-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.65rem;margin-bottom:2rem;}
 .ex-tile{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .15s;background:var(--bg);}
 .ex-tile:hover{border-color:var(--orange);transform:translateY(-2px);box-shadow:0 4px 16px rgba(232,107,37,.14);}
-.ex-tile-img{width:100%;height:90px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;background:var(--surface);position:relative;overflow:hidden;}
-.ex-tile-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,transparent 60%,rgba(0,0,0,.08));}
+.ex-tile-img{width:100%;height:90px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;background:var(--surface);}
 .ex-tile-body{padding:.5rem .6rem;}
 .ex-tile-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.68rem;letter-spacing:.3px;margin-bottom:1px;}
 .ex-tile-muscle{font-family:'IBM Plex Mono',monospace;font-size:.56rem;color:var(--orange);letter-spacing:1px;text-transform:uppercase;}
 .ex-tile-sets{font-family:'IBM Plex Mono',monospace;font-size:.56rem;color:var(--muted);}
-
-/* Workout History */
 .wo-history-list{display:flex;flex-direction:column;gap:.5rem;}
 .wo-day{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
 .wo-day-head{padding:.55rem .9rem;background:var(--surface);border-bottom:1px solid transparent;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:border-color .1s;}
@@ -245,16 +239,12 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .wo-ex-del{background:none;border:none;color:var(--light);cursor:pointer;font-size:.65rem;opacity:0;transition:opacity .1s;}
 .wo-day-body .wo-ex-row:hover .wo-ex-del{opacity:1;}
 .wo-ex-del:hover{color:var(--orange);}
-
-/* Daily Log Sidebar */
 .daily-sidebar{position:sticky;top:80px;}
 .daily-box{border:1.5px solid var(--border-dark);border-radius:var(--radius);overflow:hidden;background:var(--bg);}
 .daily-head{padding:.75rem 1.1rem;background:var(--orange);display:flex;align-items:center;justify-content:space-between;}
 .daily-head-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.75rem;color:#fff;letter-spacing:1px;text-transform:uppercase;}
 .daily-head-date{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:rgba(255,255,255,.8);}
 .daily-body{padding:.9rem;}
-
-/* Tracker rows */
 .tracker{display:flex;align-items:center;justify-content:space-between;padding:.55rem 0;border-bottom:1px solid var(--border);}
 .tracker:last-of-type{border-bottom:none;}
 .tracker-lbl{font-family:'IBM Plex Mono',monospace;font-size:.68rem;display:flex;align-items:center;gap:.45rem;}
@@ -269,12 +259,8 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .water-unit{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--muted);}
 .wbtn{width:22px;height:22px;border:1.5px solid var(--border);border-radius:4px;background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .12s;}
 .wbtn:hover{border-color:var(--orange);}
-
-/* Nicotine count */
 .nic-ctrl{display:flex;align-items:center;gap:.4rem;}
 .nic-n{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1rem;min-width:20px;text-align:center;}
-
-/* Today's exercises list in sidebar */
 .today-ex-list{margin-top:.8rem;}
 .today-ex-ttl{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
 .today-ex-item{display:flex;align-items:center;justify-content:space-between;padding:.42rem .55rem;background:var(--surface);border:1px solid var(--border);border-radius:5px;margin-bottom:.3rem;font-size:.76rem;}
@@ -285,6 +271,35 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .save-day-btn{width:100%;margin-top:.75rem;padding:.6rem;background:var(--orange);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .15s;}
 .save-day-btn:hover{background:var(--orange-dark);}
 
+/* ── QR MODAL ── */
+.qr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:.75rem;margin-top:.75rem;}
+.qr-lead-card{border:1.5px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;background:var(--bg);display:flex;flex-direction:column;gap:.5rem;}
+.qr-lead-name{font-weight:600;font-size:.85rem;}
+.qr-lead-co{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);}
+.qr-canvas-wrap{display:flex;justify-content:center;background:var(--surface);border-radius:6px;padding:.75rem;}
+.qr-canvas-wrap canvas{border-radius:4px;}
+.qr-actions{display:flex;gap:.4rem;flex-wrap:wrap;}
+.qr-dl-btn{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:600;padding:3px 10px;border:1.5px solid var(--border);border-radius:3px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;}
+.qr-dl-btn:hover{border-color:var(--orange);color:var(--orange);}
+.checkin-status{font-family:'IBM Plex Mono',monospace;font-size:.6rem;padding:2px 8px;border-radius:3px;}
+.checkin-status.in{background:var(--green-light);border:1px solid var(--green);color:var(--green);}
+.checkin-status.out{background:var(--surface);border:1px solid var(--border);color:var(--muted);}
+
+/* ── CHECK-IN PAGE ── */
+#checkinPage{display:none;position:fixed;inset:0;z-index:500;background:#fff;overflow-y:auto;}
+[data-theme="dark"] #checkinPage{background:#0f0e0d;}
+.ci-page-inner{max-width:420px;margin:0 auto;padding:3rem 2rem;text-align:center;}
+.ci-event-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.1rem;color:var(--orange);margin-bottom:.3rem;}
+.ci-lead-name{font-size:1.4rem;font-weight:700;margin-bottom:.2rem;}
+.ci-lead-co{font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--muted);margin-bottom:2rem;}
+.ci-btn{display:block;width:100%;padding:1rem;background:var(--orange);color:#fff;border:none;border-radius:var(--radius);font-family:'IBM Plex Mono',monospace;font-size:.9rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-bottom:1rem;}
+.ci-btn:hover{background:var(--orange-dark);transform:translateY(-2px);}
+.ci-btn:disabled{background:#aaa;cursor:not-allowed;transform:none;}
+.ci-status{font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:.7rem 1rem;border-radius:var(--radius-sm);border:1px solid;}
+.ci-status.ok{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.ci-status.err{background:var(--red-light);border-color:var(--red);color:var(--red);}
+.ci-logo{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.75rem;letter-spacing:3px;color:var(--orange);margin-bottom:2rem;}
+
 /* ── MODAL ── */
 .overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.48);align-items:center;justify-content:center;}
 .overlay.open{display:flex;}
@@ -293,14 +308,22 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .modal h3{font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.1rem;color:var(--orange);}
 .modal .field{margin-bottom:.6rem;}
 .modal-actions{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1.1rem;}
-.modal-ex-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
 .set-row{display:flex;gap:.5rem;align-items:center;margin-bottom:.4rem;}
 .set-row input{width:70px;}
 .set-num{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);width:45px;}
 .add-set-btn{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--orange);background:none;border:1px dashed var(--orange);border-radius:3px;padding:3px 10px;cursor:pointer;margin-top:.3rem;transition:all .12s;}
 .add-set-btn:hover{background:var(--orange-light);}
+.modal-ex-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+.attendee-chip-list{display:flex;flex-wrap:wrap;gap:.4rem;min-height:32px;padding:.3rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);cursor:text;}
+.attendee-chip{display:inline-flex;align-items:center;gap:.3rem;background:var(--orange-light);border:1px solid var(--orange);color:var(--orange);border-radius:20px;padding:2px 8px;font-family:'IBM Plex Mono',monospace;font-size:.62rem;}
+.attendee-chip button{background:none;border:none;color:var(--orange);cursor:pointer;font-size:.75rem;padding:0;line-height:1;}
+.attendee-input{border:none;outline:none;font-family:'IBM Plex Mono',monospace;font-size:.72rem;background:transparent;color:var(--text);min-width:140px;flex:1;}
+.invite-result{font-family:'IBM Plex Mono',monospace;font-size:.68rem;padding:.55rem .8rem;border-radius:var(--radius-sm);border:1px solid;margin-top:.5rem;}
+.invite-result.ok{background:var(--green-light);border-color:var(--green);color:var(--green);}
+.invite-result.err{background:var(--red-light);border-color:var(--red);color:var(--red);}
+.cal-inv-section{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem;margin-top:.4rem;}
 
-/* TOASTS */
+/* ── TOASTS ── */
 .toasts{position:fixed;bottom:1.5rem;right:1.5rem;z-index:300;display:flex;flex-direction:column;gap:.35rem;pointer-events:none;}
 .toast{background:var(--orange);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:.68rem;letter-spacing:.5px;padding:.6rem 1rem;border-radius:5px;animation:slideUp .2s ease;box-shadow:0 2px 12px rgba(232,107,37,.3);}
 @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -313,6 +336,14 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 </style>
 </head>
 <body>
+
+<!-- ══ CHECK-IN PAGE (shown via URL hash) ══════ -->
+<div id="checkinPage">
+  <div class="ci-page-inner">
+    <div class="ci-logo">DATA BASE</div>
+    <div id="ciPageContent"></div>
+  </div>
+</div>
 
 <!-- ══ MAIN APP ════════════════════════════════════ -->
 <div id="app">
@@ -388,21 +419,16 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 <div class="page" id="tab-workout">
   <div class="wo-layout">
     <div>
-      <!-- Exercise Library -->
       <div class="sec-head" style="margin-bottom:.8rem">
         <span class="sec-label">Exercise Library</span>
       </div>
       <div class="ex-cats" id="exCats"></div>
       <div class="ex-grid" id="exGrid"></div>
-
-      <!-- Workout History -->
       <div class="sec-head">
         <span class="sec-label">History<span class="badge" id="histCount">0</span></span>
       </div>
       <div class="wo-history-list" id="woHistory"></div>
     </div>
-
-    <!-- DAILY LOG SIDEBAR -->
     <div class="daily-sidebar">
       <div class="daily-box">
         <div class="daily-head">
@@ -410,7 +436,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
           <span class="daily-head-date" id="todayDateLbl"></span>
         </div>
         <div class="daily-body">
-          <div class="tracker" id="tr-workout">
+          <div class="tracker">
             <span class="tracker-lbl"><span class="tracker-icon">🏋️</span> Workout</span>
             <div class="tracker-ctrl">
               <div class="yes-no">
@@ -454,8 +480,6 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
               <button class="yn-btn" style="font-size:.55rem;padding:1px 5px;opacity:.6;margin-left:.3rem" onclick="clearTracker('nicotine')">×</button>
             </div>
           </div>
-
-          <!-- TODAY'S EXERCISES -->
           <div class="today-ex-list">
             <div class="today-ex-ttl">Today's Exercises</div>
             <div id="todayExList"></div>
@@ -469,7 +493,8 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 
 </div><!-- end #app -->
 
-<!-- ── MODALS ── -->
+<!-- ══ MODALS ══════════════════════════════════════ -->
+
 <div class="overlay" id="eventModal">
   <div class="modal">
     <h3 id="evModalTitle">New Event</h3>
@@ -536,18 +561,16 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   </div>
 </div>
 
-<!-- CALENDAR INVITE MODAL -->
+<!-- ── CALENDAR INVITE MODAL ── -->
 <div class="overlay" id="calInviteModal">
   <div class="modal" style="width:500px">
     <h3>📅 Send Calendar Invite</h3>
-
     <div class="cal-inv-section">Attendees</div>
     <div class="attendee-chip-list" id="attendeeChips" onclick="document.getElementById('attendeeInput').focus()">
       <input class="attendee-input" id="attendeeInput" placeholder="Type email and press Enter…"
         onkeydown="handleAttendeeInput(event)">
     </div>
     <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--muted);margin-top:.25rem">Press Enter or comma after each email</div>
-
     <div class="cal-inv-section" style="margin-top:.85rem">Event Details</div>
     <div class="form-grid" style="grid-template-columns:1fr 1fr">
       <div class="field"><label>Start *</label><input type="datetime-local" id="ciStart"></div>
@@ -555,22 +578,21 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
     </div>
     <div class="field"><label>Title</label><input id="ciTitle" placeholder="Will auto-fill from event name"></div>
     <div class="field"><label>Location</label><input id="ciLocation" placeholder="Venue or room"></div>
-    <div class="field"><label>Description / Message</label><textarea id="ciDesc" rows="3" style="resize:vertical" placeholder="Add a personal message to your invitees…"></textarea></div>
-
+    <div class="field"><label>Description / Message</label><textarea id="ciDesc" rows="3" style="resize:vertical" placeholder="Add a personal message…"></textarea></div>
     <div class="cal-inv-section">Also download</div>
     <div style="display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.5rem">
       <button class="btn btn-ghost" style="font-size:.65rem" onclick="downloadICS(currentCalEvId)">📁 Download .ics (Outlook)</button>
     </div>
-
     <div id="ciResult"></div>
     <input type="hidden" id="ciEvId">
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('calInviteModal')">Cancel</button>
-      <button class="btn btn-fill" onclick="sendCalInvite()">📅 Send Google Calendar Invite</button>
+      <button class="btn btn-fill" id="ciSendBtn" onclick="sendCalInvite()">📅 Send Google Calendar Invite</button>
     </div>
   </div>
 </div>
 
+<!-- ── CSV IMPORT MODAL ── -->
 <div class="overlay" id="csvModal">
   <div class="modal" style="width:480px">
     <h3>Import Leads from CSV</h3>
@@ -591,11 +613,26 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   </div>
 </div>
 
+<!-- ── QR CODE MODAL ── -->
+<div class="overlay" id="qrModal">
+  <div class="modal" style="width:680px">
+    <h3>📱 QR Check-In Codes</h3>
+    <div id="qrModalContent"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('qrModal')">Close</button>
+      <button class="btn btn-fill" onclick="printQRCodes()">🖨 Print All QR Codes</button>
+    </div>
+  </div>
+</div>
+
 <div class="toasts" id="toasts"></div>
+
+<!-- QR code library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 <script>
 // ═══════════════════════════════════════════════════
-// EXERCISES DATA
+// CONSTANTS
 // ═══════════════════════════════════════════════════
 const EXERCISES = [
   {id:'bench',name:'Bench Press',muscle:'Chest',cat:'chest',emoji:'🏋️'},
@@ -634,52 +671,114 @@ const EV_LABELS = {planning:'PLANNING',outreach:'OUTREACH',confirmed:'CONFIRMED'
 // ═══════════════════════════════════════════════════
 let S = {
   events:[],leads:[],tasks:[],driveSheets:[],
-  workoutLogs:[], // [{date, exercises:[{exId,sets:[{reps,weight}]}], trackers:{workout,diet,water,nicotine}}]
+  workoutLogs:[],calInvites:[],
   prio:'med', theme:'light'
 };
 let timerInt=null, currentEventId=null, editingEventId=null;
 let selectedExId=null, exCatFilter='all';
-let checkinLeadId=null, checkinEventName='';
 const todayKey=()=>new Date().toISOString().split('T')[0];
 
 // ═══════════════════════════════════════════════════
-// CLOUD SYNC — Anthropic Storage API
+// ▶ CHECK-IN PAGE — detect hash and show inline
+// ═══════════════════════════════════════════════════
+function checkCheckinHash(){
+  const hash = window.location.hash; // e.g. #checkin/leadId
+  if(!hash.startsWith('#checkin/')) return false;
+  const leadId = hash.replace('#checkin/','').trim();
+  showCheckinPage(leadId);
+  return true;
+}
+
+async function showCheckinPage(leadId){
+  document.getElementById('app').style.display='none';
+  document.getElementById('checkinPage').style.display='block';
+  const content = document.getElementById('ciPageContent');
+
+  // Load cloud data first so we have up-to-date leads
+  await loadCloud();
+
+  const lead = S.leads.find(l=>l.id===leadId);
+  if(!lead){
+    content.innerHTML=`<div style="color:var(--red);font-family:'IBM Plex Mono',monospace">❌ Lead not found.<br><br><a href="${window.location.pathname}" style="color:var(--orange)">← Back to app</a></div>`;
+    return;
+  }
+  const ev = S.events.find(e=>e.id===lead.eventId);
+
+  if(lead.checkedIn){
+    content.innerHTML=`
+      <div class="ci-event-name">${ev?ev.name:''}</div>
+      <div class="ci-lead-name">${lead.firstName} ${lead.lastName}</div>
+      <div class="ci-lead-co">${lead.company||''}</div>
+      <div class="ci-status ok" style="margin-bottom:1.5rem">✅ Already checked in at ${fmtTime(lead.checkinTime)}</div>
+      <a href="${window.location.pathname}" style="font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted)">← Back to app</a>`;
+    return;
+  }
+
+  content.innerHTML=`
+    <div class="ci-event-name">${ev?ev.name:'Event'}</div>
+    <div class="ci-lead-name">${lead.firstName} ${lead.lastName}</div>
+    <div class="ci-lead-co">${lead.company||''} ${lead.title?'· '+lead.title:''}</div>
+    <button class="ci-btn" id="ciDoBtn" onclick="performCheckin('${leadId}')">
+      ✅ Check Me In
+    </button>
+    <div id="ciPageStatus"></div>
+    <div style="margin-top:2rem;font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted)">${ev?ev.region||'':''} ${ev&&ev.date?'· '+fmtDT(ev.date):''}</div>`;
+}
+
+async function performCheckin(leadId){
+  const btn = document.getElementById('ciDoBtn');
+  const statusEl = document.getElementById('ciPageStatus');
+  btn.disabled = true;
+  btn.textContent = '⏳ Saving…';
+
+  // Re-fetch fresh data
+  await loadCloud();
+  const lead = S.leads.find(l=>l.id===leadId);
+  if(!lead){ statusEl.innerHTML='<div class="ci-status err">Lead not found. Please contact the organiser.</div>'; return; }
+  if(lead.checkedIn){ statusEl.innerHTML='<div class="ci-status ok">✅ Already checked in!</div>'; btn.disabled=true; return; }
+
+  lead.checkedIn = true;
+  lead.checkinTime = new Date().toISOString();
+
+  const ok = await cloudSet(S);
+  saveLocal();
+
+  if(ok){
+    btn.style.display='none';
+    statusEl.innerHTML=`<div class="ci-status ok">🎉 Welcome, ${lead.firstName}!<br>Checked in at ${fmtTime(lead.checkinTime)}</div>`;
+  } else {
+    btn.disabled=false;
+    btn.textContent='✅ Check Me In';
+    statusEl.innerHTML='<div class="ci-status err">❌ Network error — please try again or ask the organiser.</div>';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// CLOUD SYNC — Anthropic Storage API (shared=true for cross-device)
 // ═══════════════════════════════════════════════════
 const STORAGE_KEY='itreader-db-v1';
-let lastSync=null, syncPending=false;
 
 async function cloudGet(){
-  try{
-    const res=await window.storage.get(STORAGE_KEY);
-    return res?JSON.parse(res.value):null;
-  }catch(e){return null;}
+  try{ const res=await window.storage.get(STORAGE_KEY,true); return res?JSON.parse(res.value):null; }
+  catch(e){ return null; }
 }
 async function cloudSet(data){
-  try{
-    await window.storage.set(STORAGE_KEY,JSON.stringify(data));
-    return true;
-  }catch(e){return false;}
+  try{ await window.storage.set(STORAGE_KEY,JSON.stringify(data),true); return true; }
+  catch(e){ return false; }
 }
 
 async function syncNow(){
   const btn=document.getElementById('syncBtn');
   const dot=document.getElementById('syncDot');
   const txt=document.getElementById('syncTxt');
-  btn.classList.add('syncing');
-  txt.textContent='Syncing…';
-  try{
-    // Push local to cloud
-    const ok=await cloudSet(S);
-    if(ok){
-      lastSync=new Date();dot.className='sync-dot';txt.textContent='Synced';
-      setTimeout(()=>{txt.textContent='Sync';btn.classList.remove('syncing');},2000);
-      toast('☁️ Synced to cloud!');
-    } else {
-      txt.textContent='Error';btn.classList.remove('syncing');
-      setTimeout(()=>txt.textContent='Sync',2000);
-    }
-  }catch(e){
-    txt.textContent='Offline';btn.classList.remove('syncing');
+  btn.classList.add('syncing'); txt.textContent='Syncing…';
+  const ok=await cloudSet(S);
+  if(ok){
+    dot.className='sync-dot'; txt.textContent='Synced';
+    setTimeout(()=>{txt.textContent='Sync';btn.classList.remove('syncing');},2000);
+    toast('☁️ Synced!');
+  } else {
+    txt.textContent='Offline'; btn.classList.remove('syncing');
     setTimeout(()=>txt.textContent='Sync',2000);
   }
 }
@@ -687,23 +786,25 @@ async function syncNow(){
 async function loadCloud(){
   const cloud=await cloudGet();
   if(cloud){
-    // Merge cloud into local — cloud wins (most recent)
+    // Merge: cloud is source of truth, preserve theme from local if not set in cloud
+    const localTheme=S.theme;
     S={...S,...cloud};
+    if(!cloud.theme) S.theme=localTheme;
     if(!S.events) S.events=[];
     if(!S.leads) S.leads=[];
     if(!S.tasks) S.tasks=[];
     if(!S.driveSheets) S.driveSheets=[];
     if(!S.workoutLogs) S.workoutLogs=[];
-    localStorage.setItem('db7',JSON.stringify(S));
+    if(!S.calInvites) S.calInvites=[];
+    saveLocal();
     return true;
   }
   return false;
 }
 
-function saveLocal(){localStorage.setItem('db7',JSON.stringify(S));}
+function saveLocal(){ localStorage.setItem('db7',JSON.stringify(S)); }
 function save(){
   saveLocal();
-  // Auto-sync to cloud after 1.5s debounce
   clearTimeout(window._syncTimer);
   window._syncTimer=setTimeout(syncNow,1500);
 }
@@ -715,150 +816,15 @@ function loadLocal(){
   if(!S.tasks) S.tasks=[];
   if(!S.driveSheets) S.driveSheets=[];
   if(!S.workoutLogs) S.workoutLogs=[];
+  if(!S.calInvites) S.calInvites=[];
 }
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2);}
-
-// ═══════════════════════════════════════════════════
-// CALENDAR INVITE — Google Calendar + ICS
-// ═══════════════════════════════════════════════════
-let calInviteAttendees=[];
-let currentCalEvId=null;
-
-function openCalInvite(evId){
-  currentCalEvId=evId;
-  const ev=S.events.find(e=>e.id===evId);
-  calInviteAttendees=[];
-  renderAttendeeChips();
-  document.getElementById('ciEvId').value=evId;
-  document.getElementById('ciTitle').value=ev?ev.name:'';
-  document.getElementById('ciLocation').value=ev?ev.region||'':'';
-  document.getElementById('ciDesc').value='';
-  document.getElementById('ciResult').innerHTML='';
-  // Pre-fill times from event
-  if(ev&&ev.date) document.getElementById('ciStart').value=ev.date.substring(0,16);
-  if(ev&&ev.dateEnd) document.getElementById('ciEnd').value=ev.dateEnd.substring(0,16);
-  document.getElementById('calInviteModal').classList.add('open');
-  setTimeout(()=>document.getElementById('attendeeInput').focus(),100);
-}
-
-function handleAttendeeInput(e){
-  if(e.key==='Enter'||e.key===','||e.key===';'){
-    e.preventDefault();
-    addAttendeeChip();
-  }
-}
-function addAttendeeChip(){
-  const inp=document.getElementById('attendeeInput');
-  const val=inp.value.trim().replace(/,|;/g,'');
-  if(!val) return;
-  const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if(!emailRe.test(val)){
-    inp.style.color='var(--red)';
-    setTimeout(()=>inp.style.color='',800);
-    return;
-  }
-  if(!calInviteAttendees.includes(val)){
-    calInviteAttendees.push(val);
-    renderAttendeeChips();
-  }
-  inp.value='';
-}
-function removeAttendee(email){
-  calInviteAttendees=calInviteAttendees.filter(e=>e!==email);
-  renderAttendeeChips();
-}
-function renderAttendeeChips(){
-  const box=document.getElementById('attendeeChips');
-  const inp=document.getElementById('attendeeInput');
-  box.innerHTML='';
-  calInviteAttendees.forEach(email=>{
-    const chip=document.createElement('span');
-    chip.className='attendee-chip';
-    chip.innerHTML=`${email}<button onclick="removeAttendee('${email}')">×</button>`;
-    box.appendChild(chip);
-  });
-  box.appendChild(inp);
-  inp.focus();
-}
-
-async function sendCalInvite(){
-  addAttendeeChip(); // flush any typed email
-  const evId=document.getElementById('ciEvId').value;
-  const title=document.getElementById('ciTitle').value.trim();
-  const start=document.getElementById('ciStart').value;
-  const end=document.getElementById('ciEnd').value;
-  const loc=document.getElementById('ciLocation').value.trim();
-  const desc=document.getElementById('ciDesc').value.trim();
-  const res=document.getElementById('ciResult');
-
-  if(!title||!start||!end){res.innerHTML='<div class="invite-result err">Title, start and end time required.</div>';return;}
-  if(calInviteAttendees.length===0){res.innerHTML='<div class="invite-result err">Add at least one attendee email.</div>';return;}
-
-  res.innerHTML='<div class="invite-result" style="border-color:var(--border);color:var(--muted)">⏳ Sending via Google Calendar…</div>';
-
-  try{
-    const startISO=start.length===16?start+':00':start;
-    const endISO=end.length===16?end+':00':end;
-    const attendeeList=calInviteAttendees.map(e=>({email:e}));
-    const fullDesc=desc+'\n\nSent via IT Reader Data Base';
-
-    // Call Anthropic API which routes through the connected Google Calendar MCP
-    const response=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:400,
-        mcp_servers:[{type:'url',url:'https://gcal.mcp.claude.com/mcp',name:'gcal'}],
-        messages:[{
-          role:'user',
-          content:`Create a Google Calendar event with these exact details:
-Title: ${title}
-Start: ${startISO} (use Europe/Oslo timezone)
-End: ${endISO} (use Europe/Oslo timezone)
-Location: ${loc||''}
-Description: ${fullDesc}
-Attendees: ${calInviteAttendees.join(', ')}
-Send invites to all attendees. Reply with just the event link when done.`
-        }]
-      })
-    });
-    const data=await response.json();
-    const txt=data.content?.map(c=>c.text||'').join('')||'';
-    const link=txt.match(/https:\/\/calendar\.google\.com[^\s]*/)?.[0]||'';
-
-    // Save record locally
-    if(!S.calInvites) S.calInvites=[];
-    S.calInvites.push({evId,title,start:startISO,end:endISO,attendees:calInviteAttendees,sentAt:new Date().toISOString()});
-    save();
-
-    res.innerHTML=`<div class="invite-result ok">✅ Invite sent to: ${calInviteAttendees.join(', ')}${link?`<br><a href="${link}" target="_blank" style="color:var(--green);text-decoration:underline">View in Google Calendar ↗</a>`:''}</div>`;
-  }catch(e){
-    res.innerHTML=`<div class="invite-result err">❌ ${e.message||'Error sending invite'}. Try downloading the .ics file instead.</div>`;
-  }
-}
-
-// ICS Download (works with Outlook + any calendar)
-function downloadICS(evId){
-  const ev=S.events.find(e=>e.id===evId||e.id===currentCalEvId);
-  if(!ev){toast('No event found');return;}
-  const start=ev.date?ev.date.replace(/[-:]/g,'').replace('T','T').substring(0,15)+'00':'';
-  const end=ev.dateEnd?ev.dateEnd.replace(/[-:]/g,'').replace('T','T').substring(0,15)+'00':start;
-  const now=new Date().toISOString().replace(/[-:]/g,'').substring(0,15)+'00Z';
-  const ics=`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//IT Reader//Data Base//EN\r\nCALSCALE:GREGORIAN\r\nMETHOD:REQUEST\r\nBEGIN:VEVENT\r\nUID:${ev.id}@itreader.com\r\nDTSTAMP:${now}\r\n${start?'DTSTART;TZID=Europe/Oslo:'+start+'\r\n':''}\r\n${end?'DTEND;TZID=Europe/Oslo:'+end+'\r\n':''}\r\nSUMMARY:${ev.name}\r\nLOCATION:${ev.region||''}\r\nDESCRIPTION:${ev.notes||''}\r\nSTATUS:CONFIRMED\r\nSEQUENCE:0\r\nBEGIN:VALARM\r\nTRIGGER:-PT60M\r\nACTION:DISPLAY\r\nDESCRIPTION:Reminder\r\nEND:VALARM\r\nEND:VEVENT\r\nEND:VCALENDAR`;
-  const blob=new Blob([ics],{type:'text/calendar'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=ev.name.replace(/\s+/g,'_')+'.ics';
-  a.click();
-  toast('📁 .ics downloaded — open to add to Outlook/Apple Calendar');
-}
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2); }
 
 // ═══════════════════════════════════════════════════
 // THEME
 // ═══════════════════════════════════════════════════
-function toggleTheme(){const c=document.documentElement.getAttribute('data-theme');setTheme(c==='dark'?'light':'dark');}
-function setTheme(t){document.documentElement.setAttribute('data-theme',t);S.theme=t;document.getElementById('themeLabel').textContent=t==='dark'?'Dark':'Light';save();}
+function toggleTheme(){ const c=document.documentElement.getAttribute('data-theme'); setTheme(c==='dark'?'light':'dark'); }
+function setTheme(t){ document.documentElement.setAttribute('data-theme',t); S.theme=t; document.getElementById('themeLabel').textContent=t==='dark'?'Dark':'Light'; save(); }
 
 // ═══════════════════════════════════════════════════
 // NAVIGATION
@@ -868,16 +834,16 @@ function switchTab(name,el){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('tab-'+name).classList.add('active');
-  if(el)el.classList.add('active');
+  if(el) el.classList.add('active');
   updateBC();
-  if(name==='workout')renderWorkout();
+  if(name==='workout') renderWorkout();
 }
 function openEventDetail(evId){
   currentEventId=evId;
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('mainTabs').style.display='none';
   document.getElementById('eventDetail').style.display='block';
-  renderEventDetail(evId);updateBC();
+  renderEventDetail(evId); updateBC();
 }
 function closeEventDetail(){
   currentEventId=null;
@@ -895,10 +861,8 @@ function goBack(){
 }
 function updateBC(){
   const bc=document.getElementById('breadcrumb');
-  if(currentEventId){
-    const ev=S.events.find(e=>e.id===currentEventId);
-    bc.innerHTML=`<span class="crumb-link" onclick="goBack()">Events</span><span class="crumb-sep">/</span><span class="crumb-cur">${ev?ev.name:''}</span>`;
-  } else bc.innerHTML='';
+  if(currentEventId){ const ev=S.events.find(e=>e.id===currentEventId); bc.innerHTML=`<span class="crumb-link" onclick="goBack()">Events</span><span class="crumb-sep">/</span><span class="crumb-cur">${ev?ev.name:''}</span>`; }
+  else bc.innerHTML='';
 }
 
 // ═══════════════════════════════════════════════════
@@ -906,16 +870,16 @@ function updateBC(){
 // ═══════════════════════════════════════════════════
 function renderEvents(){
   document.getElementById('evCount').textContent=S.events.length;
-  const g=document.getElementById('evGrid');g.innerHTML='';
+  const g=document.getElementById('evGrid'); g.innerHTML='';
   if(!S.events.length){g.innerHTML='<div class="ev-empty">NO EVENTS YET — CREATE YOUR FIRST ONE</div>';return;}
   S.events.forEach(ev=>{
     const leads=S.leads.filter(l=>l.eventId===ev.id);
     const checked=leads.filter(l=>l.checkedIn).length;
-    const card=document.createElement('div');card.className='ev-card'+(ev.stage==='delivered'?' delivered-card':'');
+    const card=document.createElement('div'); card.className='ev-card'+(ev.stage==='delivered'?' delivered-card':'');
     const pills=[];
-    if(ev.region)pills.push(ev.region);
-    if(ev.date)pills.push(fmtDT(ev.date));
-    if(ev.client)pills.push(ev.client);
+    if(ev.region) pills.push(ev.region);
+    if(ev.date) pills.push(fmtDT(ev.date));
+    if(ev.client) pills.push(ev.client);
     card.innerHTML=`
       <div class="ev-card-top">
         <div class="ev-card-name">${ev.name}</div>
@@ -963,9 +927,9 @@ function saveEvent(){
   save();renderEvents();closeModal('eventModal');
 }
 function delEvent(id,e){
-  if(e)e.stopPropagation();
+  if(e) e.stopPropagation();
   if(!confirm('Delete event and all its leads?'))return;
-  S.events=S.events.filter(x=>x.id!==id);S.leads=S.leads.filter(x=>x.eventId!==id);
+  S.events=S.events.filter(x=>x.id!==id); S.leads=S.leads.filter(x=>x.eventId!==id);
   save();renderEvents();toast('Deleted');
 }
 function advEvent(id){
@@ -979,19 +943,21 @@ function advEvent(id){
 // EVENT DETAIL
 // ═══════════════════════════════════════════════════
 function renderEventDetail(evId){
-  const ev=S.events.find(e=>e.id===evId);if(!ev)return;
+  const ev=S.events.find(e=>e.id===evId); if(!ev)return;
   const leads=S.leads.filter(l=>l.eventId===evId);
   const checked=leads.filter(l=>l.checkedIn).length;
   const now=new Date(),evStart=ev.date?new Date(ev.date):null,evEnd=ev.dateEnd?new Date(ev.dateEnd):null;
   let statusTxt='No date set';
   if(evStart){
-    if(now<evStart)statusTxt=`<strong>STARTS IN</strong> — ${fmtDT(ev.date)}`;
-    else if(evEnd&&now<evEnd)statusTxt=`<strong>🔴 LIVE NOW</strong> — ends ${fmtDT(ev.dateEnd)}`;
+    if(now<evStart) statusTxt=`<strong>STARTS IN</strong> — ${fmtDT(ev.date)}`;
+    else if(evEnd&&now<evEnd) statusTxt=`<strong>🔴 LIVE NOW</strong> — ends ${fmtDT(ev.dateEnd)}`;
     else statusTxt=`<strong>ENDED</strong> — ${fmtDT(ev.date)}`;
   }
   const meta=[];
-  if(ev.region)meta.push('📍 '+ev.region);if(ev.date)meta.push('🗓 '+fmtDT(ev.date));
-  if(ev.client)meta.push('🏢 '+ev.client);if(ev.notes)meta.push('📝 '+ev.notes);
+  if(ev.region) meta.push('📍 '+ev.region);
+  if(ev.date) meta.push('🗓 '+fmtDT(ev.date));
+  if(ev.client) meta.push('🏢 '+ev.client);
+  if(ev.notes) meta.push('📝 '+ev.notes);
 
   document.getElementById('eventDetail').innerHTML=`
   <div style="padding:2rem">
@@ -1001,6 +967,8 @@ function renderEventDetail(evId){
       <button class="btn btn-fill" onclick="advEvent('${ev.id}')">→ Advance Stage</button>
       <button class="btn" style="border-color:var(--blue);color:var(--blue)" onclick="openCalInvite('${ev.id}')">📅 Calendar Invite</button>
       <button class="btn btn-ghost" onclick="downloadICS('${ev.id}')">📁 .ics Outlook</button>
+      <button class="btn btn-ghost" onclick="openQRModal('${ev.id}')">📱 QR Check-In</button>
+      <button class="btn btn-ghost" onclick="exportLeadsCSV('${ev.id}')">⬇ Export CSV</button>
     </div>
     <div class="ev-hero">
       <div class="ev-hero-top">
@@ -1030,6 +998,7 @@ function renderEventDetail(evId){
         <span class="leads-title">Leads<span class="badge">${leads.length}</span></span>
         <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
           <button class="btn btn-ghost" onclick="openCSVModal('${ev.id}')">⬆ Import CSV</button>
+          <button class="btn btn-ghost" onclick="exportLeadsCSV('${ev.id}')">⬇ Export CSV</button>
           <button class="btn btn-fill" onclick="openLeadModal('${ev.id}')">+ Add Lead</button>
         </div>
       </div>
@@ -1058,7 +1027,7 @@ function renderEventDetail(evId){
 
 function updTimer(s,e){
   const now=new Date();let t=s;
-  if(e&&now>s&&now<e)t=e;
+  if(e&&now>s&&now<e) t=e;
   const d=t-now,fmt=n=>String(Math.max(0,n)).padStart(2,'0');
   if(d<=0){['t-d','t-h','t-m','t-s'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='00';});return;}
   const dEl=document.getElementById('t-d'),hEl=document.getElementById('t-h'),mEl=document.getElementById('t-m'),sEl=document.getElementById('t-s');
@@ -1072,16 +1041,18 @@ function updTimer(s,e){
 // LEADS
 // ═══════════════════════════════════════════════════
 function renderLeads(evId,filter){
-  const tbody=document.getElementById('leadsBody');if(!tbody)return;
+  const tbody=document.getElementById('leadsBody'); if(!tbody)return;
   let list=S.leads.filter(l=>l.eventId===evId);
-  if(filter==='checked')list=list.filter(l=>l.checkedIn);
-  else if(filter&&filter!=='all')list=list.filter(l=>l.status===filter);
+  if(filter==='checked') list=list.filter(l=>l.checkedIn);
+  else if(filter&&filter!=='all') list=list.filter(l=>l.status===filter);
   tbody.innerHTML='';
   if(!list.length){tbody.innerHTML=`<tr class="empty-row"><td colspan="12">NO LEADS YET</td></tr>`;return;}
   list.forEach((l,i)=>{
     const tr=document.createElement('tr');
     const li=l.linkedin?`<a href="${l.linkedin}" target="_blank" style="color:var(--orange);font-family:'IBM Plex Mono',monospace;font-size:.7rem;text-decoration:none">↗</a>`:'—';
-    const ci=l.checkedIn?`<span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--green)">✅ ${fmtTime(l.checkinTime)}</span>`:`<span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--light)">pending</span>`;
+    const ci=l.checkedIn
+      ?`<span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--green)">✅ ${fmtTime(l.checkinTime)}</span>`
+      :`<span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--light)">pending</span>`;
     tr.innerHTML=`
       <td class="lt-mono" style="color:var(--light)">${i+1}</td>
       <td style="font-weight:600">${l.firstName||'—'}</td>
@@ -1100,13 +1071,13 @@ function renderLeads(evId,filter){
 }
 function filterLeads(f,evId,el){
   document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
-  el.classList.add('active');renderLeads(evId,f);
+  el.classList.add('active'); renderLeads(evId,f);
 }
 function cycleStatus(id){
   const l=S.leads.find(x=>x.id===id);
   const idx=LEAD_COLS.indexOf(l.status);
   l.status=LEAD_COLS[(idx+1)%LEAD_COLS.length];
-  save();if(currentEventId)renderEventDetail(currentEventId);toast('→ '+LEAD_LABELS[l.status]);
+  save(); if(currentEventId)renderEventDetail(currentEventId); toast('→ '+LEAD_LABELS[l.status]);
 }
 function openLeadModal(evId){
   document.getElementById('ldEventId').value=evId;
@@ -1120,16 +1091,16 @@ function saveLead(){
   if(!f('ldFirst')){toast('First name required');return;}
   const evId=document.getElementById('ldEventId').value;
   S.leads.push({id:uid(),eventId:evId,firstName:f('ldFirst'),lastName:f('ldLast'),email:f('ldEmail'),phone:f('ldPhone'),company:f('ldCompany'),title:f('ldTitle'),linkedin:f('ldLinkedin'),notes:f('ldNotes'),status:f('ldStatus')||'leads',checkedIn:false});
-  save();if(currentEventId===evId)renderEventDetail(evId);renderEvents();closeModal('leadModal');toast('Lead added');
+  save(); if(currentEventId===evId)renderEventDetail(evId); renderEvents(); closeModal('leadModal'); toast('Lead added');
 }
 function delLead(id,e){
-  if(e)e.stopPropagation();
+  if(e) e.stopPropagation();
   S.leads=S.leads.filter(x=>x.id!==id);
-  save();if(currentEventId)renderEventDetail(currentEventId);renderEvents();toast('Lead removed');
+  save(); if(currentEventId)renderEventDetail(currentEventId); renderEvents(); toast('Lead removed');
 }
 
 // ═══════════════════════════════════════════════════
-// CSV IMPORT
+// ▶ CSV IMPORT — fixed & working
 // ═══════════════════════════════════════════════════
 function openCSVModal(evId){
   document.getElementById('csvEventId').value=evId;
@@ -1147,10 +1118,7 @@ function importCSV(){
     const text=e.target.result;
     const lines=text.split(/\r?\n/).filter(l=>l.trim());
     if(lines.length<2){showCSVResult([],[],'CSV file is empty or has no data rows.');return;}
-
-    // Parse header
     const header=parseCSVRow(lines[0]).map(h=>h.toLowerCase().trim());
-    // Map columns
     const colIdx={};
     const aliases={
       first:['first name','first','firstname','fname'],
@@ -1160,34 +1128,25 @@ function importCSV(){
       company:['company','organisation','organization','company name'],
       title:['title','job title','position','role'],
       phone:['phone','phone number','tel','telephone'],
+      linkedin:['linkedin','linkedin url','linkedin profile'],
     };
     Object.entries(aliases).forEach(([key,alts])=>{
       const found=header.findIndex(h=>alts.includes(h));
       if(found>=0) colIdx[key]=found;
     });
-
-    if(colIdx.email===undefined){
-      showCSVResult([],[],'No Email column found. Required column: Email');return;
-    }
-    if(colIdx.name===undefined&&colIdx.first===undefined){
-      showCSVResult([],[],'No Name column found. Required: Name or First Name');return;
-    }
-
+    if(colIdx.email===undefined){showCSVResult([],[],'No Email column found.');return;}
+    if(colIdx.name===undefined&&colIdx.first===undefined){showCSVResult([],[],'No Name column found. Needs "Name" or "First Name".');return;}
     const existingEmails=new Set(S.leads.filter(l=>l.eventId===evId).map(l=>(l.email||'').toLowerCase()));
     const imported=[];const errors=[];
     const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
     lines.slice(1).forEach((line,i)=>{
-      if(!line.trim()) return;
+      if(!line.trim())return;
       const cols=parseCSVRow(line);
       const email=(cols[colIdx.email]||'').trim();
       const rowNum=i+2;
-
-      // Validate email
       if(!email){errors.push(`Row ${rowNum}: Missing email`);return;}
       if(!emailRe.test(email)){errors.push(`Row ${rowNum}: Invalid email "${email}"`);return;}
       if(existingEmails.has(email.toLowerCase())){errors.push(`Row ${rowNum}: Duplicate email "${email}"`);return;}
-
       let firstName='',lastName='';
       if(colIdx.name!==undefined){
         const full=(cols[colIdx.name]||'').trim();
@@ -1198,20 +1157,14 @@ function importCSV(){
         lastName=colIdx.last!==undefined?(cols[colIdx.last]||'').trim():'';
       }
       if(!firstName){errors.push(`Row ${rowNum}: Missing name`);return;}
-
-      const lead={
-        id:uid(),eventId:evId,
-        firstName,lastName,
-        email,
+      imported.push({id:uid(),eventId:evId,firstName,lastName,email,
         phone:colIdx.phone!==undefined?(cols[colIdx.phone]||'').trim():'',
         company:colIdx.company!==undefined?(cols[colIdx.company]||'').trim():'',
         title:colIdx.title!==undefined?(cols[colIdx.title]||'').trim():'',
-        linkedin:'',notes:'',status:'leads',checkedIn:false
-      };
-      imported.push(lead);
+        linkedin:colIdx.linkedin!==undefined?(cols[colIdx.linkedin]||'').trim():'',
+        notes:'',status:'leads',checkedIn:false});
       existingEmails.add(email.toLowerCase());
     });
-
     imported.forEach(l=>S.leads.push(l));
     if(imported.length>0) save();
     showCSVResult(imported,errors);
@@ -1237,10 +1190,7 @@ function parseCSVRow(row){
 
 function showCSVResult(imported,errors,fatal){
   const preview=document.getElementById('csvPreview');
-  if(fatal){
-    preview.innerHTML=`<div style="font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--red);background:var(--red-light);border:1px solid var(--red);border-radius:4px;padding:.6rem .8rem">${fatal}</div>`;
-    return;
-  }
+  if(fatal){preview.innerHTML=`<div style="font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--red);background:var(--red-light);border:1px solid var(--red);border-radius:4px;padding:.6rem .8rem">${fatal}</div>`;return;}
   let html='';
   if(imported.length>0){
     html+=`<div style="font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--green);background:var(--green-light);border:1px solid var(--green);border-radius:4px;padding:.6rem .8rem;margin-bottom:.5rem">✅ ${imported.length} lead${imported.length!==1?'s':''} imported successfully</div>`;
@@ -1254,13 +1204,303 @@ function showCSVResult(imported,errors,fatal){
 }
 
 // ═══════════════════════════════════════════════════
+// ▶ CSV EXPORT — new feature
+// ═══════════════════════════════════════════════════
+function exportLeadsCSV(evId){
+  const ev=S.events.find(e=>e.id===evId);
+  const leads=S.leads.filter(l=>l.eventId===evId);
+  if(!leads.length){toast('No leads to export');return;}
+  const headers=['First Name','Last Name','Email','Phone','Company','Job Title','LinkedIn','Status','Checked In','Check-In Time','Notes'];
+  const rows=leads.map(l=>[
+    csvEscape(l.firstName||''),csvEscape(l.lastName||''),csvEscape(l.email||''),
+    csvEscape(l.phone||''),csvEscape(l.company||''),csvEscape(l.title||''),
+    csvEscape(l.linkedin||''),csvEscape(l.status||''),
+    l.checkedIn?'Yes':'No',
+    l.checkinTime?fmtTime(l.checkinTime):'',
+    csvEscape(l.notes||'')
+  ]);
+  const csv=[headers.join(','),...rows.map(r=>r.join(','))].join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  const filename=(ev?ev.name.replace(/\s+/g,'_'):'leads')+'_leads.csv';
+  a.download=filename;
+  a.click();
+  toast(`⬇ Exported ${leads.length} leads as CSV`);
+}
+function csvEscape(val){
+  const s=String(val);
+  if(s.includes(',')|| s.includes('"')||s.includes('\n')) return '"'+s.replace(/"/g,'""')+'"';
+  return s;
+}
+
+// ═══════════════════════════════════════════════════
+// ▶ QR CODE CHECK-IN — new feature
+// ═══════════════════════════════════════════════════
+function openQRModal(evId){
+  const leads=S.leads.filter(l=>l.eventId===evId);
+  const content=document.getElementById('qrModalContent');
+  if(!leads.length){
+    content.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.72rem;color:var(--muted);padding:1rem 0">No leads for this event. Add leads first.</div>';
+    document.getElementById('qrModal').classList.add('open');
+    return;
+  }
+  // Build the check-in base URL (this page + hash)
+  const baseURL=window.location.href.split('#')[0];
+  content.innerHTML=`
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);margin-bottom:1rem;line-height:1.7">
+      Each QR code links to a personal check-in page. Share or print for each delegate.<br>
+      <strong style="color:var(--text)">Check-in URL:</strong> ${baseURL}#checkin/[leadId]
+    </div>
+    <div class="qr-grid" id="qrGrid"></div>`;
+  document.getElementById('qrModal').classList.add('open');
+
+  // Render QR codes after modal is open (so DOM is ready)
+  setTimeout(()=>{
+    const grid=document.getElementById('qrGrid');
+    if(!grid) return;
+    leads.forEach(lead=>{
+      const card=document.createElement('div');
+      card.className='qr-lead-card';
+      const checkinURL=`${baseURL}#checkin/${lead.id}`;
+      const statusCls=lead.checkedIn?'in':'out';
+      const statusTxt=lead.checkedIn?`✅ Checked in ${fmtTime(lead.checkinTime)}`:'⬜ Not checked in';
+      card.innerHTML=`
+        <div class="qr-lead-name">${lead.firstName} ${lead.lastName}</div>
+        <div class="qr-lead-co">${lead.company||''} ${lead.title?'· '+lead.title:''}</div>
+        <span class="checkin-status ${statusCls}">${statusTxt}</span>
+        <div class="qr-canvas-wrap" id="qr-${lead.id}"></div>
+        <div class="qr-actions">
+          <button class="qr-dl-btn" onclick="downloadQR('${lead.id}','${(lead.firstName+' '+lead.lastName).replace(/'/g,'')}')">⬇ Download PNG</button>
+          <button class="qr-dl-btn" onclick="copyCheckinURL('${checkinURL}')">🔗 Copy Link</button>
+        </div>`;
+      grid.appendChild(card);
+
+      // Generate QR
+      try{
+        new QRCode(document.getElementById('qr-'+lead.id),{
+          text:checkinURL,width:150,height:150,
+          colorDark:'#000000',colorLight:'#ffffff',
+          correctLevel:QRCode.CorrectLevel.M
+        });
+      }catch(err){
+        document.getElementById('qr-'+lead.id).innerHTML=`<div style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);word-break:break-all;padding:.5rem">${checkinURL}</div>`;
+      }
+    });
+  },100);
+}
+
+function downloadQR(leadId,name){
+  const wrap=document.getElementById('qr-'+leadId);
+  if(!wrap) return;
+  const canvas=wrap.querySelector('canvas');
+  if(!canvas){toast('QR canvas not found');return;}
+  const a=document.createElement('a');
+  a.href=canvas.toDataURL('image/png');
+  a.download=name.replace(/\s+/g,'_')+'_checkin_QR.png';
+  a.click();
+  toast('QR code downloaded');
+}
+
+function copyCheckinURL(url){
+  navigator.clipboard.writeText(url).then(()=>toast('✅ Check-in link copied!')).catch(()=>{
+    // Fallback
+    const inp=document.createElement('input');
+    inp.value=url; document.body.appendChild(inp); inp.select();
+    document.execCommand('copy'); document.body.removeChild(inp);
+    toast('✅ Check-in link copied!');
+  });
+}
+
+function printQRCodes(){
+  const grid=document.getElementById('qrGrid');
+  if(!grid){toast('Open QR modal first');return;}
+  const win=window.open('','_blank');
+  win.document.write(`<html><head><title>QR Check-In Codes</title><style>
+    body{font-family:sans-serif;padding:20px;}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+    .card{border:1px solid #ddd;border-radius:8px;padding:16px;text-align:center;break-inside:avoid;}
+    .name{font-weight:700;font-size:14px;margin-bottom:4px;}
+    .co{font-size:11px;color:#777;margin-bottom:12px;}
+    img,canvas{width:140px;height:140px;}
+    @media print{.grid{grid-template-columns:repeat(3,1fr)}}
+  </style></head><body><div class="grid">`);
+  grid.querySelectorAll('.qr-lead-card').forEach(card=>{
+    const name=card.querySelector('.qr-lead-name')?.textContent||'';
+    const co=card.querySelector('.qr-lead-co')?.textContent||'';
+    const canvas=card.querySelector('canvas');
+    const img=canvas?`<img src="${canvas.toDataURL()}">`:'';
+    win.document.write(`<div class="card"><div class="name">${name}</div><div class="co">${co}</div>${img}</div>`);
+  });
+  win.document.write('</div></body></html>');
+  win.document.close();
+  win.print();
+}
+
+// ═══════════════════════════════════════════════════
+// ▶ CALENDAR INVITE — fixed to use correct model + manual only
+// ═══════════════════════════════════════════════════
+let calInviteAttendees=[];
+let currentCalEvId=null;
+
+function openCalInvite(evId){
+  currentCalEvId=evId;
+  const ev=S.events.find(e=>e.id===evId);
+  calInviteAttendees=[];
+  renderAttendeeChips();
+  document.getElementById('ciEvId').value=evId;
+  document.getElementById('ciTitle').value=ev?ev.name:'';
+  document.getElementById('ciLocation').value=ev?ev.region||'':'';
+  document.getElementById('ciDesc').value='';
+  document.getElementById('ciResult').innerHTML='';
+  if(ev&&ev.date) document.getElementById('ciStart').value=ev.date.substring(0,16);
+  if(ev&&ev.dateEnd) document.getElementById('ciEnd').value=ev.dateEnd.substring(0,16);
+  document.getElementById('calInviteModal').classList.add('open');
+  setTimeout(()=>document.getElementById('attendeeInput').focus(),100);
+}
+
+function handleAttendeeInput(e){
+  if(e.key==='Enter'||e.key===','||e.key===';'){e.preventDefault();addAttendeeChip();}
+}
+function addAttendeeChip(){
+  const inp=document.getElementById('attendeeInput');
+  const val=inp.value.trim().replace(/,|;/g,'');
+  if(!val) return;
+  const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailRe.test(val)){inp.style.color='var(--red)';setTimeout(()=>inp.style.color='',800);return;}
+  if(!calInviteAttendees.includes(val)) calInviteAttendees.push(val);
+  renderAttendeeChips();
+  inp.value='';
+}
+function removeAttendee(email){
+  calInviteAttendees=calInviteAttendees.filter(e=>e!==email);
+  renderAttendeeChips();
+}
+function renderAttendeeChips(){
+  const box=document.getElementById('attendeeChips');
+  const inp=document.getElementById('attendeeInput');
+  box.innerHTML='';
+  calInviteAttendees.forEach(email=>{
+    const chip=document.createElement('span'); chip.className='attendee-chip';
+    chip.innerHTML=`${email}<button onclick="removeAttendee('${email}')">×</button>`;
+    box.appendChild(chip);
+  });
+  box.appendChild(inp); inp.focus();
+}
+
+// Manual-only: user clicks the button to send
+async function sendCalInvite(){
+  addAttendeeChip(); // flush typed email
+  const evId=document.getElementById('ciEvId').value;
+  const title=document.getElementById('ciTitle').value.trim();
+  const start=document.getElementById('ciStart').value;
+  const end=document.getElementById('ciEnd').value;
+  const loc=document.getElementById('ciLocation').value.trim();
+  const desc=document.getElementById('ciDesc').value.trim();
+  const res=document.getElementById('ciResult');
+  const sendBtn=document.getElementById('ciSendBtn');
+
+  if(!title||!start||!end){res.innerHTML='<div class="invite-result err">Title, start and end time required.</div>';return;}
+  if(calInviteAttendees.length===0){res.innerHTML='<div class="invite-result err">Add at least one attendee email.</div>';return;}
+
+  sendBtn.disabled=true; sendBtn.textContent='⏳ Sending…';
+  res.innerHTML='<div class="invite-result" style="border-color:var(--border);color:var(--muted)">⏳ Connecting to Google Calendar…</div>';
+
+  try{
+    const startISO=start.length===16?start+':00':start;
+    const endISO=end.length===16?end+':00':end;
+    const fullDesc=desc?desc+'\n\nSent via IT Reader Data Base':'Sent via IT Reader Data Base';
+
+    const response=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-5-20251001',
+        max_tokens:1000,
+        mcp_servers:[{type:'url',url:'https://gcal.mcp.claude.com/mcp',name:'gcal'}],
+        messages:[{
+          role:'user',
+          content:`Create a Google Calendar event with these exact details and send invites to all attendees:
+Title: ${title}
+Start: ${startISO}
+End: ${endISO}
+Location: ${loc||''}
+Description: ${fullDesc}
+Attendees (send invites to each): ${calInviteAttendees.join(', ')}
+After creating the event, reply with just: DONE: [event link if available]`
+        }]
+      })
+    });
+
+    if(!response.ok){
+      const errData=await response.json().catch(()=>({}));
+      throw new Error(errData.error?.message||`API error ${response.status}`);
+    }
+
+    const data=await response.json();
+    const fullText=data.content?.filter(c=>c.type==='text').map(c=>c.text).join('')||'';
+    const link=fullText.match(/https:\/\/calendar\.google\.com[^\s\)"]*/)?.[0]||'';
+
+    // Save record
+    if(!S.calInvites) S.calInvites=[];
+    S.calInvites.push({evId,title,start:startISO,end:endISO,attendees:[...calInviteAttendees],sentAt:new Date().toISOString()});
+    save();
+
+    res.innerHTML=`<div class="invite-result ok">✅ Invite sent to: ${calInviteAttendees.join(', ')}${link?`<br><a href="${link}" target="_blank" style="color:var(--green);text-decoration:underline">View in Google Calendar ↗</a>`:''}</div>`;
+    toast('📅 Calendar invite sent!');
+  }catch(err){
+    res.innerHTML=`<div class="invite-result err">❌ ${err.message||'Error sending invite'}.<br>Try downloading the .ics file instead.</div>`;
+  } finally {
+    sendBtn.disabled=false; sendBtn.textContent='📅 Send Google Calendar Invite';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// ICS DOWNLOAD — for Outlook/Apple Calendar
+// ═══════════════════════════════════════════════════
+function downloadICS(evId){
+  const id=evId||currentCalEvId;
+  const ev=S.events.find(e=>e.id===id);
+  if(!ev){toast('Event not found');return;}
+  const toICSDate=str=>{
+    if(!str) return '';
+    // Remove dashes/colons from datetime, ensure trailing Z or local
+    const d=new Date(str);
+    if(isNaN(d)) return '';
+    return d.toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+  };
+  const start=toICSDate(ev.date);
+  const end=toICSDate(ev.dateEnd)||start;
+  const now=toICSDate(new Date().toISOString());
+  const ics=[
+    'BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//IT Reader//DataBase//EN',
+    'CALSCALE:GREGORIAN','METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    `UID:${ev.id}@itreader.com`,
+    `DTSTAMP:${now}`,
+    start?`DTSTART:${start}`:`DTSTART;VALUE=DATE:${todayKey().replace(/-/g,'')}`,
+    end?`DTEND:${end}`:`DTEND;VALUE=DATE:${todayKey().replace(/-/g,'')}`,
+    `SUMMARY:${ev.name}`,
+    `LOCATION:${(ev.region||'').replace(/\n/g,'\\n')}`,
+    `DESCRIPTION:${[ev.client?'Client: '+ev.client:'',ev.notes||''].filter(Boolean).join('\\n')}`,
+    'STATUS:CONFIRMED','SEQUENCE:0',
+    'BEGIN:VALARM','TRIGGER:-PT60M','ACTION:DISPLAY','DESCRIPTION:Reminder','END:VALARM',
+    'END:VEVENT','END:VCALENDAR'
+  ].join('\r\n');
+  const blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=(ev.name.replace(/\s+/g,'_')||'event')+'.ics'; a.click();
+  toast('📁 .ics downloaded — open to add to Outlook/Apple Calendar');
+}
+
+// ═══════════════════════════════════════════════════
 // DRIVE
 // ═══════════════════════════════════════════════════
 function renderDrive(){
-  const g=document.getElementById('driveGrid');g.innerHTML='';
+  const g=document.getElementById('driveGrid'); g.innerHTML='';
   if(!S.driveSheets.length){g.innerHTML='<div class="ev-empty" style="grid-column:1/-1">NO SHEETS ADDED YET</div>';return;}
   S.driveSheets.forEach(s=>{
-    const c=document.createElement('div');c.className='drive-card';
+    const c=document.createElement('div'); c.className='drive-card';
     c.innerHTML=`<div class="drive-icon">📊</div><div class="drive-name">${s.name}</div>${s.desc?`<div class="drive-desc">${s.desc}</div>`:''}<div class="drive-url">${s.url.length>45?s.url.substring(0,45)+'…':s.url}</div><button class="drive-del" onclick="delSheet('${s.id}',event)">✕</button>`;
     c.onclick=e=>{if(e.target.classList.contains('drive-del'))return;window.open(s.url,'_blank');};
     g.appendChild(c);
@@ -1287,7 +1527,7 @@ function renderTasks(){
   list.innerHTML='';
   if(!sorted.length){list.innerHTML='<div class="ev-empty" style="padding:2rem">NO TASKS YET</div>';return;}
   sorted.forEach(t=>{
-    const item=document.createElement('div');item.className='task-item'+(t.done?' done':'');
+    const item=document.createElement('div'); item.className='task-item'+(t.done?' done':'');
     item.innerHTML=`
       <div class="task-ck" onclick="togTask('${t.id}')">${t.done?'✓':''}</div>
       <div class="task-body">
@@ -1312,7 +1552,7 @@ function togTask(id){const t=S.tasks.find(x=>x.id===id);if(t){t.done=!t.done;sav
 function delTask(id){S.tasks=S.tasks.filter(x=>x.id!==id);save();renderTasks();}
 
 // ═══════════════════════════════════════════════════
-// WORKOUT ══════════════════════════════════════════
+// WORKOUT
 // ═══════════════════════════════════════════════════
 function getTodayLog(){
   const k=todayKey();
@@ -1320,17 +1560,12 @@ function getTodayLog(){
   if(!log){log={date:k,exercises:[],trackers:{workout:null,diet:null,water:0,nicotine:0}};S.workoutLogs.push(log);}
   return log;
 }
-
 function renderWorkout(){
   document.getElementById('todayDateLbl').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
-  renderExLibrary();
-  renderTodaySidebar();
-  renderWoHistory();
+  renderExLibrary();renderTodaySidebar();renderWoHistory();
 }
-
 function renderExLibrary(){
-  // Category buttons
-  const cats=document.getElementById('exCats');cats.innerHTML='';
+  const cats=document.getElementById('exCats'); cats.innerHTML='';
   EX_CATS.forEach(c=>{
     const btn=document.createElement('button');
     btn.className='ex-cat-btn'+(exCatFilter===c.id?' active':'');
@@ -1338,11 +1573,10 @@ function renderExLibrary(){
     btn.onclick=()=>{exCatFilter=c.id;renderExLibrary();};
     cats.appendChild(btn);
   });
-  // Exercise tiles
-  const grid=document.getElementById('exGrid');grid.innerHTML='';
+  const grid=document.getElementById('exGrid'); grid.innerHTML='';
   const filtered=exCatFilter==='all'?EXERCISES:EXERCISES.filter(e=>e.cat===exCatFilter);
   filtered.forEach(ex=>{
-    const tile=document.createElement('div');tile.className='ex-tile';
+    const tile=document.createElement('div'); tile.className='ex-tile';
     const todayLog=getTodayLog();
     const logged=todayLog.exercises.filter(e=>e.exId===ex.id);
     const setsInfo=logged.length?`${logged.reduce((a,e)=>a+e.sets.length,0)} sets today`:'';
@@ -1351,21 +1585,18 @@ function renderExLibrary(){
     grid.appendChild(tile);
   });
 }
-
 function openExModal(exId){
   selectedExId=exId;
   const ex=EXERCISES.find(e=>e.id===exId);
   document.getElementById('exModalName').innerHTML=`${ex.emoji} ${ex.name}`;
   document.getElementById('setRows').innerHTML='';
-  addSetRow();addSetRow();addSetRow(); // Start with 3 sets
+  addSetRow();addSetRow();addSetRow();
   document.getElementById('exModal').classList.add('open');
-  setTimeout(()=>document.getElementById('setRows').querySelector('input'),100);
 }
-
 function addSetRow(){
   const rows=document.getElementById('setRows');
   const idx=rows.children.length+1;
-  const row=document.createElement('div');row.className='set-row';
+  const row=document.createElement('div'); row.className='set-row';
   row.innerHTML=`
     <span class="set-num">Set ${idx}</span>
     <div class="field" style="flex:1;margin-bottom:0"><label>Reps</label><input type="number" placeholder="10" min="1" class="set-reps"></div>
@@ -1374,14 +1605,13 @@ function addSetRow(){
   rows.appendChild(row);
 }
 function reIndexSets(){document.querySelectorAll('.set-row .set-num').forEach((n,i)=>n.textContent=`Set ${i+1}`);}
-
 function logExercise(){
   const rows=document.querySelectorAll('.set-row');
   const sets=[];
   rows.forEach(r=>{
     const reps=parseInt(r.querySelector('.set-reps').value);
     const weight=parseFloat(r.querySelector('.set-weight').value)||0;
-    if(reps>0)sets.push({reps,weight});
+    if(reps>0) sets.push({reps,weight});
   });
   if(!sets.length){toast('Enter at least one set');return;}
   const log=getTodayLog();
@@ -1390,29 +1620,20 @@ function logExercise(){
   const ex=EXERCISES.find(e=>e.id===selectedExId);
   toast(`💪 ${ex.name} logged! ${sets.length} set${sets.length!==1?'s':''}`);
 }
-
 function renderTodaySidebar(){
   const log=getTodayLog();const t=log.trackers;
-  // Workout toggle
   document.getElementById('wo-y').className='yn-btn'+(t.workout==='yes'?' y-active':'');
   document.getElementById('wo-n').className='yn-btn'+(t.workout==='no'?' n-active':'');
-  // Diet toggle
   document.getElementById('diet-y').className='yn-btn'+(t.diet==='yes'?' y-active':'');
   document.getElementById('diet-n').className='yn-btn'+(t.diet==='no'?' n-active':'');
-  // Water
   document.getElementById('water-n').textContent=t.water||0;
-  // Nicotine
   document.getElementById('nic-n').textContent=t.nicotine||0;
-  // Today exercises list
-  const list=document.getElementById('todayExList');list.innerHTML='';
-  if(!log.exercises.length){
-    list.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.62rem;color:var(--light);text-align:center;padding:.5rem">Click an exercise to log</div>';
-    return;
-  }
+  const list=document.getElementById('todayExList'); list.innerHTML='';
+  if(!log.exercises.length){list.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.62rem;color:var(--light);text-align:center;padding:.5rem">Click an exercise to log</div>';return;}
   log.exercises.forEach((entry,idx)=>{
     const ex=EXERCISES.find(e=>e.id===entry.exId)||{name:entry.exId,emoji:'🏋️'};
     const totalVol=entry.sets.reduce((a,s)=>a+s.reps*(s.weight||0),0);
-    const item=document.createElement('div');item.className='today-ex-item';
+    const item=document.createElement('div'); item.className='today-ex-item';
     item.innerHTML=`
       <span class="today-ex-nm">${ex.emoji} ${ex.name}</span>
       <span class="today-ex-detail">${entry.sets.length}×${entry.sets.map(s=>s.reps).join('/')} ${totalVol?'@'+Math.max(...entry.sets.map(s=>s.weight))+'kg':''}</span>
@@ -1420,48 +1641,28 @@ function renderTodaySidebar(){
     list.appendChild(item);
   });
 }
-
-function delTodayEx(idx){
-  const log=getTodayLog();
-  log.exercises.splice(idx,1);
-  save();renderTodaySidebar();renderExLibrary();
-}
-
-function setTracker(key,val){
-  const log=getTodayLog();log.trackers[key]=val;save();renderTodaySidebar();
-}
-function clearTracker(key){
-  const log=getTodayLog();
-  log.trackers[key]=key==='water'||key==='nicotine'?0:null;
-  save();renderTodaySidebar();
-}
-function adj(key,delta){
-  const log=getTodayLog();
-  log.trackers[key]=Math.max(0,(log.trackers[key]||0)+delta);
-  save();renderTodaySidebar();
-}
+function delTodayEx(idx){const log=getTodayLog();log.exercises.splice(idx,1);save();renderTodaySidebar();renderExLibrary();}
+function setTracker(key,val){const log=getTodayLog();log.trackers[key]=val;save();renderTodaySidebar();}
+function clearTracker(key){const log=getTodayLog();log.trackers[key]=key==='water'||key==='nicotine'?0:null;save();renderTodaySidebar();}
+function adj(key,delta){const log=getTodayLog();log.trackers[key]=Math.max(0,(log.trackers[key]||0)+delta);save();renderTodaySidebar();}
 function saveDay(){save();toast('Day saved! 💪');renderWoHistory();}
-
 function renderWoHistory(){
   const hist=document.getElementById('woHistory');
-  const logs=[...S.workoutLogs]
-    .filter(l=>l.exercises.length>0||Object.values(l.trackers).some(v=>v!==null&&v!==0))
-    .sort((a,b)=>b.date.localeCompare(a.date)).slice(0,30);
+  const logs=[...S.workoutLogs].filter(l=>l.exercises.length>0||Object.values(l.trackers).some(v=>v!==null&&v!==0)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,30);
   document.getElementById('histCount').textContent=logs.length;
   hist.innerHTML='';
   if(!logs.length){hist.innerHTML='<div class="ev-empty" style="padding:2rem">NO HISTORY YET — START LOGGING!</div>';return;}
   logs.forEach(log=>{
     const t=log.trackers;
-    const exNames=log.exercises.map(e=>{const x=EXERCISES.find(x=>x.id===e.exId)||{name:e.exId};return x.name;});
     const totalSets=log.exercises.reduce((a,e)=>a+e.sets.length,0);
-    const day=document.createElement('div');day.className='wo-day';
+    const day=document.createElement('div'); day.className='wo-day';
     const badges=[];
-    if(t.workout==='yes')badges.push('<span class="wo-badge g">💪 Trained</span>');
-    else if(t.workout==='no')badges.push('<span class="wo-badge r">❌ Rest</span>');
-    if(t.diet==='yes')badges.push('<span class="wo-badge g">🥗 Diet ✓</span>');
-    else if(t.diet==='no')badges.push('<span class="wo-badge r">🍕 Off diet</span>');
-    if(t.water)badges.push(`<span class="wo-badge b">💧 ${t.water} glasses</span>`);
-    if(t.nicotine)badges.push(`<span class="wo-badge y">🚬 ${t.nicotine} cig${t.nicotine!==1?'s':''}</span>`);
+    if(t.workout==='yes') badges.push('<span class="wo-badge g">💪 Trained</span>');
+    else if(t.workout==='no') badges.push('<span class="wo-badge r">❌ Rest</span>');
+    if(t.diet==='yes') badges.push('<span class="wo-badge g">🥗 Diet ✓</span>');
+    else if(t.diet==='no') badges.push('<span class="wo-badge r">🍕 Off diet</span>');
+    if(t.water) badges.push(`<span class="wo-badge b">💧 ${t.water} glasses</span>`);
+    if(t.nicotine) badges.push(`<span class="wo-badge y">🚬 ${t.nicotine} cig${t.nicotine!==1?'s':''}</span>`);
     day.innerHTML=`
       <div class="wo-day-head" onclick="this.parentElement.classList.toggle('open')">
         <span class="wo-day-date">${fmtDate(log.date)}</span>
@@ -1481,11 +1682,7 @@ function renderWoHistory(){
     hist.appendChild(day);
   });
 }
-
-function delHistEx(date,idx){
-  const log=S.workoutLogs.find(l=>l.date===date);
-  if(log){log.exercises.splice(idx,1);save();renderWoHistory();}
-}
+function delHistEx(date,idx){const log=S.workoutLogs.find(l=>l.date===date);if(log){log.exercises.splice(idx,1);save();renderWoHistory();}}
 
 // ═══════════════════════════════════════════════════
 // UTILS
@@ -1495,66 +1692,58 @@ function fmtDT(d){if(!d)return'';try{const dt=new Date(d);if(isNaN(dt))return d;
 function fmtTime(iso){if(!iso)return'';try{return new Date(iso).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}catch{return '';}}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function toast(msg){
-  const el=document.createElement('div');el.className='toast';el.textContent=msg;
+  const el=document.createElement('div'); el.className='toast'; el.textContent=msg;
   document.getElementById('toasts').appendChild(el);
   setTimeout(()=>el.remove(),2800);
 }
-['eventModal','leadModal','driveModal','exModal','qrModal','csvModal'].forEach(id=>{
-  const el=document.getElementById(id);
-  if(el)el.addEventListener('click',function(e){if(e.target===this)closeModal(id);});
-});
 
-// ═══════════════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════
-// CALENDAR — ICS download + Google Calendar link
-// ═══════════════════════════════════════════════════
-function downloadICS(evId){
-  const ev=S.events.find(e=>e.id===evId);
-  if(!ev){toast('Event not found');return;}
-  const start=ev.date?ev.date.replace(/[-:]/g,'').replace('T','').substring(0,15)+'Z':'';
-  const end=ev.dateEnd?ev.dateEnd.replace(/[-:]/g,'').replace('T','').substring(0,15)+'Z':start;
-  const now=new Date().toISOString().replace(/[-:]/g,'').replace('T','').substring(0,15)+'Z';
-  const ics=`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//ITReader//DataBase//EN\r\nCALSCALE:GREGORIAN\r\nMETHOD:PUBLISH\r\nBEGIN:VEVENT\r\nUID:${ev.id}@itreader.com\r\nDTSTAMP:${now}\r\nDTSTART${start?':'+start:';VALUE=DATE:'+todayKey().replace(/-/g,'')}\r\nDTEND${end?':'+end:';VALUE=DATE:'+todayKey().replace(/-/g,'')}\r\nSUMMARY:${ev.name}\r\nLOCATION:${(ev.region||'').replace(/\n/g,'\\n')}\r\nDESCRIPTION:${[ev.client?'Client: '+ev.client:'',ev.notes||''].filter(Boolean).join('\\n')}\r\nSTATUS:CONFIRMED\r\nEND:VEVENT\r\nEND:VCALENDAR`;
-  const blob=new Blob([ics],{type:'text/calendar;charset=utf-8'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=(ev.name.replace(/\s+/g,'_')||'event')+'.ics';
-  a.click();
-  toast('📅 .ics file downloaded — open to add to Outlook/Apple Calendar');
-}
-
-// ─────────────────────────────────────────────────
-// OVERLAY CLOSE ON CLICK OUTSIDE
-// ─────────────────────────────────────────────────
-['eventModal','leadModal','driveModal','exModal','calInviteModal','csvModal'].forEach(id=>{
+// Close modals on overlay click
+['eventModal','leadModal','driveModal','exModal','calInviteModal','csvModal','qrModal'].forEach(id=>{
   const el=document.getElementById(id);
   if(el) el.addEventListener('click',function(e){if(e.target===this)closeModal(id);});
 });
 
-// ─────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════
 // INIT
-// ─────────────────────────────────────────────────
+// ═══════════════════════════════════════════════════
 async function init(){
+  // Check if this is a check-in page request first
+  if(checkCheckinHash()) return;
+
   loadLocal();
   if(S.theme==='dark') setTheme('dark');
 
-  // Load from cloud (so data syncs across all computers)
+  // Load from shared cloud storage
   const syncDot=document.getElementById('syncDot');
   syncDot.className='sync-dot stale';
   document.getElementById('syncTxt').textContent='Loading…';
+
   const gotCloud=await loadCloud();
   if(gotCloud){
     syncDot.className='sync-dot';
     document.getElementById('syncTxt').textContent='Synced';
     setTimeout(()=>document.getElementById('syncTxt').textContent='Sync',2000);
+    // Apply theme from cloud
+    if(S.theme==='dark') setTheme('dark');
+    else setTheme('light');
   } else {
     syncDot.className='sync-dot stale';
     document.getElementById('syncTxt').textContent='Sync';
   }
-  renderEvents();renderDrive();renderTasks();
+
+  renderEvents(); renderDrive(); renderTasks();
+
+  // Handle hash changes (for check-in links)
+  window.addEventListener('hashchange',()=>{
+    if(window.location.hash.startsWith('#checkin/')){
+      const leadId=window.location.hash.replace('#checkin/','');
+      document.getElementById('app').style.display='none';
+      document.getElementById('checkinPage').style.display='block';
+      showCheckinPage(leadId);
+    }
+  });
 }
+
 init();
 </script>
 </body>
