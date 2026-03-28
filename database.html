@@ -1296,8 +1296,6 @@ async function showCheckinPage(leadId) {
       <div class="ci-delegate-name">${lead.firstName}<br>${lead.lastName}</div>
       <div class="ci-company">${[lead.company, lead.title].filter(Boolean).join(' · ')}</div>
       <div class="ci-already">✅ Already checked in at ${fmtTime(lead.checkinTime)}</div>
-      <a href="${BASE_URL}" style="font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--muted);text-decoration:none">← Back to app</a>`;
-    return;
   }
 
   body.innerHTML = `
