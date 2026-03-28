@@ -630,131 +630,1414 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 <!-- QR code library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-<script defer>
+<script>
 // ═══════════════════════════════════════════════════
-// STATE (FIXED — SINGLE DECLARATION)
+// CONSTANTS
 // ═══════════════════════════════════════════════════
-const STORAGE_KEY='itreader-db-v1';
+const EXERCISES = [
+  {id:'bench',name:'Bench Press',muscle:'Chest',cat:'chest',emoji:'🏋️'},
+  {id:'incline',name:'Incline Press',muscle:'Upper Chest',cat:'chest',emoji:'🏋️'},
+  {id:'cable-fly',name:'Cable Fly',muscle:'Chest',cat:'chest',emoji:'🔀'},
+  {id:'dips',name:'Dips',muscle:'Chest / Triceps',cat:'chest',emoji:'💪'},
+  {id:'squat',name:'Squat',muscle:'Quads / Glutes',cat:'legs',emoji:'🦵'},
+  {id:'legpress',name:'Leg Press',muscle:'Quads',cat:'legs',emoji:'🦵'},
+  {id:'rdl',name:'Romanian DL',muscle:'Hamstrings',cat:'legs',emoji:'🦵'},
+  {id:'lunge',name:'Lunges',muscle:'Legs',cat:'legs',emoji:'🦵'},
+  {id:'legcurl',name:'Leg Curl',muscle:'Hamstrings',cat:'legs',emoji:'🦵'},
+  {id:'calf',name:'Calf Raise',muscle:'Calves',cat:'legs',emoji:'🦵'},
+  {id:'deadlift',name:'Deadlift',muscle:'Full Body',cat:'back',emoji:'💀'},
+  {id:'row',name:'Barbell Row',muscle:'Back',cat:'back',emoji:'🔙'},
+  {id:'pullup',name:'Pull Up',muscle:'Lats',cat:'back',emoji:'🔝'},
+  {id:'lat',name:'Lat Pulldown',muscle:'Lats',cat:'back',emoji:'🔙'},
+  {id:'cable-row',name:'Cable Row',muscle:'Back',cat:'back',emoji:'🔙'},
+  {id:'ohp',name:'Overhead Press',muscle:'Shoulders',cat:'shoulders',emoji:'🏋️'},
+  {id:'lateral',name:'Lateral Raise',muscle:'Side Delts',cat:'shoulders',emoji:'🙌'},
+  {id:'facepull',name:'Face Pull',muscle:'Rear Delts',cat:'shoulders',emoji:'🙌'},
+  {id:'curl',name:'Bicep Curl',muscle:'Biceps',cat:'arms',emoji:'💪'},
+  {id:'hammer',name:'Hammer Curl',muscle:'Biceps',cat:'arms',emoji:'🔨'},
+  {id:'tricep-push',name:'Tricep Pushdown',muscle:'Triceps',cat:'arms',emoji:'💪'},
+  {id:'skull',name:'Skull Crusher',muscle:'Triceps',cat:'arms',emoji:'💀'},
+  {id:'plank',name:'Plank',muscle:'Core',cat:'core',emoji:'🧱'},
+  {id:'crunch',name:'Crunches',muscle:'Abs',cat:'core',emoji:'🧱'},
+];
 
+const EX_CATS = [
+  {id:'all',name:'ALL'},
+  {id:'chest',name:'CHEST'},
+  {id:'back',name:'BACK'},
+  {id:'legs',name:'LEGS'},
+  {id:'shoulders',name:'SHOULDERS'},
+  {id:'arms',name:'ARMS'},
+  {id:'core',name:'CORE'}
+];
+
+// ═══════════════════════════════════════════════════
+// 1. CONSTANTS & STATE
+// ═══════════════════════════════════════════════════
+const LEAD_COLS = ['leads', 'deal', 'rejected', 'waiting'];
+const LEAD_LABELS = {leads: 'LEADS', deal: 'DEAL', rejected: 'REJECTED', waiting: 'WAITING'};
+const EV_STAGES = ['planning', 'outreach', 'confirmed', 'delivered'];
+const EV_LABELS = {planning: 'PLANNING', outreach: 'OUTREACH', confirmed: 'CONFIRMED', delivered: 'DELIVERED'};
+
+// ═══════════════════════════════════════════════════
+// STATE (only one declaration)
+// ═══════════════════════════════════════════════════
 let S = {
-  events:[],
-  leads:[],
-  tasks:[],
-  driveSheets:[],
-  workoutLogs:[],
-  calInvites:[],
-  prio:'med',
-  theme:'light'
+  events: [], leads: [], tasks: [], driveSheets: [],
+  workoutLogs: [], calInvites: [],
+  prio: 'med', theme: 'light'
 };
-
-let timerInt=null, currentEventId=null, editingEventId=null;
-let selectedExId=null, exCatFilter='all';
-const todayKey=()=>new Date().toISOString().split('T')[0];
+let timerInt = null, currentEventId = null, editingEventId = null;
+let selectedExId = null, exCatFilter = 'all';
+const todayKey = () => new Date().toISOString().split('T')[0];
 
 // ═══════════════════════════════════════════════════
-// QR CODE FIXED
+// ▶ CHECK-IN PAGE — detect hash and show inline
 // ═══════════════════════════════════════════════════
-function openQRModal(evId){
-  const leads=S.leads.filter(l=>l.eventId===evId);
-  const content=document.getElementById('qrModalContent');
+function checkCheckinHash() {
+  const hash = window.location.hash; // e.g. #checkin/leadId
+  if(!hash.startsWith('#checkin/')) return false;
+  const leadId = hash.replace('#checkin/', '').trim();
+  showCheckinPage(leadId);
+  return true;
+}
 
-  if(!leads.length){
-    content.innerHTML='<div>No leads</div>';
+async function showCheckinPage(leadId) {
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('checkinPage').style.display = 'block';
+  const content = document.getElementById('ciPageContent');
+
+  // Load cloud data first so we have up-to-date leads
+  await loadCloud();
+
+  const lead = S.leads.find(l => l.id === leadId);
+  if(!lead) {
+    content.innerHTML = `<div style="color:var(--red);font-family:'IBM Plex Mono',monospace">❌ Lead not found.<br><br><a href="${window.location.pathname}" style="color:var(--orange)">← Back to app</a></div>`;
+    return;
+  }
+  const ev = S.events.find(e => e.id === lead.eventId);
+
+  if(lead.checkedIn) {
+    content.innerHTML = `
+      <div class="ci-event-name">${ev ? ev.name : ''}</div>
+      <div class="ci-lead-name">${lead.firstName} ${lead.lastName}</div>
+      <div class="ci-lead-co">${lead.company || ''}</div>
+      <div class="ci-status ok" style="margin-bottom:1.5rem">✅ Already checked in at ${fmtTime(lead.checkinTime)}</div>
+      <a href="${window.location.pathname}" style="font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted)">← Back to app</a>`;
+    return;
+  }
+
+  content.innerHTML = `
+    <div class="ci-event-name">${ev ? ev.name : 'Event'}</div>
+    <div class="ci-lead-name">${lead.firstName} ${lead.lastName}</div>
+    <div class="ci-lead-co">${lead.company || ''} ${lead.title ? '· ' + lead.title : ''}</div>
+    <button class="ci-btn" id="ciDoBtn" onclick="performCheckin('${leadId}')">
+      ✅ Check Me In
+    </button>
+    <div id="ciPageStatus"></div>
+    <div style="margin-top:2rem;font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted)">${ev ? ev.region || '' : ''} ${ev && ev.date ? '· ' + fmtDT(ev.date) : ''}</div>`;
+}
+
+async function performCheckin(leadId) {
+  const btn = document.getElementById('ciDoBtn');
+  const statusEl = document.getElementById('ciPageStatus');
+  btn.disabled = true;
+  btn.textContent = '⏳ Saving…';
+
+  // Re-fetch fresh data
+  await loadCloud();
+  const lead = S.leads.find(l => l.id === leadId);
+  if(!lead) { 
+    statusEl.innerHTML = '<div class="ci-status err">Lead not found. Please contact the organiser.</div>'; 
+    btn.disabled = false;
+    return; 
+  }
+  if(lead.checkedIn) { 
+    statusEl.innerHTML = '<div class="ci-status ok">✅ Already checked in!</div>'; 
+    btn.disabled = true; 
+    return; 
+  }
+
+  lead.checkedIn = true;
+  lead.checkinTime = new Date().toISOString();
+
+  const ok = await cloudSet(S);
+  saveLocal();
+
+  if(ok) {
+    btn.style.display = 'none';
+    statusEl.innerHTML = `<div class="ci-status ok">🎉 Welcome, ${lead.firstName}!<br>Checked in at ${fmtTime(lead.checkinTime)}</div>`;
+  } else {
+    btn.disabled = false;
+    btn.textContent = '✅ Check Me In';
+    statusEl.innerHTML = '<div class="ci-status err">❌ Network error — please try again or ask the organiser.</div>';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// CLOUD SYNC — Anthropic Storage API (shared=true for cross-device)
+// ═══════════════════════════════════════════════════
+const STORAGE_KEY = 'itreader-db-v1';
+
+async function cloudGet() {
+  try { 
+    const res = await window.storage.get(STORAGE_KEY, true); 
+    return res ? JSON.parse(res.value) : null; 
+  } catch(e) { 
+    return null; 
+  }
+}
+
+async function cloudSet(data) {
+  try { 
+    await window.storage.set(STORAGE_KEY, JSON.stringify(data), true); 
+    return true; 
+  } catch(e) { 
+    return false; 
+  }
+}
+
+async function syncNow() {
+  const btn = document.getElementById('syncBtn');
+  const dot = document.getElementById('syncDot');
+  const txt = document.getElementById('syncTxt');
+  btn.classList.add('syncing'); 
+  txt.textContent = 'Syncing…';
+  const ok = await cloudSet(S);
+  if(ok) {
+    dot.className = 'sync-dot'; 
+    txt.textContent = 'Synced';
+    setTimeout(() => { txt.textContent = 'Sync'; btn.classList.remove('syncing'); }, 2000);
+    toast('☁️ Synced!');
+  } else {
+    txt.textContent = 'Offline'; 
+    btn.classList.remove('syncing');
+    setTimeout(() => txt.textContent = 'Sync', 2000);
+  }
+}
+
+async function loadCloud() {
+  const cloud = await cloudGet();
+  if(cloud) {
+    // Merge: cloud is source of truth, preserve theme from local if not set in cloud
+    const localTheme = S.theme;
+    S = { ...S, ...cloud };
+    if(!cloud.theme) S.theme = localTheme;
+    if(!S.events) S.events = [];
+    if(!S.leads) S.leads = [];
+    if(!S.tasks) S.tasks = [];
+    if(!S.driveSheets) S.driveSheets = [];
+    if(!S.workoutLogs) S.workoutLogs = [];
+    if(!S.calInvites) S.calInvites = [];
+    saveLocal();
+    return true;
+  }
+  return false;
+}
+
+function saveLocal() { 
+  localStorage.setItem('db7', JSON.stringify(S)); 
+}
+
+function save() {
+  saveLocal();
+  clearTimeout(window._syncTimer);
+  window._syncTimer = setTimeout(syncNow, 1500);
+}
+
+function loadLocal() {
+  const r = localStorage.getItem('db7');
+  if(r) try { S = JSON.parse(r); } catch(e) {}
+  if(!S.events) S.events = [];
+  if(!S.leads) S.leads = [];
+  if(!S.tasks) S.tasks = [];
+  if(!S.driveSheets) S.driveSheets = [];
+  if(!S.workoutLogs) S.workoutLogs = [];
+  if(!S.calInvites) S.calInvites = [];
+}
+
+function uid() { 
+  return Date.now().toString(36) + Math.random().toString(36).slice(2); 
+}
+
+// ═══════════════════════════════════════════════════
+// THEME
+// ═══════════════════════════════════════════════════
+function toggleTheme() { 
+  const c = document.documentElement.getAttribute('data-theme'); 
+  setTheme(c === 'dark' ? 'light' : 'dark'); 
+}
+
+function setTheme(t) { 
+  document.documentElement.setAttribute('data-theme', t); 
+  S.theme = t; 
+  const themeLabel = document.getElementById('themeLabel');
+  if(themeLabel) themeLabel.textContent = t === 'dark' ? 'Dark' : 'Light'; 
+  save(); 
+}
+
+// ═══════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════
+function switchTab(name, el) {
+  closeEventDetail();
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  if(el) el.classList.add('active');
+  updateBC();
+  if(name === 'workout') renderWorkout();
+}
+
+function openEventDetail(evId) {
+  currentEventId = evId;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('mainTabs').style.display = 'none';
+  document.getElementById('eventDetail').style.display = 'block';
+  renderEventDetail(evId); 
+  updateBC();
+}
+
+function closeEventDetail() {
+  currentEventId = null;
+  if(timerInt) { clearInterval(timerInt); timerInt = null; }
+  document.getElementById('eventDetail').style.display = 'none';
+  document.getElementById('mainTabs').style.display = 'flex';
+  updateBC();
+}
+
+function goBack() {
+  closeEventDetail();
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-events').classList.add('active');
+  document.querySelectorAll('.tab')[0].classList.add('active');
+}
+
+function updateBC() {
+  const bc = document.getElementById('breadcrumb');
+  if(currentEventId) { 
+    const ev = S.events.find(e => e.id === currentEventId); 
+    bc.innerHTML = `<span class="crumb-link" onclick="goBack()">Events</span><span class="crumb-sep">/</span><span class="crumb-cur">${ev ? ev.name : ''}</span>`; 
+  } else { 
+    bc.innerHTML = ''; 
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// EVENTS
+// ═══════════════════════════════════════════════════
+function renderEvents() {
+  const evCount = document.getElementById('evCount');
+  if(evCount) evCount.textContent = S.events.length;
+  const g = document.getElementById('evGrid'); 
+  if(!g) return;
+  g.innerHTML = '';
+  if(!S.events.length) {
+    g.innerHTML = '<div class="ev-empty">NO EVENTS YET — CREATE YOUR FIRST ONE</div>';
+    return;
+  }
+  S.events.forEach(ev => {
+    const leads = S.leads.filter(l => l.eventId === ev.id);
+    const checked = leads.filter(l => l.checkedIn).length;
+    const card = document.createElement('div'); 
+    card.className = 'ev-card' + (ev.stage === 'delivered' ? ' delivered-card' : '');
+    const pills = [];
+    if(ev.region) pills.push(ev.region);
+    if(ev.date) pills.push(fmtDT(ev.date));
+    if(ev.client) pills.push(ev.client);
+    card.innerHTML = `
+      <div class="ev-card-top">
+        <div class="ev-card-name">${ev.name}</div>
+        <div class="ev-card-pills">${pills.map(p => `<span class="ev-pill">${p}</span>`).join('')}</div>
+      </div>
+      <div class="ev-card-bot">
+        <span class="ev-stage ${ev.stage || 'planning'}">${EV_LABELS[ev.stage || 'planning']}</span>
+        <span class="ev-card-stats">${leads.length} lead${leads.length !== 1 ? 's' : ''} · ${checked} checked in</span>
+        <button class="ev-card-del" onclick="delEvent('${ev.id}',event)">✕</button>
+      </div>`;
+    card.onclick = e => { if(e.target.classList.contains('ev-card-del')) return; openEventDetail(ev.id); };
+    g.appendChild(card);
+  });
+}
+
+function openEventModal(id) {
+  editingEventId = id || null;
+  if(id) {
+    const ev = S.events.find(e => e.id === id);
+    document.getElementById('evModalTitle').textContent = 'Edit Event';
+    document.getElementById('evName').value = ev.name;
+    document.getElementById('evRegion').value = ev.region || '';
+    document.getElementById('evDate').value = ev.date || '';
+    document.getElementById('evDateEnd').value = ev.dateEnd || '';
+    document.getElementById('evClient').value = ev.client || '';
+    document.getElementById('evNotes').value = ev.notes || '';
+  } else {
+    document.getElementById('evModalTitle').textContent = 'New Event';
+    ['evName', 'evRegion', 'evDate', 'evDateEnd', 'evClient', 'evNotes'].forEach(i => document.getElementById(i).value = '');
+  }
+  document.getElementById('eventModal').classList.add('open');
+  setTimeout(() => document.getElementById('evName').focus(), 100);
+}
+
+function saveEvent() {
+  const f = id => document.getElementById(id).value.trim();
+  if(!f('evName') || !f('evRegion')) { toast('Name and region required'); return; }
+  if(editingEventId) {
+    const ev = S.events.find(e => e.id === editingEventId);
+    ev.name = f('evName'); ev.region = f('evRegion'); ev.date = f('evDate'); 
+    ev.dateEnd = f('evDateEnd'); ev.client = f('evClient'); ev.notes = f('evNotes');
+    if(currentEventId === editingEventId) renderEventDetail(editingEventId);
+    toast('Event updated');
+  } else {
+    S.events.push({
+      id: uid(), name: f('evName'), region: f('evRegion'), date: f('evDate'), 
+      dateEnd: f('evDateEnd'), client: f('evClient'), notes: f('evNotes'), stage: 'planning'
+    });
+    toast('Event created');
+  }
+  save(); renderEvents(); closeModal('eventModal');
+}
+
+function delEvent(id, e) {
+  if(e) e.stopPropagation();
+  if(!confirm('Delete event and all its leads?')) return;
+  S.events = S.events.filter(x => x.id !== id); 
+  S.leads = S.leads.filter(x => x.eventId !== id);
+  save(); renderEvents(); toast('Deleted');
+}
+
+function advEvent(id) {
+  const ev = S.events.find(x => x.id === id);
+  const idx = EV_STAGES.indexOf(ev.stage || 'planning');
+  if(idx < EV_STAGES.length - 1) {
+    ev.stage = EV_STAGES[idx + 1];
+    save(); renderEvents(); renderEventDetail(id); 
+    toast('→ ' + EV_LABELS[ev.stage]);
+  } else toast('Already DELIVERED');
+}
+
+// ═══════════════════════════════════════════════════
+// EVENT DETAIL
+// ═══════════════════════════════════════════════════
+function renderEventDetail(evId) {
+  const ev = S.events.find(e => e.id === evId); 
+  if(!ev) return;
+  const leads = S.leads.filter(l => l.eventId === evId);
+  const checked = leads.filter(l => l.checkedIn).length;
+  const now = new Date(), evStart = ev.date ? new Date(ev.date) : null, evEnd = ev.dateEnd ? new Date(ev.dateEnd) : null;
+  let statusTxt = 'No date set';
+  if(evStart) {
+    if(now < evStart) statusTxt = `<strong>STARTS IN</strong> — ${fmtDT(ev.date)}`;
+    else if(evEnd && now < evEnd) statusTxt = `<strong>🔴 LIVE NOW</strong> — ends ${fmtDT(ev.dateEnd)}`;
+    else statusTxt = `<strong>ENDED</strong> — ${fmtDT(ev.date)}`;
+  }
+  const meta = [];
+  if(ev.region) meta.push('📍 ' + ev.region);
+  if(ev.date) meta.push('🗓 ' + fmtDT(ev.date));
+  if(ev.client) meta.push('🏢 ' + ev.client);
+  if(ev.notes) meta.push('📝 ' + ev.notes);
+
+  document.getElementById('eventDetail').innerHTML = `
+  <div style="padding:2rem">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1.2rem;flex-wrap:wrap;">
+      <button class="btn" onclick="goBack()">← Back</button>
+      <button class="btn" onclick="openEventModal('${ev.id}')">✎ Edit</button>
+      <button class="btn btn-fill" onclick="advEvent('${ev.id}')">→ Advance Stage</button>
+      <button class="btn" style="border-color:var(--blue);color:var(--blue)" onclick="openCalInvite('${ev.id}')">📅 Calendar Invite</button>
+      <button class="btn btn-ghost" onclick="downloadICS('${ev.id}')">📁 .ics Outlook</button>
+      <button class="btn btn-ghost" onclick="openQRModal('${ev.id}')">📱 QR Check-In</button>
+      <button class="btn btn-ghost" onclick="exportLeadsCSV('${ev.id}')">⬇ Export CSV</button>
+    </div>
+    <div class="ev-hero">
+      <div class="ev-hero-top">
+        <div>
+          <div class="ev-hero-name">${ev.name}</div>
+          <div class="ev-hero-meta">${meta.map(m => `<span>${m}</span>`).join('')}</div>
+        </div>
+        <div class="ev-hero-right">
+          <span class="ev-stage-badge">${EV_LABELS[ev.stage || 'planning']}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:rgba(255,255,255,.8)">${checked}/${leads.length} checked in</span>
+          <button class="btn-hero" onclick="openLeadModal('${ev.id}')">+ Add Lead</button>
+        </div>
+      </div>
+      <div class="ev-timer-box">
+        <div class="timer-cell"><div class="timer-num" id="t-d">--</div><div class="timer-lbl">Days</div></div>
+        <div class="timer-cell"><div class="timer-num" id="t-h">--</div><div class="timer-lbl">Hours</div></div>
+        <div class="timer-cell"><div class="timer-num" id="t-m">--</div><div class="timer-lbl">Mins</div></div>
+        <div class="timer-cell"><div class="timer-num" id="t-s">--</div><div class="timer-lbl">Secs</div></div>
+      </div>
+      <div class="timer-foot">
+        <span class="timer-txt">${statusTxt}</span>
+        <span class="timer-txt">${leads.length} total leads</span>
+      </div>
+    </div>
+    <div class="leads-section">
+      <div class="leads-head">
+        <span class="leads-title">Leads<span class="badge">${leads.length}</span></span>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+          <button class="btn btn-ghost" onclick="openCSVModal('${ev.id}')">⬆ Import CSV</button>
+          <button class="btn btn-ghost" onclick="exportLeadsCSV('${ev.id}')">⬇ Export CSV</button>
+          <button class="btn btn-fill" onclick="openLeadModal('${ev.id}')">+ Add Lead</button>
+        </div>
+      </div>
+      <div class="filter-tabs" id="ftabs">
+        <div class="ftab active" onclick="filterLeads('all','${ev.id}',this)">ALL ${leads.length}</div>
+        <div class="ftab" onclick="filterLeads('leads','${ev.id}',this)">LEADS ${leads.filter(l => l.status === 'leads').length}</div>
+        <div class="ftab" onclick="filterLeads('deal','${ev.id}',this)">DEAL ${leads.filter(l => l.status === 'deal').length}</div>
+        <div class="ftab" onclick="filterLeads('rejected','${ev.id}',this)">REJECTED ${leads.filter(l => l.status === 'rejected').length}</div>
+        <div class="ftab" onclick="filterLeads('waiting','${ev.id}',this)">WAITING ${leads.filter(l => l.status === 'waiting').length}</div>
+        <div class="ftab" onclick="filterLeads('checked','${ev.id}',this)">✅ CHECKED IN ${checked}</div>
+      </div>
+      <div class="table-wrap">
+        <table class="leads-table"><thead><tr>
+          <th>#</th><th>First</th><th>Last</th><th>Email</th><th>Phone</th>
+          <th>Company</th><th>Title</th><th>LinkedIn</th><th>Status</th><th>Check-In</th><th>Notes</th><th></th>
+        </tr></thead><tbody id="leadsBody"></tbody></table>
+      </div>
+      <div class="table-add" onclick="openLeadModal('${ev.id}')">+ ADD LEAD</div>
+    </div>
+  </div>`;
+
+  renderLeads(evId, 'all');
+  if(timerInt) { clearInterval(timerInt); timerInt = null; }
+  if(evStart) { updTimer(evStart, evEnd); timerInt = setInterval(() => updTimer(evStart, evEnd), 1000); }
+}
+
+function updTimer(s, e) {
+  const now = new Date(); let t = s;
+  if(e && now > s && now < e) t = e;
+  const d = t - now, fmt = n => String(Math.max(0, n)).padStart(2, '0');
+  if(d <= 0) { ['t-d', 't-h', 't-m', 't-s'].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = '00'; }); return; }
+  const dEl = document.getElementById('t-d'), hEl = document.getElementById('t-h'), mEl = document.getElementById('t-m'), sEl = document.getElementById('t-s');
+  if(dEl) dEl.textContent = fmt(Math.floor(d / 86400000));
+  if(hEl) hEl.textContent = fmt(Math.floor((d % 86400000) / 3600000));
+  if(mEl) mEl.textContent = fmt(Math.floor((d % 3600000) / 60000));
+  if(sEl) sEl.textContent = fmt(Math.floor((d % 60000) / 1000));
+}
+
+// ═══════════════════════════════════════════════════
+// LEADS
+// ═══════════════════════════════════════════════════
+function renderLeads(evId, filter) {
+  const tbody = document.getElementById('leadsBody'); 
+  if(!tbody) return;
+  let list = S.leads.filter(l => l.eventId === evId);
+  if(filter === 'checked') list = list.filter(l => l.checkedIn);
+  else if(filter && filter !== 'all') list = list.filter(l => l.status === filter);
+  tbody.innerHTML = '';
+  if(!list.length) { tbody.innerHTML = `<tr class="empty-row"><td colspan="12">NO LEADS YET</td></tr>`; return; }
+  list.forEach((l, i) => {
+    const tr = document.createElement('tr');
+    const li = l.linkedin ? `<a href="${l.linkedin}" target="_blank" style="color:var(--orange);font-family:'IBM Plex Mono',monospace;font-size:.7rem;text-decoration:none">↗</a>` : '—';
+    const ci = l.checkedIn
+      ? `<span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--green)">✅ ${fmtTime(l.checkinTime)}</span>`
+      : `<span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--light)">pending</span>`;
+    tr.innerHTML = `
+      <td class="lt-mono" style="color:var(--light)">${i + 1}</td>
+      <td style="font-weight:600">${l.firstName || '—'}</td>
+      <td>${l.lastName || '—'}</td>
+      <td class="lt-mono">${l.email || '—'}</td>
+      <td class="lt-mono">${l.phone || '—'}</td>
+      <td>${l.company || '—'}</td>
+      <td style="color:var(--muted);font-size:.78rem">${l.title || '—'}</td>
+      <td style="text-align:center">${li}</td>
+      <td><span class="ls ${l.status}" onclick="cycleStatus('${l.id}')">${LEAD_LABELS[l.status] || l.status}</span></td>
+      <td>${ci}</td>
+      <td style="color:var(--muted);font-size:.76rem;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.notes || '—'}</td>
+      <td><button class="lt-del" onclick="delLead('${l.id}',event)">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function filterLeads(f, evId, el) {
+  document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active'); 
+  renderLeads(evId, f);
+}
+
+function cycleStatus(id) {
+  const l = S.leads.find(x => x.id === id);
+  const idx = LEAD_COLS.indexOf(l.status);
+  l.status = LEAD_COLS[(idx + 1) % LEAD_COLS.length];
+  save(); 
+  if(currentEventId) renderEventDetail(currentEventId); 
+  toast('→ ' + LEAD_LABELS[l.status]);
+}
+
+function openLeadModal(evId) {
+  document.getElementById('ldEventId').value = evId;
+  ['ldFirst', 'ldLast', 'ldEmail', 'ldPhone', 'ldCompany', 'ldTitle', 'ldLinkedin', 'ldNotes'].forEach(i => document.getElementById(i).value = '');
+  document.getElementById('ldStatus').value = 'leads';
+  document.getElementById('leadModal').classList.add('open');
+  setTimeout(() => document.getElementById('ldFirst').focus(), 100);
+}
+
+function saveLead() {
+  const f = id => document.getElementById(id).value.trim();
+  if(!f('ldFirst')) { toast('First name required'); return; }
+  const evId = document.getElementById('ldEventId').value;
+  S.leads.push({
+    id: uid(), eventId: evId, firstName: f('ldFirst'), lastName: f('ldLast'), 
+    email: f('ldEmail'), phone: f('ldPhone'), company: f('ldCompany'), 
+    title: f('ldTitle'), linkedin: f('ldLinkedin'), notes: f('ldNotes'), 
+    status: f('ldStatus') || 'leads', checkedIn: false
+  });
+  save(); 
+  if(currentEventId === evId) renderEventDetail(evId); 
+  renderEvents(); 
+  closeModal('leadModal'); 
+  toast('Lead added');
+}
+
+function delLead(id, e) {
+  if(e) e.stopPropagation();
+  S.leads = S.leads.filter(x => x.id !== id);
+  save(); 
+  if(currentEventId) renderEventDetail(currentEventId); 
+  renderEvents(); 
+  toast('Lead removed');
+}
+
+// ═══════════════════════════════════════════════════
+// ▶ CSV IMPORT — fixed & working
+// ═══════════════════════════════════════════════════
+function openCSVModal(evId) {
+  document.getElementById('csvEventId').value = evId;
+  document.getElementById('csvFileInput').value = '';
+  document.getElementById('csvPreview').innerHTML = '';
+  document.getElementById('csvModal').classList.add('open');
+}
+
+function importCSV() {
+  const file = document.getElementById('csvFileInput').files[0];
+  const evId = document.getElementById('csvEventId').value;
+  if(!file) { toast('Please select a CSV file'); return; }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const text = e.target.result;
+    const lines = text.split(/\r?\n/).filter(l => l.trim());
+    if(lines.length < 2) { showCSVResult([], [], 'CSV file is empty or has no data rows.'); return; }
+    const header = parseCSVRow(lines[0]).map(h => h.toLowerCase().trim());
+    const colIdx = {};
+    const aliases = {
+      first: ['first name', 'first', 'firstname', 'fname'],
+      last: ['last name', 'last', 'lastname', 'lname'],
+      name: ['name', 'full name', 'fullname'],
+      email: ['email', 'e-mail', 'email address'],
+      company: ['company', 'organisation', 'organization', 'company name'],
+      title: ['title', 'job title', 'position', 'role'],
+      phone: ['phone', 'phone number', 'tel', 'telephone'],
+      linkedin: ['linkedin', 'linkedin url', 'linkedin profile'],
+    };
+    Object.entries(aliases).forEach(([key, alts]) => {
+      const found = header.findIndex(h => alts.includes(h));
+      if(found >= 0) colIdx[key] = found;
+    });
+    if(colIdx.email === undefined) { showCSVResult([], [], 'No Email column found.'); return; }
+    if(colIdx.name === undefined && colIdx.first === undefined) { showCSVResult([], [], 'No Name column found. Needs "Name" or "First Name".'); return; }
+    const existingEmails = new Set(S.leads.filter(l => l.eventId === evId).map(l => (l.email || '').toLowerCase()));
+    const imported = []; const errors = [];
+    const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    lines.slice(1).forEach((line, i) => {
+      if(!line.trim()) return;
+      const cols = parseCSVRow(line);
+      const email = (cols[colIdx.email] || '').trim();
+      const rowNum = i + 2;
+      if(!email) { errors.push(`Row ${rowNum}: Missing email`); return; }
+      if(!emailRe.test(email)) { errors.push(`Row ${rowNum}: Invalid email "${email}"`); return; }
+      if(existingEmails.has(email.toLowerCase())) { errors.push(`Row ${rowNum}: Duplicate email "${email}"`); return; }
+      let firstName = '', lastName = '';
+      if(colIdx.name !== undefined) {
+        const full = (cols[colIdx.name] || '').trim();
+        const parts = full.split(' ');
+        firstName = parts[0] || ''; lastName = parts.slice(1).join(' ') || '';
+      } else {
+        firstName = (cols[colIdx.first] || '').trim();
+        lastName = colIdx.last !== undefined ? (cols[colIdx.last] || '').trim() : '';
+      }
+      if(!firstName) { errors.push(`Row ${rowNum}: Missing name`); return; }
+      imported.push({
+        id: uid(), eventId: evId, firstName, lastName, email,
+        phone: colIdx.phone !== undefined ? (cols[colIdx.phone] || '').trim() : '',
+        company: colIdx.company !== undefined ? (cols[colIdx.company] || '').trim() : '',
+        title: colIdx.title !== undefined ? (cols[colIdx.title] || '').trim() : '',
+        linkedin: colIdx.linkedin !== undefined ? (cols[colIdx.linkedin] || '').trim() : '',
+        notes: '', status: 'leads', checkedIn: false
+      });
+      existingEmails.add(email.toLowerCase());
+    });
+    imported.forEach(l => S.leads.push(l));
+    if(imported.length > 0) save();
+    showCSVResult(imported, errors);
+    if(imported.length > 0) {
+      if(currentEventId === evId) renderEventDetail(evId);
+      renderEvents();
+    }
+  };
+  reader.readAsText(file);
+}
+
+function parseCSVRow(row) {
+  const result = []; let cur = ''; let inQ = false;
+  for(let i = 0; i < row.length; i++) {
+    const c = row[i];
+    if(c === '"') { if(inQ && row[i+1] === '"') { cur += '"'; i++; } else inQ = !inQ; }
+    else if(c === ',' && !inQ) { result.push(cur.trim()); cur = ''; }
+    else cur += c;
+  }
+  result.push(cur.trim());
+  return result.map(v => v.replace(/^"|"$/g, ''));
+}
+
+function showCSVResult(imported, errors, fatal) {
+  const preview = document.getElementById('csvPreview');
+  if(fatal) { preview.innerHTML = `<div style="font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--red);background:var(--red-light);border:1px solid var(--red);border-radius:4px;padding:.6rem .8rem">${fatal}</div>`; return; }
+  let html = '';
+  if(imported.length > 0) {
+    html += `<div style="font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--green);background:var(--green-light);border:1px solid var(--green);border-radius:4px;padding:.6rem .8rem;margin-bottom:.5rem">✅ ${imported.length} lead${imported.length !== 1 ? 's' : ''} imported successfully</div>`;
+    closeModal('csvModal');
+    toast(`✅ ${imported.length} lead${imported.length !== 1 ? 's' : ''} imported!`);
+  }
+  if(errors.length > 0) {
+    html += `<div style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;background:var(--red-light);border:1px solid var(--red);border-radius:4px;padding:.6rem .8rem;color:var(--red)"><strong>${errors.length} error${errors.length !== 1 ? 's' : ''}:</strong><br>${errors.slice(0, 8).join('<br>')}${errors.length > 8 ? `<br>...and ${errors.length - 8} more` : ''}</div>`;
+  }
+  preview.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════
+// ▶ CSV EXPORT — new feature
+// ═══════════════════════════════════════════════════
+function exportLeadsCSV(evId) {
+  const ev = S.events.find(e => e.id === evId);
+  const leads = S.leads.filter(l => l.eventId === evId);
+  if(!leads.length) { toast('No leads to export'); return; }
+  const headers = ['First Name', 'Last Name', 'Email', 'Phone', 'Company', 'Job Title', 'LinkedIn', 'Status', 'Checked In', 'Check-In Time', 'Notes'];
+  const rows = leads.map(l => [
+    csvEscape(l.firstName || ''), csvEscape(l.lastName || ''), csvEscape(l.email || ''),
+    csvEscape(l.phone || ''), csvEscape(l.company || ''), csvEscape(l.title || ''),
+    csvEscape(l.linkedin || ''), csvEscape(l.status || ''),
+    l.checkedIn ? 'Yes' : 'No',
+    l.checkinTime ? fmtTime(l.checkinTime) : '',
+    csvEscape(l.notes || '')
+  ]);
+  const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const filename = (ev ? ev.name.replace(/\s+/g, '_') : 'leads') + '_leads.csv';
+  a.download = filename;
+  a.click();
+  toast(`⬇ Exported ${leads.length} leads as CSV`);
+}
+
+function csvEscape(val) {
+  const s = String(val);
+  if(s.includes(',') || s.includes('"') || s.includes('\n')) return '"' + s.replace(/"/g, '""') + '"';
+  return s;
+}
+
+// ═══════════════════════════════════════════════════
+// ▶ QR CODE CHECK-IN — fixed
+// ═══════════════════════════════════════════════════
+function openQRModal(evId) {
+  const leads = S.leads.filter(l => l.eventId === evId);
+  const content = document.getElementById('qrModalContent');
+  if(!leads.length) {
+    content.innerHTML = '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.72rem;color:var(--muted);padding:1rem 0">No leads for this event. Add leads first.</div>';
     document.getElementById('qrModal').classList.add('open');
     return;
   }
-
-  const baseURL=window.location.origin + window.location.pathname;
-
-  content.innerHTML=`<div id="qrGrid"></div>`;
+  // Build the check-in base URL (this page + hash)
+  const baseURL = window.location.href.split('#')[0];
+  content.innerHTML = `
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);margin-bottom:1rem;line-height:1.7">
+      Each QR code links to a personal check-in page. Share or print for each delegate.<br>
+      <strong style="color:var(--text)">Check-in URL:</strong> ${baseURL}#checkin/[leadId]
+    </div>
+    <div class="qr-grid" id="qrGrid"></div>`;
   document.getElementById('qrModal').classList.add('open');
 
-  setTimeout(()=>{
-    const grid=document.getElementById('qrGrid');
+  // Render QR codes after modal is open (so DOM is ready)
+  setTimeout(() => {
+    const grid = document.getElementById('qrGrid');
+    if(!grid) return;
+    leads.forEach(lead => {
+      const card = document.createElement('div');
+      card.className = 'qr-lead-card';
+      const checkinURL = `${baseURL}#checkin/${lead.id}`;
+      const statusCls = lead.checkedIn ? 'in' : 'out';
+      const statusTxt = lead.checkedIn ? `✅ Checked in ${fmtTime(lead.checkinTime)}` : '⬜ Not checked in';
+      card.innerHTML = `
+        <div class="qr-lead-name">${lead.firstName} ${lead.lastName}</div>
+        <div class="qr-lead-co">${lead.company || ''} ${lead.title ? '· ' + lead.title : ''}</div>
+        <span class="checkin-status ${statusCls}">${statusTxt}</span>
+        <div class="qr-canvas-wrap" id="qr-${lead.id}"></div>
+        <div class="qr-actions">
+          <button class="qr-dl-btn" onclick="downloadQR('${lead.id}','${(lead.firstName + ' ' + lead.lastName).replace(/'/g, '')}')">⬇ Download PNG</button>
+          <button class="qr-dl-btn" onclick="copyCheckinURL('${checkinURL}')">🔗 Copy Link</button>
+        </div>`;
+      grid.appendChild(card);
 
-    leads.forEach(lead=>{
-      const wrap=document.createElement('div');
-      wrap.innerHTML=`<div id="qr-${lead.id}"></div>`;
-      grid.appendChild(wrap);
-
-      const url=`${baseURL}#checkin/${lead.id}`;
-
-      if(typeof QRCode!=="undefined"){
-        new QRCode(document.getElementById('qr-'+lead.id),{
-          text:url,
-          width:150,
-          height:150
+      // Generate QR - using the global QRCode constructor
+      try {
+        new QRCode(document.getElementById('qr-' + lead.id), {
+          text: checkinURL,
+          width: 150,
+          height: 150,
+          colorDark: '#000000',
+          colorLight: '#ffffff',
+          correctLevel: QRCode.CorrectLevel.M
         });
-      } else {
-        document.getElementById('qr-'+lead.id).innerText=url;
+      } catch(err) {
+        console.error('QR generation error:', err);
+        document.getElementById('qr-' + lead.id).innerHTML = `<div style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);word-break:break-all;padding:.5rem">${checkinURL}</div>`;
       }
     });
-  },100);
+  }, 100);
+}
+
+function downloadQR(leadId, name) {
+  const wrap = document.getElementById('qr-' + leadId);
+  if(!wrap) return;
+  const canvas = wrap.querySelector('canvas');
+  if(!canvas) { toast('QR canvas not found'); return; }
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = name.replace(/\s+/g, '_') + '_checkin_QR.png';
+  a.click();
+  toast('QR code downloaded');
+}
+
+function copyCheckinURL(url) {
+  navigator.clipboard.writeText(url).then(() => toast('✅ Check-in link copied!')).catch(() => {
+    // Fallback
+    const inp = document.createElement('input');
+    inp.value = url; document.body.appendChild(inp); inp.select();
+    document.execCommand('copy'); document.body.removeChild(inp);
+    toast('✅ Check-in link copied!');
+  });
+}
+
+function printQRCodes() {
+  const grid = document.getElementById('qrGrid');
+  if(!grid) { toast('Open QR modal first'); return; }
+  const win = window.open('', '_blank');
+  win.document.write(`<html><head><title>QR Check-In Codes</title><style>
+    body{font-family:sans-serif;padding:20px;}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+    .card{border:1px solid #ddd;border-radius:8px;padding:16px;text-align:center;break-inside:avoid;}
+    .name{font-weight:700;font-size:14px;margin-bottom:4px;}
+    .co{font-size:11px;color:#777;margin-bottom:12px;}
+    img,canvas{width:140px;height:140px;}
+    @media print{.grid{grid-template-columns:repeat(3,1fr)}}
+  </style></head><body><div class="grid">`);
+  grid.querySelectorAll('.qr-lead-card').forEach(card => {
+    const name = card.querySelector('.qr-lead-name')?.textContent || '';
+    const co = card.querySelector('.qr-lead-co')?.textContent || '';
+    const canvas = card.querySelector('canvas');
+    const img = canvas ? `<img src="${canvas.toDataURL()}">` : '';
+    win.document.write(`<div class="card"><div class="name">${name}</div><div class="co">${co}</div>${img}</div>`);
+  });
+  win.document.write('</div></body></html>');
+  win.document.close();
+  win.print();
 }
 
 // ═══════════════════════════════════════════════════
-// GOOGLE CALENDAR (WORKING VERSION)
+// ▶ CALENDAR INVITE — fixed to download ICS instead of API call
 // ═══════════════════════════════════════════════════
-function openGoogleCalendar(){
-  const title = encodeURIComponent(document.getElementById('ciTitle').value);
-  const startRaw = document.getElementById('ciStart').value;
-  const endRaw = document.getElementById('ciEnd').value;
-  const details = encodeURIComponent(document.getElementById('ciDesc').value);
-  const location = encodeURIComponent(document.getElementById('ciLocation').value);
+let calInviteAttendees = [];
+let currentCalEvId = null;
 
-  if(!title || !startRaw || !endRaw){
-    alert('Fill all fields');
+function openCalInvite(evId) {
+  currentCalEvId = evId;
+  const ev = S.events.find(e => e.id === evId);
+  calInviteAttendees = [];
+  renderAttendeeChips();
+  document.getElementById('ciEvId').value = evId;
+  document.getElementById('ciTitle').value = ev ? ev.name : '';
+  document.getElementById('ciLocation').value = ev ? ev.region || '' : '';
+  document.getElementById('ciDesc').value = '';
+  document.getElementById('ciResult').innerHTML = '';
+  if(ev && ev.date) document.getElementById('ciStart').value = ev.date.substring(0, 16);
+  if(ev && ev.dateEnd) document.getElementById('ciEnd').value = ev.dateEnd.substring(0, 16);
+  document.getElementById('calInviteModal').classList.add('open');
+  setTimeout(() => document.getElementById('attendeeInput').focus(), 100);
+}
+
+function handleAttendeeInput(e) {
+  if(e.key === 'Enter' || e.key === ',' || e.key === ';') { e.preventDefault(); addAttendeeChip(); }
+}
+
+function addAttendeeChip() {
+  const inp = document.getElementById('attendeeInput');
+  const val = inp.value.trim().replace(/,|;/g, '');
+  if(!val) return;
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!emailRe.test(val)) { inp.style.color = 'var(--red)'; setTimeout(() => inp.style.color = '', 800); return; }
+  if(!calInviteAttendees.includes(val)) calInviteAttendees.push(val);
+  renderAttendeeChips();
+  inp.value = '';
+}
+
+function removeAttendee(email) {
+  calInviteAttendees = calInviteAttendees.filter(e => e !== email);
+  renderAttendeeChips();
+}
+
+function renderAttendeeChips() {
+  const box = document.getElementById('attendeeChips');
+  const inp = document.getElementById('attendeeInput');
+  if(!box) return;
+  box.innerHTML = '';
+  calInviteAttendees.forEach(email => {
+    const chip = document.createElement('span'); chip.className = 'attendee-chip';
+    chip.innerHTML = `${email}<button onclick="removeAttendee('${email}')">×</button>`;
+    box.appendChild(chip);
+  });
+  box.appendChild(inp); 
+  if(inp) inp.focus();
+}
+
+// Generate and download ICS file with attendees
+function downloadICSWithAttendees() {
+  addAttendeeChip(); // flush typed email
+  
+  const evId = document.getElementById('ciEvId').value;
+  const ev = S.events.find(e => e.id === evId);
+  const title = document.getElementById('ciTitle').value.trim();
+  const start = document.getElementById('ciStart').value;
+  const end = document.getElementById('ciEnd').value;
+  const loc = document.getElementById('ciLocation').value.trim();
+  const desc = document.getElementById('ciDesc').value.trim();
+  const res = document.getElementById('ciResult');
+
+  if(!title || !start || !end) {
+    res.innerHTML = '<div class="invite-result err">Title, start and end time required.</div>';
     return;
   }
 
-  const start = new Date(startRaw).toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
-  const end = new Date(endRaw).toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
-
-  const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&location=${location}`;
-
-  window.open(url,'_blank');
-}
-
-// ═══════════════════════════════════════════════════
-// ICS DOWNLOAD (UNCHANGED WORKING)
-// ═══════════════════════════════════════════════════
-function downloadICS(evId){
-  const ev=S.events.find(e=>e.id===evId);
-  if(!ev)return;
-
-  const toICSDate=str=>{
-    const d=new Date(str);
-    return d.toISOString().replace(/[-:]/g,'').split('.')[0];
+  const toICSDate = (str) => {
+    if(!str) return '';
+    const d = new Date(str);
+    if(isNaN(d)) return '';
+    return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   };
 
-  const start=toICSDate(ev.date);
-  const end=toICSDate(ev.dateEnd||ev.date);
+  const startISO = toICSDate(start);
+  const endISO = toICSDate(end);
+  const now = toICSDate(new Date().toISOString());
 
-  const ics=`BEGIN:VCALENDAR
-VERSION:2.0
-BEGIN:VEVENT
-SUMMARY:${ev.name}
-DTSTART:${start}
-DTEND:${end}
-LOCATION:${ev.region||''}
-END:VEVENT
-END:VCALENDAR`;
+  // Build attendee lines
+  const attendeeLines = calInviteAttendees.map(email => `ATTENDEE;ROLE=REQ-PARTICIPANT;PARTSTAT=NEEDS-ACTION;RSVP=TRUE:MAILTO:${email}`).join('\r\n');
 
-  const blob=new Blob([ics],{type:'text/calendar'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='event.ics';
+  const ics = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//IT Reader//DataBase//EN',
+    'CALSCALE:GREGORIAN',
+    'METHOD:REQUEST',
+    'BEGIN:VEVENT',
+    `UID:${uid()}@itreader.com`,
+    `DTSTAMP:${now}`,
+    `DTSTART:${startISO}`,
+    `DTEND:${endISO}`,
+    `SUMMARY:${title}`,
+    `LOCATION:${loc.replace(/\n/g, '\\n')}`,
+    `DESCRIPTION:${desc ? desc.replace(/\n/g, '\\n') + '\\n\\n' : ''}Sent via IT Reader Data Base`,
+    attendeeLines,
+    'STATUS:CONFIRMED',
+    'SEQUENCE:0',
+    'BEGIN:VALARM',
+    'TRIGGER:-PT60M',
+    'ACTION:DISPLAY',
+    'DESCRIPTION:Reminder',
+    'END:VALARM',
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (title.replace(/\s+/g, '_') || 'event') + '_invite.ics';
   a.click();
+
+  // Save to history
+  if(!S.calInvites) S.calInvites = [];
+  S.calInvites.push({
+    evId, title, start: startISO, end: endISO, 
+    attendees: [...calInviteAttendees], sentAt: new Date().toISOString()
+  });
+  save();
+
+  res.innerHTML = `<div class="invite-result ok">✅ ICS file generated for: ${calInviteAttendees.join(', ') || 'no attendees'}<br>Download the file and open it in Outlook/Apple Calendar to send invites.</div>`;
+  toast('📅 ICS file downloaded - open to send invites');
 }
+
+// ═══════════════════════════════════════════════════
+// ICS DOWNLOAD — for Outlook/Apple Calendar
+// ═══════════════════════════════════════════════════
+function downloadICS(evId) {
+  const id = evId || currentCalEvId;
+  const ev = S.events.find(e => e.id === id);
+  if(!ev) { toast('Event not found'); return; }
+  const toICSDate = str => {
+    if(!str) return '';
+    const d = new Date(str);
+    if(isNaN(d)) return '';
+    return d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  };
+  const start = toICSDate(ev.date);
+  const end = toICSDate(ev.dateEnd) || start;
+  const now = toICSDate(new Date().toISOString());
+  const ics = [
+    'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//IT Reader//DataBase//EN',
+    'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    `UID:${ev.id}@itreader.com`,
+    `DTSTAMP:${now}`,
+    start ? `DTSTART:${start}` : `DTSTART;VALUE=DATE:${todayKey().replace(/-/g, '')}`,
+    end ? `DTEND:${end}` : `DTEND;VALUE=DATE:${todayKey().replace(/-/g, '')}`,
+    `SUMMARY:${ev.name}`,
+    `LOCATION:${(ev.region || '').replace(/\n/g, '\\n')}`,
+    `DESCRIPTION:${[ev.client ? 'Client: ' + ev.client : '', ev.notes || ''].filter(Boolean).join('\\n')}`,
+    'STATUS:CONFIRMED', 'SEQUENCE:0',
+    'BEGIN:VALARM', 'TRIGGER:-PT60M', 'ACTION:DISPLAY', 'DESCRIPTION:Reminder', 'END:VALARM',
+    'END:VEVENT', 'END:VCALENDAR'
+  ].join('\r\n');
+  const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); 
+  a.download = (ev.name.replace(/\s+/g, '_') || 'event') + '.ics'; 
+  a.click();
+  toast('📁 .ics downloaded — open to add to Outlook/Apple Calendar');
+}
+
+// ═══════════════════════════════════════════════════
+// DRIVE
+// ═══════════════════════════════════════════════════
+function renderDrive() {
+  const g = document.getElementById('driveGrid'); 
+  if(!g) return;
+  g.innerHTML = '';
+  if(!S.driveSheets.length) { g.innerHTML = '<div class="ev-empty" style="grid-column:1/-1">NO SHEETS ADDED YET</div>'; return; }
+  S.driveSheets.forEach(s => {
+    const c = document.createElement('div'); c.className = 'drive-card';
+    c.innerHTML = `<div class="drive-icon">📊</div><div class="drive-name">${s.name}</div>${s.desc ? `<div class="drive-desc">${s.desc}</div>` : ''}<div class="drive-url">${s.url.length > 45 ? s.url.substring(0, 45) + '…' : s.url}</div><button class="drive-del" onclick="delSheet('${s.id}',event)">✕</button>`;
+    c.onclick = e => { if(e.target.classList.contains('drive-del')) return; window.open(s.url, '_blank'); };
+    g.appendChild(c);
+  });
+}
+
+function openDriveModal() { 
+  ['dsName', 'dsUrl', 'dsDesc'].forEach(i => document.getElementById(i).value = ''); 
+  document.getElementById('driveModal').classList.add('open'); 
+  setTimeout(() => document.getElementById('dsName').focus(), 100); 
+}
+
+function saveDriveSheet() {
+  const f = id => document.getElementById(id).value.trim();
+  if(!f('dsName') || !f('dsUrl')) { toast('Name and URL required'); return; }
+  S.driveSheets.push({ id: uid(), name: f('dsName'), url: f('dsUrl'), desc: f('dsDesc') });
+  save(); renderDrive(); closeModal('driveModal'); toast('Sheet added');
+}
+
+function delSheet(id, e) { 
+  e.stopPropagation(); 
+  S.driveSheets = S.driveSheets.filter(x => x.id !== id); 
+  save(); renderDrive(); toast('Removed'); 
+}
+
+// ═══════════════════════════════════════════════════
+// TASKS
+// ═══════════════════════════════════════════════════
+function selPrio(btn) { 
+  document.querySelectorAll('.prio-btn').forEach(b => b.classList.remove('sel')); 
+  btn.classList.add('sel'); 
+  S.prio = btn.dataset.p; 
+}
+
+function renderTasks() {
+  const list = document.getElementById('taskList');
+  if(!list) return;
+  const open = S.tasks.filter(t => !t.done).length;
+  const taskCount = document.getElementById('taskCount');
+  if(taskCount) taskCount.textContent = open;
+  const sorted = [...S.tasks].sort((a, b) => { const p = { high: 0, med: 1, low: 2 }; return (p[a.prio] || 1) - (p[b.prio] || 1); });
+  list.innerHTML = '';
+  if(!sorted.length) { list.innerHTML = '<div class="ev-empty" style="padding:2rem">NO TASKS YET</div>'; return; }
+  sorted.forEach(t => {
+    const item = document.createElement('div'); item.className = 'task-item' + (t.done ? ' done' : '');
+    item.innerHTML = `
+      <div class="task-ck" onclick="togTask('${t.id}')">${t.done ? '✓' : ''}</div>
+      <div class="task-body">
+        <div class="task-txt">${t.text}</div>
+        <div class="task-meta2">
+          ${t.due ? `<span class="task-date2">${fmtDate(t.due)}</span>` : ''}
+          <span class="ptag ${t.prio === 'high' ? 'high' : t.prio === 'med' ? 'med' : ''}">${t.prio?.toUpperCase()}</span>
+        </div>
+      </div>
+      <button class="task-del2" onclick="delTask('${t.id}')">✕</button>`;
+    list.appendChild(item);
+  });
+}
+
+function addTask() {
+  const text = document.getElementById('taskText').value.trim();
+  if(!text) { toast('Task text required'); return; }
+  S.tasks.push({ id: uid(), text, due: document.getElementById('taskDue').value, prio: S.prio || 'med', done: false });
+  document.getElementById('taskText').value = ''; document.getElementById('taskDue').value = '';
+  save(); renderTasks(); toast('Task added');
+}
+
+function togTask(id) { 
+  const t = S.tasks.find(x => x.id === id); 
+  if(t) { t.done = !t.done; save(); renderTasks(); } 
+}
+
+function delTask(id) { 
+  S.tasks = S.tasks.filter(x => x.id !== id); 
+  save(); renderTasks(); 
+}
+
+// ═══════════════════════════════════════════════════
+// WORKOUT
+// ═══════════════════════════════════════════════════
+function getTodayLog() {
+  const k = todayKey();
+  let log = S.workoutLogs.find(l => l.date === k);
+  if(!log) {
+    log = { date: k, exercises: [], trackers: { workout: null, diet: null, water: 0, nicotine: 0 } };
+    S.workoutLogs.push(log);
+  }
+  return log;
+}
+
+function renderWorkout() {
+  const todayDateLbl = document.getElementById('todayDateLbl');
+  if(todayDateLbl) todayDateLbl.textContent = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
+  renderExLibrary(); 
+  renderTodaySidebar(); 
+  renderWoHistory();
+}
+
+function renderExLibrary() {
+  const cats = document.getElementById('exCats'); 
+  if(!cats) return;
+  cats.innerHTML = '';
+  EX_CATS.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'ex-cat-btn' + (exCatFilter === c.id ? ' active' : '');
+    btn.textContent = c.name;
+    btn.onclick = () => { exCatFilter = c.id; renderExLibrary(); };
+    cats.appendChild(btn);
+  });
+  const grid = document.getElementById('exGrid'); 
+  if(!grid) return;
+  grid.innerHTML = '';
+  const filtered = exCatFilter === 'all' ? EXERCISES : EXERCISES.filter(e => e.cat === exCatFilter);
+  filtered.forEach(ex => {
+    const tile = document.createElement('div'); tile.className = 'ex-tile';
+    const todayLog = getTodayLog();
+    const logged = todayLog.exercises.filter(e => e.exId === ex.id);
+    const setsInfo = logged.length ? `${logged.reduce((a, e) => a + e.sets.length, 0)} sets today` : '';
+    tile.innerHTML = `<div class="ex-tile-img">${ex.emoji}</div><div class="ex-tile-body"><div class="ex-tile-name">${ex.name}</div><div class="ex-tile-muscle">${ex.muscle}</div>${setsInfo ? `<div class="ex-tile-sets">${setsInfo}</div>` : ''}</div>`;
+    tile.onclick = () => openExModal(ex.id);
+    grid.appendChild(tile);
+  });
+}
+
+function openExModal(exId) {
+  selectedExId = exId;
+  const ex = EXERCISES.find(e => e.id === exId);
+  const exModalName = document.getElementById('exModalName');
+  if(exModalName) exModalName.innerHTML = `${ex.emoji} ${ex.name}`;
+  const setRows = document.getElementById('setRows');
+  if(setRows) setRows.innerHTML = '';
+  addSetRow(); addSetRow(); addSetRow();
+  document.getElementById('exModal').classList.add('open');
+}
+
+function addSetRow() {
+  const rows = document.getElementById('setRows');
+  if(!rows) return;
+  const idx = rows.children.length + 1;
+  const row = document.createElement('div'); row.className = 'set-row';
+  row.innerHTML = `
+    <span class="set-num">Set ${idx}</span>
+    <div class="field" style="flex:1;margin-bottom:0"><label>Reps</label><input type="number" placeholder="10" min="1" class="set-reps"></div>
+    <div class="field" style="flex:1;margin-bottom:0"><label>kg</label><input type="number" placeholder="0" min="0" step="0.5" class="set-weight"></div>
+    <button style="background:none;border:none;color:var(--light);cursor:pointer;font-size:.8rem;margin-top:1.1rem" onclick="this.parentElement.remove();reIndexSets()">✕</button>`;
+  rows.appendChild(row);
+}
+
+function reIndexSets() {
+  document.querySelectorAll('.set-row .set-num').forEach((n, i) => n.textContent = `Set ${i + 1}`);
+}
+
+function logExercise() {
+  const rows = document.querySelectorAll('.set-row');
+  const sets = [];
+  rows.forEach(r => {
+    const reps = parseInt(r.querySelector('.set-reps').value);
+    const weight = parseFloat(r.querySelector('.set-weight').value) || 0;
+    if(reps > 0) sets.push({ reps, weight });
+  });
+  if(!sets.length) { toast('Enter at least one set'); return; }
+  const log = getTodayLog();
+  log.exercises.push({ exId: selectedExId, sets });
+  save(); 
+  renderTodaySidebar(); 
+  renderExLibrary(); 
+  closeModal('exModal');
+  const ex = EXERCISES.find(e => e.id === selectedExId);
+  toast(`💪 ${ex.name} logged! ${sets.length} set${sets.length !== 1 ? 's' : ''}`);
+}
+
+function renderTodaySidebar() {
+  const log = getTodayLog();
+  const t = log.trackers;
+  
+  const woY = document.getElementById('wo-y');
+  const woN = document.getElementById('wo-n');
+  const dietY = document.getElementById('diet-y');
+  const dietN = document.getElementById('diet-n');
+  const waterN = document.getElementById('water-n');
+  const nicN = document.getElementById('nic-n');
+  
+  if(woY) woY.className = 'yn-btn' + (t.workout === 'yes' ? ' y-active' : '');
+  if(woN) woN.className = 'yn-btn' + (t.workout === 'no' ? ' n-active' : '');
+  if(dietY) dietY.className = 'yn-btn' + (t.diet === 'yes' ? ' y-active' : '');
+  if(dietN) dietN.className = 'yn-btn' + (t.diet === 'no' ? ' n-active' : '');
+  if(waterN) waterN.textContent = t.water || 0;
+  if(nicN) nicN.textContent = t.nicotine || 0;
+  
+  const list = document.getElementById('todayExList'); 
+  if(!list) return;
+  list.innerHTML = '';
+  if(!log.exercises.length) { list.innerHTML = '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.62rem;color:var(--light);text-align:center;padding:.5rem">Click an exercise to log</div>'; return; }
+  log.exercises.forEach((entry, idx) => {
+    const ex = EXERCISES.find(e => e.id === entry.exId) || { name: entry.exId, emoji: '🏋️' };
+    const totalVol = entry.sets.reduce((a, s) => a + s.reps * (s.weight || 0), 0);
+    const item = document.createElement('div'); item.className = 'today-ex-item';
+    item.innerHTML = `
+      <span class="today-ex-nm">${ex.emoji} ${ex.name}</span>
+      <span class="today-ex-detail">${entry.sets.length}×${entry.sets.map(s => s.reps).join('/')} ${totalVol ? '@' + Math.max(...entry.sets.map(s => s.weight)) + 'kg' : ''}</span>
+      <button class="today-ex-del" onclick="delTodayEx(${idx})">✕</button>`;
+    list.appendChild(item);
+  });
+}
+
+function delTodayEx(idx) { 
+  const log = getTodayLog(); 
+  log.exercises.splice(idx, 1); 
+  save(); 
+  renderTodaySidebar(); 
+  renderExLibrary(); 
+}
+
+function setTracker(key, val) { 
+  const log = getTodayLog(); 
+  log.trackers[key] = val; 
+  save(); 
+  renderTodaySidebar(); 
+}
+
+function clearTracker(key) { 
+  const log = getTodayLog(); 
+  log.trackers[key] = key === 'water' || key === 'nicotine' ? 0 : null; 
+  save(); 
+  renderTodaySidebar(); 
+}
+
+function adj(key, delta) { 
+  const log = getTodayLog(); 
+  log.trackers[key] = Math.max(0, (log.trackers[key] || 0) + delta); 
+  save(); 
+  renderTodaySidebar(); 
+}
+
+function saveDay() { 
+  save(); 
+  toast('Day saved! 💪'); 
+  renderWoHistory(); 
+}
+
+function renderWoHistory() {
+  const hist = document.getElementById('woHistory');
+  if(!hist) return;
+  const logs = [...S.workoutLogs].filter(l => l.exercises.length > 0 || Object.values(l.trackers).some(v => v !== null && v !== 0)).sort((a, b) => b.date.localeCompare(a.date)).slice(0, 30);
+  const histCount = document.getElementById('histCount');
+  if(histCount) histCount.textContent = logs.length;
+  hist.innerHTML = '';
+  if(!logs.length) { hist.innerHTML = '<div class="ev-empty" style="padding:2rem">NO HISTORY YET — START LOGGING!</div>'; return; }
+  logs.forEach(log => {
+    const t = log.trackers;
+    const totalSets = log.exercises.reduce((a, e) => a + e.sets.length, 0);
+    const day = document.createElement('div'); day.className = 'wo-day';
+    const badges = [];
+    if(t.workout === 'yes') badges.push('<span class="wo-badge g">💪 Trained</span>');
+    else if(t.workout === 'no') badges.push('<span class="wo-badge r">❌ Rest</span>');
+    if(t.diet === 'yes') badges.push('<span class="wo-badge g">🥗 Diet ✓</span>');
+    else if(t.diet === 'no') badges.push('<span class="wo-badge r">🍕 Off diet</span>');
+    if(t.water) badges.push(`<span class="wo-badge b">💧 ${t.water} glasses</span>`);
+    if(t.nicotine) badges.push(`<span class="wo-badge y">🚬 ${t.nicotine} cig${t.nicotine !== 1 ? 's' : ''}</span>`);
+    day.innerHTML = `
+      <div class="wo-day-head" onclick="this.parentElement.classList.toggle('open')">
+        <span class="wo-day-date">${fmtDate(log.date)}</span>
+        <div class="wo-day-sum">
+          <span>${log.exercises.length} exercise${log.exercises.length !== 1 ? 's' : ''} · ${totalSets} sets</span>
+          <div class="wo-day-badges">${badges.join('')}</div>
+        </div>
+      </div>
+      <div class="wo-day-body">
+        ${badges.length ? `<div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.7rem">${badges.join('')}</div>` : ''}
+        ${log.exercises.map((entry, idx) => {
+          const ex = EXERCISES.find(e => e.id === entry.exId) || { name: entry.exId, emoji: '🏋️' };
+          const setsStr = entry.sets.map((s, i) => `Set ${i + 1}: ${s.reps} reps${s.weight ? ' @ ' + s.weight + 'kg' : ''}`).join(' · ');
+          return `<div class="wo-ex-row"><span class="wo-ex-name">${ex.emoji} ${ex.name}</span><span class="wo-ex-detail">${setsStr}</span><button class="wo-ex-del" onclick="delHistEx('${log.date}',${idx})">✕</button></div>`;
+        }).join('')}
+      </div>`;
+    hist.appendChild(day);
+  });
+}
+
+function delHistEx(date, idx) { 
+  const log = S.workoutLogs.find(l => l.date === date); 
+  if(log) { log.exercises.splice(idx, 1); save(); renderWoHistory(); } 
+}
+
+// ═══════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════
+function fmtDate(d) { 
+  if(!d) return ''; 
+  try { return new Date(d + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }); } 
+  catch { return d; } 
+}
+
+function fmtDT(d) { 
+  if(!d) return ''; 
+  try { const dt = new Date(d); if(isNaN(dt)) return d; return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + (d.includes('T') ? ' · ' + dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : ''); } 
+  catch { return d; } 
+}
+
+function fmtTime(iso) { 
+  if(!iso) return ''; 
+  try { return new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }); } 
+  catch { return ''; } 
+}
+
+function closeModal(id) { 
+  const modal = document.getElementById(id);
+  if(modal) modal.classList.remove('open'); 
+}
+
+function toast(msg) {
+  const el = document.createElement('div'); el.className = 'toast'; el.textContent = msg;
+  const toasts = document.getElementById('toasts');
+  if(toasts) toasts.appendChild(el);
+  setTimeout(() => el.remove(), 2800);
+}
+
+// Close modals on overlay click
+['eventModal', 'leadModal', 'driveModal', 'exModal', 'calInviteModal', 'csvModal', 'qrModal'].forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.addEventListener('click', function(e) { if(e.target === this) closeModal(id); });
+});
 
 // ═══════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════
-function init(){
-  console.log('APP READY');
+async function init() {
+  // Check if this is a check-in page request first
+  if(checkCheckinHash()) return;
+
+  loadLocal();
+  if(S.theme === 'dark') setTheme('dark');
+
+  // Load from shared cloud storage
+  const syncDot = document.getElementById('syncDot');
+  if(syncDot) syncDot.className = 'sync-dot stale';
+  const syncTxt = document.getElementById('syncTxt');
+  if(syncTxt) syncTxt.textContent = 'Loading…';
+
+  const gotCloud = await loadCloud();
+  if(gotCloud) {
+    if(syncDot) syncDot.className = 'sync-dot';
+    if(syncTxt) syncTxt.textContent = 'Synced';
+    setTimeout(() => { if(syncTxt) syncTxt.textContent = 'Sync'; }, 2000);
+    // Apply theme from cloud
+    if(S.theme === 'dark') setTheme('dark');
+    else setTheme('light');
+  } else {
+    if(syncDot) syncDot.className = 'sync-dot stale';
+    if(syncTxt) syncTxt.textContent = 'Sync';
+  }
+
+  renderEvents(); renderDrive(); renderTasks();
+
+  // Handle hash changes (for check-in links)
+  window.addEventListener('hashchange', () => {
+    if(window.location.hash.startsWith('#checkin/')) {
+      const leadId = window.location.hash.replace('#checkin/', '');
+      document.getElementById('app').style.display = 'none';
+      document.getElementById('checkinPage').style.display = 'block';
+      showCheckinPage(leadId);
+    }
+  });
 }
 
+// Make sure global functions are accessible
+window.init = init;
+window.toggleTheme = toggleTheme;
+window.switchTab = switchTab;
+window.openEventModal = openEventModal;
+window.saveEvent = saveEvent;
+window.delEvent = delEvent;
+window.openEventDetail = openEventDetail;
+window.goBack = goBack;
+window.advEvent = advEvent;
+window.openLeadModal = openLeadModal;
+window.saveLead = saveLead;
+window.delLead = delLead;
+window.cycleStatus = cycleStatus;
+window.filterLeads = filterLeads;
+window.openCSVModal = openCSVModal;
+window.importCSV = importCSV;
+window.exportLeadsCSV = exportLeadsCSV;
+window.openQRModal = openQRModal;
+window.downloadQR = downloadQR;
+window.copyCheckinURL = copyCheckinURL;
+window.printQRCodes = printQRCodes;
+window.openCalInvite = openCalInvite;
+window.handleAttendeeInput = handleAttendeeInput;
+window.addAttendeeChip = addAttendeeChip;
+window.removeAttendee = removeAttendee;
+window.sendCalInvite = downloadICSWithAttendees;
+window.downloadICS = downloadICS;
+window.openDriveModal = openDriveModal;
+window.saveDriveSheet = saveDriveSheet;
+window.delSheet = delSheet;
+window.selPrio = selPrio;
+window.addTask = addTask;
+window.togTask = togTask;
+window.delTask = delTask;
+window.renderWorkout = renderWorkout;
+window.addSetRow = addSetRow;
+window.logExercise = logExercise;
+window.setTracker = setTracker;
+window.clearTracker = clearTracker;
+window.adj = adj;
+window.saveDay = saveDay;
+window.delTodayEx = delTodayEx;
+window.delHistEx = delHistEx;
+window.performCheckin = performCheckin;
+
 init();
+</script>
 </script>
 
 </script>
