@@ -627,6 +627,80 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 
 <div class="toasts" id="toasts"></div>
 
+
+
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, addDoc, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "YOUR_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "YOUR_PROJECT_ID",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.db = db; // e bojm global
+</script>
+
+
+  <script type="module">
+const params = new URLSearchParams(window.location.search);
+const userId = params.get("id");
+
+const page = document.getElementById("checkinPage");
+const content = document.getElementById("ciPageContent");
+
+if (window.location.search.includes("id")) {
+  page.style.display = "block";
+
+  content.innerHTML = `
+    <div class="ci-event-name">Event Check-in</div>
+    <div class="ci-lead-name">Delegate</div>
+    <button class="ci-btn" id="checkBtn">Check-in</button>
+    <div id="ciStatus"></div>
+  `;
+
+  const btn = document.getElementById("checkBtn");
+  const status = document.getElementById("ciStatus");
+
+  btn.onclick = async () => {
+    if (!userId) {
+      status.innerHTML = `<div class="ci-status err">Invalid QR</div>`;
+      return;
+    }
+
+    try {
+      // kontrollo a eshte check-in ma heret
+      const q = query(collection(window.db, "checkins"), where("userId", "==", userId));
+      const snap = await getDocs(q);
+
+      if (!snap.empty) {
+        status.innerHTML = `<div class="ci-status err">Already checked in</div>`;
+        return;
+      }
+
+      // ruaj ne firebase
+      await addDoc(collection(window.db, "checkins"), {
+        userId: userId,
+        checkedIn: true,
+        time: new Date()
+      });
+
+      status.innerHTML = `<div class="ci-status ok">✅ Checked in successfully</div>`;
+      btn.disabled = true;
+
+    } catch (err) {
+      console.error(err);
+      status.innerHTML = `<div class="ci-status err">Error, try again</div>`;
+    }
+  };
+}
+</script>
+
 <!-- QR code library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
@@ -1277,18 +1351,25 @@ function openQRModal(evId){
       grid.appendChild(card);
 
       // Generate QR
-      try{
-        new QRCode(document.getElementById('qr-'+lead.id),{
-          text:checkinURL,width:150,height:150,
-          colorDark:'#000000',colorLight:'#ffffff',
-          correctLevel:QRCode.CorrectLevel.M
-        });
-      }catch(err){
-        document.getElementById('qr-'+lead.id).innerHTML=`<div style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);word-break:break-all;padding:.5rem">${checkinURL}</div>`;
-      }
-    });
-  },100);
+      try {
+  const checkinURL = window.location.origin + window.location.pathname + "?id=" + lead.id;
+
+  new QRCode(document.getElementById('qr-'+lead.id), {
+    text: checkinURL,
+    width: 150,
+    height: 150,
+    colorDark: '#000000',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+
+} catch(err) {
+  document.getElementById('qr-'+lead.id).innerHTML = `
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);word-break:break-all;padding:.5rem">
+      ${checkinURL}
+    </div>`;
 }
+
 
 function downloadQR(leadId,name){
   const wrap=document.getElementById('qr-'+leadId);
