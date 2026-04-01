@@ -24,7 +24,6 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // ── Expose DB helpers to global scope ──────────────────
   window._db = db;
   window._fbReady = true;
 
@@ -42,14 +41,12 @@
     } catch(e) { console.error("fbLoad error", e); return null; }
   };
 
-  // Real-time listener — updates UI when another device changes data
   window.fbListen = function(callback) {
     return onSnapshot(doc(db, "app", "state"), (snap) => {
       if (snap.exists()) callback(snap.data());
     });
   };
 
-  // Notify app that Firebase is ready
   window.dispatchEvent(new Event("fbReady"));
 </script>
 
@@ -292,7 +289,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .water-ctrl,.nic-ctrl{display:flex;align-items:center;gap:.4rem;}
 .water-n,.nic-n{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1rem;min-width:20px;text-align:center;}
 .water-unit{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--muted);}
-.wbtn{width:22px;height:22px;border:1.5px solid var(--border);border-radius:4px;background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .12s;}
+.wbtn{width:22px;height:22px;border:1.5px solid var(--border);border-radius:4px;background:var(--bg);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.85rem;transition:all .12px;}
 .wbtn:hover{border-color:var(--orange);}
 .today-ex-list{margin-top:.8rem;}
 .today-ex-ttl{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
@@ -303,6 +300,26 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .today-ex-del:hover{color:var(--red);}
 .save-day-btn{width:100%;margin-top:.75rem;padding:.6rem;background:var(--orange);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'IBM Plex Mono',monospace;font-size:.7rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:background .15s;}
 .save-day-btn:hover{background:var(--orange-dark);}
+
+/* ── TIMER ── */
+.tmr-cards{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem;}
+.tmr-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:1rem 1.2rem;}
+.tmr-display{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:2rem;letter-spacing:3px;color:var(--text);transition:color .2s;}
+.tmr-display.running{color:var(--orange);}
+.tmr-display.on-break{color:var(--green);}
+.tmr-controls{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.2rem;}
+.tmr-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-bottom:1.5rem;}
+.tmr-stat{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:.75rem 1rem;text-align:center;}
+.tmr-stat-val{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.1rem;color:var(--text);}
+.tmr-stat-lbl{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:3px;}
+.tmr-status{display:flex;align-items:center;gap:.6rem;margin-bottom:1.2rem;}
+.tmr-pulse{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background .2s;}
+.tmr-pulse.active{animation:tmrPulse 1.2s infinite;}
+@keyframes tmrPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.4)}}
+.tmr-status-txt{font-family:'IBM Plex Mono',monospace;font-size:.65rem;letter-spacing:1px;text-transform:uppercase;color:var(--muted);}
+.tmr-log-row{display:flex;align-items:center;justify-content:space-between;padding:.5rem .8rem;border:1.5px solid var(--border);border-radius:5px;font-family:'IBM Plex Mono',monospace;font-size:.68rem;}
+.tmr-log-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.tmr-empty{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--light);text-align:center;padding:1.5rem;border:1.5px dashed var(--border);border-radius:var(--radius);}
 
 /* ── MODAL ── */
 .overlay{display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.55);align-items:center;justify-content:center;}
@@ -371,7 +388,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 
 @media(max-width:1024px){.wo-layout{grid-template-columns:1fr;}.daily-sidebar{position:static;}}
-@media(max-width:768px){.tasks-layout{grid-template-columns:1fr;}.ev-timer-box{grid-template-columns:repeat(2,1fr);}.ev-grid{grid-template-columns:1fr;}}
+@media(max-width:768px){.tasks-layout{grid-template-columns:1fr;}.ev-timer-box{grid-template-columns:repeat(2,1fr);}.ev-grid{grid-template-columns:1fr;}.tmr-cards{grid-template-columns:1fr;}.tmr-summary{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
@@ -407,6 +424,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   <div class="tab" onclick="switchTab('drive',this)">Drive</div>
   <div class="tab" onclick="switchTab('tasks',this)">Tasks</div>
   <div class="tab" onclick="switchTab('workout',this)">Workout</div>
+  <div class="tab" onclick="switchTab('timer',this)">Timer</div>
 </div>
 
 <!-- EVENTS -->
@@ -526,6 +544,65 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   </div>
 </div>
 
+<!-- TIMER -->
+<div class="page" id="tab-timer">
+  <div class="sec-head">
+    <span class="sec-label">Work Timer</span>
+    <button class="btn btn-ghost" onclick="tmrReset()" style="opacity:.7">↺ Reset All</button>
+  </div>
+
+  <div style="max-width:640px">
+
+    <!-- Status indicator -->
+    <div class="tmr-status">
+      <div class="tmr-pulse" id="tmrPulse"></div>
+      <span class="tmr-status-txt" id="tmrStatusTxt">Idle — press Start Work to begin</span>
+    </div>
+
+    <!-- Two big clocks -->
+    <div class="tmr-cards">
+      <div class="tmr-card">
+        <div class="sec-label" style="margin-bottom:.4rem">Work time</div>
+        <div class="tmr-display" id="tmrWork">00:00:00</div>
+      </div>
+      <div class="tmr-card">
+        <div class="sec-label" style="margin-bottom:.4rem">Break time</div>
+        <div class="tmr-display" id="tmrBreak">00:00:00</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="tmr-controls">
+      <button class="btn btn-fill" id="tmrWorkBtn" onclick="tmrStartWork()">▶ Start Work</button>
+      <button class="btn" id="tmrBreakBtn" onclick="tmrStartBreak()" disabled style="border-color:var(--green);color:var(--green)">☕ Take Break</button>
+      <button class="btn btn-ghost" id="tmrStopBtn" onclick="tmrStop()" disabled>■ Stop</button>
+    </div>
+
+    <!-- Summary stats -->
+    <div class="tmr-summary">
+      <div class="tmr-stat">
+        <div class="tmr-stat-val" id="tmrTotalWork">0h 0m</div>
+        <div class="tmr-stat-lbl">Total work</div>
+      </div>
+      <div class="tmr-stat">
+        <div class="tmr-stat-val" id="tmrTotalBreak">0h 0m</div>
+        <div class="tmr-stat-lbl">Total break</div>
+      </div>
+      <div class="tmr-stat">
+        <div class="tmr-stat-val" id="tmrSessionCount">0</div>
+        <div class="tmr-stat-lbl">Work sessions</div>
+      </div>
+    </div>
+
+    <!-- Session log -->
+    <div class="sec-label" style="margin-bottom:.6rem">Session log</div>
+    <div id="tmrLog">
+      <div class="tmr-empty">No sessions yet</div>
+    </div>
+
+  </div>
+</div>
+
 </div><!-- end #app -->
 
 <!-- ═══════════════ MODALS ═══════════════════════ -->
@@ -623,15 +700,13 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   </div>
 </div>
 
-<!-- ═══ CALENDAR INVITE MODAL ═══════════════════ -->
+<!-- Calendar Invite -->
 <div class="overlay" id="calModal">
   <div class="modal" style="width:520px">
     <h3>📅 Send Calendar Invites to Delegates</h3>
-
     <div style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);background:var(--surface);padding:.6rem .8rem;border-radius:var(--radius-sm);margin-bottom:.8rem;line-height:1.7">
       This sends a Google Calendar event invite directly to each delegate's email. Make sure your browser is connected to Google Calendar via the tools panel.
     </div>
-
     <div class="cal-inv-section">Who to invite</div>
     <div style="display:flex;gap:.5rem;margin-bottom:.5rem;flex-wrap:wrap;">
       <button class="qr-sm-btn" id="calSelAll" onclick="calSelectAll()">✅ Select All Leads</button>
@@ -639,12 +714,10 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
       <span style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);align-self:center" id="calSelCount">0 selected</span>
     </div>
     <div id="calLeadCheckboxes" style="max-height:180px;overflow-y:auto;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.4rem"></div>
-
     <div class="cal-inv-section">Or add extra emails manually</div>
     <div class="attendee-chip-list" id="attendeeChips" onclick="document.getElementById('attendeeInput').focus()">
       <input class="attendee-input" id="attendeeInput" placeholder="extra@email.com — press Enter" onkeydown="handleAttendeeKey(event)">
     </div>
-
     <div class="cal-inv-section">Event details</div>
     <div class="form-grid" style="grid-template-columns:1fr 1fr">
       <div class="field"><label>Start *</label><input type="datetime-local" id="ciStart"></div>
@@ -655,10 +728,8 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
     <div class="field"><label>Message to delegates</label>
       <textarea id="ciDesc" rows="3" style="resize:vertical" placeholder="We look forward to seeing you at…"></textarea>
     </div>
-
     <div id="calResult"></div>
     <input type="hidden" id="ciEvId">
-
     <div class="modal-actions" style="flex-wrap:wrap;gap:.4rem">
       <button class="btn btn-ghost" onclick="downloadICS()">📁 Download .ics (Outlook)</button>
       <button class="btn btn-ghost" onclick="closeModal('calModal')">Cancel</button>
@@ -667,7 +738,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   </div>
 </div>
 
-<!-- ═══ QR CHECK-IN MODAL ═══════════════════════ -->
+<!-- QR Check-In -->
 <div class="overlay" id="qrModal">
   <div class="modal" style="width:600px">
     <h3>📱 QR Check-In Codes</h3>
@@ -679,7 +750,6 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
       <button class="qr-sm-btn" onclick="exportCheckedIn()">⬇ Export Checked-In CSV</button>
     </div>
     <div class="qr-lead-list" id="qrLeadList"></div>
-    <!-- Hidden QR canvases for download/print -->
     <div id="qrCanvasPool" class="qr-canvas-hidden"></div>
     <div class="modal-actions">
       <button class="btn btn-ghost" onclick="closeModal('qrModal')">Close</button>
@@ -744,7 +814,6 @@ window.addEventListener('fbReady', async () => {
   fbReady = true;
   setSyncStatus('loading');
 
-  // Check-in page detection — before loading full app
   const hash = window.location.hash;
   if (hash.startsWith('#checkin/')) {
     await loadFromFirebase();
@@ -752,19 +821,11 @@ window.addEventListener('fbReady', async () => {
     return;
   }
 
-  // Load data then start real-time listener
   const loaded = await loadFromFirebase();
-  if (loaded) {
-    setSyncStatus('ok');
-    renderAll();
-  } else {
-    setSyncStatus('ok'); // No data yet — fresh start
-    renderAll();
-  }
+  if (loaded) { setSyncStatus('ok'); renderAll(); }
+  else { setSyncStatus('ok'); renderAll(); }
 
-  // Real-time sync: when another device saves, update UI
   fbUnsubscribe = window.fbListen((remoteData) => {
-    // Only update if we're not mid-edit (simple: always merge)
     mergeRemote(remoteData);
     renderAll();
     setSyncStatus('ok');
@@ -794,7 +855,6 @@ async function saveToFirebase() {
   if (!ok) toast('Save failed — check connection', 'err');
 }
 
-// Debounced save — waits 800ms after last change
 let _saveTimer = null;
 function save() {
   clearTimeout(_saveTimer);
@@ -1093,10 +1153,141 @@ function renderWoHistory(){const hist=document.getElementById('woHistory');const
 function delHistEx(date,idx){const log=S.workoutLogs.find(l=>l.date===date);if(log){log.exercises.splice(idx,1);save();renderWoHistory();}}
 
 // ═══════════════════════════════════════════════════
-// ▶▶▶ QR CHECK-IN SYSTEM — FULLY WORKING
+// ▶▶▶ WORK TIMER
 // ═══════════════════════════════════════════════════
+let _tmrMode=null, _tmrStart=null, _tmrTicker=null;
+let _tmrElapsed={work:0,brk:0}, _tmrSessions=[];
 
-// The check-in URL format: BASE_URL#checkin/LEAD_ID
+function _tmrFmt(ms){
+  const t=Math.floor(ms/1000);
+  const h=Math.floor(t/3600);
+  const m=Math.floor((t%3600)/60);
+  const s=t%60;
+  return[h,m,s].map(n=>String(n).padStart(2,'0')).join(':');
+}
+function _tmrShort(ms){
+  const t=Math.floor(ms/1000);
+  const h=Math.floor(t/3600);
+  const m=Math.floor((t%3600)/60);
+  const s=t%60;
+  if(h>0)return h+'h '+m+'m';
+  if(m>0)return m+'m '+s+'s';
+  return s+'s';
+}
+function _tmrHM(ms){
+  const h=Math.floor(ms/3600000);
+  const m=Math.floor((ms%3600000)/60000);
+  return h+'h '+m+'m';
+}
+function _tmrNow(){
+  return new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+}
+function _tmrTick(){
+  const delta=Date.now()-_tmrStart;
+  if(_tmrMode==='work'){
+    document.getElementById('tmrWork').textContent=_tmrFmt(_tmrElapsed.work+delta);
+  } else if(_tmrMode==='brk'){
+    document.getElementById('tmrBreak').textContent=_tmrFmt(_tmrElapsed.brk+delta);
+  }
+}
+function _tmrFlush(){
+  const delta=Date.now()-_tmrStart;
+  if(_tmrMode==='work'){
+    _tmrElapsed.work+=delta;
+    _tmrSessions.push({type:'work',dur:delta,at:_tmrNow()});
+  } else if(_tmrMode==='brk'){
+    _tmrElapsed.brk+=delta;
+    _tmrSessions.push({type:'brk',dur:delta,at:_tmrNow()});
+  }
+  _tmrUpdateSummary();
+}
+function tmrStartWork(){
+  if(_tmrMode==='work')return;
+  if(_tmrMode==='brk')_tmrFlush();
+  _tmrMode='work';
+  _tmrStart=Date.now();
+  clearInterval(_tmrTicker);
+  _tmrTicker=setInterval(_tmrTick,500);
+  document.getElementById('tmrWork').className='tmr-display running';
+  document.getElementById('tmrBreak').className='tmr-display';
+  document.getElementById('tmrWorkBtn').disabled=true;
+  document.getElementById('tmrBreakBtn').disabled=false;
+  document.getElementById('tmrStopBtn').disabled=false;
+  const p=document.getElementById('tmrPulse');
+  p.className='tmr-pulse active';
+  p.style.background='var(--orange)';
+  document.getElementById('tmrStatusTxt').textContent='Working — started at '+_tmrNow();
+  toast('▶ Work session started','ok');
+}
+function tmrStartBreak(){
+  if(_tmrMode==='brk')return;
+  if(_tmrMode==='work')_tmrFlush();
+  _tmrMode='brk';
+  _tmrStart=Date.now();
+  clearInterval(_tmrTicker);
+  _tmrTicker=setInterval(_tmrTick,500);
+  document.getElementById('tmrBreak').className='tmr-display on-break';
+  document.getElementById('tmrWork').className='tmr-display';
+  document.getElementById('tmrWorkBtn').disabled=false;
+  document.getElementById('tmrBreakBtn').disabled=true;
+  document.getElementById('tmrStopBtn').disabled=false;
+  const p=document.getElementById('tmrPulse');
+  p.className='tmr-pulse active';
+  p.style.background='var(--green)';
+  document.getElementById('tmrStatusTxt').textContent='On break — started at '+_tmrNow();
+  toast('☕ Break started');
+}
+function tmrStop(){
+  if(_tmrMode)_tmrFlush();
+  _tmrMode=null;
+  _tmrStart=null;
+  clearInterval(_tmrTicker);
+  document.getElementById('tmrWork').className='tmr-display';
+  document.getElementById('tmrBreak').className='tmr-display';
+  document.getElementById('tmrWorkBtn').disabled=false;
+  document.getElementById('tmrBreakBtn').disabled=true;
+  document.getElementById('tmrStopBtn').disabled=true;
+  const p=document.getElementById('tmrPulse');
+  p.className='tmr-pulse';
+  p.style.background='var(--border)';
+  document.getElementById('tmrStatusTxt').textContent='Stopped — press Start Work to resume';
+  toast('■ Session stopped');
+}
+function tmrReset(){
+  tmrStop();
+  _tmrElapsed={work:0,brk:0};
+  _tmrSessions=[];
+  document.getElementById('tmrWork').textContent='00:00:00';
+  document.getElementById('tmrBreak').textContent='00:00:00';
+  document.getElementById('tmrBreakBtn').disabled=true;
+  document.getElementById('tmrStopBtn').disabled=true;
+  _tmrUpdateSummary();
+  document.getElementById('tmrStatusTxt').textContent='Reset — press Start Work to begin';
+  toast('↺ Timer reset');
+}
+function _tmrUpdateSummary(){
+  document.getElementById('tmrTotalWork').textContent=_tmrHM(_tmrElapsed.work);
+  document.getElementById('tmrTotalBreak').textContent=_tmrHM(_tmrElapsed.brk);
+  document.getElementById('tmrSessionCount').textContent=_tmrSessions.filter(s=>s.type==='work').length;
+  const log=document.getElementById('tmrLog');
+  if(!_tmrSessions.length){
+    log.innerHTML='<div class="tmr-empty">No sessions yet</div>';
+    return;
+  }
+  log.innerHTML=[..._tmrSessions].reverse().map(s=>`
+    <div class="tmr-log-row" style="margin-bottom:.4rem">
+      <span style="display:flex;align-items:center;gap:.5rem;color:var(--text)">
+        <span class="tmr-log-dot" style="background:${s.type==='work'?'var(--orange)':'var(--green)'}"></span>
+        ${s.type==='work'?'Work':'Break'}
+      </span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--text)">${_tmrShort(s.dur)}</span>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted)">${s.at}</span>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// ▶▶▶ QR CHECK-IN SYSTEM
+// ═══════════════════════════════════════════════════
 function getCheckinURL(leadId) {
   return `${BASE_URL}#checkin/${leadId}`;
 }
@@ -1117,8 +1308,6 @@ function openQRModal(evId) {
 
   leads.forEach(lead => {
     const url = getCheckinURL(lead.id);
-
-    // Row in list
     const row = document.createElement('div');
     row.className = 'qr-lead-row';
     row.id = `qr-row-${lead.id}`;
@@ -1137,13 +1326,11 @@ function openQRModal(evId) {
       </div>`;
     list.appendChild(row);
 
-    // Hidden canvas for this lead (used for download/print)
     const wrap = document.createElement('div');
     wrap.id = `qrc-${lead.id}`;
     wrap.style.cssText = 'display:inline-block;margin:4px;';
     pool.appendChild(wrap);
 
-    // Generate QR into hidden canvas
     try {
       new QRCode(wrap, {
         text: url,
@@ -1162,7 +1349,6 @@ function openQRModal(evId) {
 }
 
 function downloadSingleQR(leadId, name) {
-  // Give QRCode.js a moment to render if needed
   setTimeout(() => {
     const wrap = document.getElementById(`qrc-${leadId}`);
     if (!wrap) { toast('QR not ready', 'err'); return; }
@@ -1176,17 +1362,15 @@ function downloadSingleQR(leadId, name) {
       a.click();
       toast('QR downloaded ✅', 'ok');
     } else if (img) {
-      // QRCode.js sometimes renders img instead of canvas
       const a = document.createElement('a');
       a.href = img.src;
       a.download = name.replace(/\s+/g,'_') + '_QR.png';
       a.click();
       toast('QR downloaded ✅', 'ok');
     } else {
-      // Fallback: generate inline and download
       const tempDiv = document.createElement('div');
       document.body.appendChild(tempDiv);
-      const qr = new QRCode(tempDiv, {
+      new QRCode(tempDiv, {
         text: getCheckinURL(leadId),
         width: 300, height: 300,
         colorDark: '#000000', colorLight: '#ffffff',
@@ -1218,7 +1402,6 @@ function openCheckinInTab(leadId) {
 }
 
 function exportCheckedIn() {
-  // Find event from open modal context — use leads currently shown
   const allChecked = S.leads.filter(l => l.checkedIn);
   if (!allChecked.length) { toast('No check-ins yet', 'err'); return; }
   const esc = v => { const s=String(v||''); return (s.includes(',')||s.includes('"'))?'"'+s.replace(/"/g,'""')+'"':s; };
@@ -1266,7 +1449,7 @@ function printAllQR() {
 }
 
 // ═══════════════════════════════════════════════════
-// ▶▶▶ CHECK-IN PAGE — shown when URL contains #checkin/ID
+// ▶▶▶ CHECK-IN PAGE
 // ═══════════════════════════════════════════════════
 async function showCheckinPage(leadId) {
   document.getElementById('app').style.display = 'none';
@@ -1276,7 +1459,6 @@ async function showCheckinPage(leadId) {
   const body = document.getElementById('ciPageBody');
   body.innerHTML = `<div style="font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--muted)">Loading…</div>`;
 
-  // Reload fresh data from Firebase to get latest check-in state
   await loadFromFirebase();
 
   const lead = S.leads.find(l => l.id === leadId);
@@ -1296,7 +1478,6 @@ async function showCheckinPage(leadId) {
       <div class="ci-delegate-name">${lead.firstName}<br>${lead.lastName}</div>
       <div class="ci-company">${[lead.company, lead.title].filter(Boolean).join(' · ')}</div>
       <div class="ci-already">✅ Already checked in at ${fmtTime(lead.checkinTime)}</div>
-      <!-- Linku i kthimit është HEQUR -->
     `;
     return;
   }
@@ -1311,13 +1492,13 @@ async function showCheckinPage(leadId) {
     <div id="ciStatusBox"></div>
   `;
 }
+
 async function performCheckin(leadId) {
   const btn = document.getElementById('doCheckinBtn');
   const statusBox = document.getElementById('ciStatusBox');
   btn.disabled = true;
   btn.textContent = '⏳ Saving…';
 
-  // Re-fetch to avoid race conditions
   await loadFromFirebase();
 
   const lead = S.leads.find(l => l.id === leadId);
@@ -1348,7 +1529,6 @@ async function performCheckin(leadId) {
   }
 }
 
-// Listen for hash changes (delegate scans QR while app is open)
 window.addEventListener('hashchange', () => {
   const hash = window.location.hash;
   if (hash.startsWith('#checkin/')) {
@@ -1357,7 +1537,7 @@ window.addEventListener('hashchange', () => {
 });
 
 // ═══════════════════════════════════════════════════
-// ▶▶▶ CALENDAR INVITES — sends directly to delegates
+// ▶▶▶ CALENDAR INVITES
 // ═══════════════════════════════════════════════════
 function openCalModal(evId) {
   calCurrentEvId = evId;
@@ -1367,7 +1547,6 @@ function openCalModal(evId) {
   const ev = S.events.find(e => e.id === evId);
   const leads = S.leads.filter(l => l.eventId === evId && l.email);
 
-  // Pre-fill form
   document.getElementById('ciEvId').value = evId;
   document.getElementById('ciTitle').value = ev ? ev.name : '';
   document.getElementById('ciLocation').value = ev ? ev.region || '' : '';
@@ -1376,7 +1555,6 @@ function openCalModal(evId) {
   if (ev && ev.date) document.getElementById('ciStart').value = ev.date.substring(0,16);
   if (ev && ev.dateEnd) document.getElementById('ciEnd').value = ev.dateEnd.substring(0,16);
 
-  // Build lead checkboxes
   const box = document.getElementById('calLeadCheckboxes');
   if (!leads.length) {
     box.innerHTML = '<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.65rem;color:var(--muted);padding:.5rem">No leads with email addresses for this event.</div>';
@@ -1417,7 +1595,6 @@ function updateCalSelCount() {
   document.getElementById('calSelCount').textContent = `${calSelectedLeadIds.size} selected`;
 }
 
-// Attendee chip input for extra emails
 function handleAttendeeKey(e) { if(e.key==='Enter'||e.key===','||e.key===';'){e.preventDefault();addAttendeeChip();} }
 function addAttendeeChip() {
   const inp = document.getElementById('attendeeInput');
@@ -1441,7 +1618,7 @@ function renderAttendeeChips() {
 }
 
 async function sendCalendarInvites() {
-  addAttendeeChip(); // flush typed email
+  addAttendeeChip();
 
   const evId = document.getElementById('ciEvId').value;
   const title = document.getElementById('ciTitle').value.trim();
@@ -1457,7 +1634,6 @@ async function sendCalendarInvites() {
     return;
   }
 
-  // Collect all email recipients
   const leadEmails = S.leads.filter(l => calSelectedLeadIds.has(l.id) && l.email).map(l => l.email);
   const allEmails = [...new Set([...leadEmails, ...calExtraAttendees])];
 
@@ -1533,7 +1709,6 @@ Create the event and send invites to all of them. Reply with "SUCCESS" and the e
   }
 }
 
-// ICS download fallback
 function downloadICS() {
   const evId = document.getElementById('ciEvId').value;
   const ev = S.events.find(e => e.id === evId);
@@ -1559,15 +1734,12 @@ function toast(msg, type='') {
   setTimeout(() => el.remove(), 3000);
 }
 
-// Close modals on overlay click
 ['eventModal','leadModal','driveModal','exModal','csvModal','calModal','qrModal'].forEach(id => {
   const el = document.getElementById(id);
   if(el) el.addEventListener('click', function(e){ if(e.target===this) closeModal(id); });
 });
 
 // ── Init ──────────────────────────────────────────────────
-// Firebase module fires 'fbReady' event which starts everything.
-// Fallback: if Firebase takes too long, show app with empty state.
 setTimeout(() => {
   if (!fbReady) {
     document.getElementById('syncTxt').textContent = 'Offline';
