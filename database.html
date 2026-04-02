@@ -208,51 +208,6 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .drive-main-link{display:inline-flex;align-items:center;gap:.5rem;font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--orange);text-decoration:none;border:1.5px solid var(--orange);border-radius:var(--radius-sm);padding:.38rem .85rem;transition:all .15s;}
 .drive-main-link:hover{background:var(--orange);color:#fff;}
 
-/* ── DRIVE SEARCH ── */
-.drive-search-bar{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;}
-.drive-search-input{flex:1;font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:.42rem .7rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;}
-.drive-search-input:focus{border-color:var(--orange);}
-.drive-search-count{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);white-space:nowrap;}
-.drive-card.hidden{display:none;}
-
-/* ── TEMPLATES ── */
-.tpl-layout{display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start;}
-.tpl-grid{display:flex;flex-direction:column;gap:.6rem;}
-.tpl-card{border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);overflow:hidden;transition:border-color .15s;}
-.tpl-card:hover{border-color:var(--orange);}
-.tpl-card-head{padding:.7rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:.75rem;}
-.tpl-card-head:hover .tpl-card-name{color:var(--orange);}
-.tpl-card-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.82rem;flex:1;}
-.tpl-card-tag{font-family:'IBM Plex Mono',monospace;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:2px 7px;border:1px solid var(--border);border-radius:3px;color:var(--muted);white-space:nowrap;}
-.tpl-card-tag.outreach{border-color:var(--orange);color:var(--orange);}
-.tpl-card-tag.followup{border-color:var(--blue);color:var(--blue);}
-.tpl-card-tag.confirmation{border-color:var(--green);color:var(--green);}
-.tpl-card-tag.rejection{border-color:var(--red);color:var(--red);}
-.tpl-card-tag.general{border-color:var(--muted);color:var(--muted);}
-.tpl-card-actions{display:flex;gap:.3rem;align-items:center;}
-.tpl-action-btn{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:600;padding:3px 9px;border:1.5px solid var(--border);border-radius:3px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;white-space:nowrap;}
-.tpl-action-btn:hover{border-color:var(--orange);color:var(--orange);}
-.tpl-del-btn{background:none;border:none;font-size:.68rem;color:var(--light);cursor:pointer;padding:3px 5px;transition:color .1s;}
-.tpl-del-btn:hover{color:var(--red);}
-.tpl-body{display:none;padding:.75rem 1rem 1rem;border-top:1px solid var(--border);background:var(--surface);}
-.tpl-body.open{display:block;}
-.tpl-subject-preview{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-bottom:.5rem;}
-.tpl-subject-preview strong{color:var(--text);}
-.tpl-msg-preview{font-size:.8rem;color:var(--text);line-height:1.6;white-space:pre-wrap;word-break:break-word;max-height:200px;overflow-y:auto;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.6rem .8rem;}
-.tpl-copy-row{display:flex;gap:.5rem;margin-top:.65rem;flex-wrap:wrap;}
-.tpl-form-box{border:1.5px solid var(--border-dark);border-radius:var(--radius);overflow:hidden;background:var(--bg);height:fit-content;position:sticky;top:80px;}
-.tpl-form-head{padding:.75rem 1.1rem;background:var(--orange);}
-.tpl-form-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.72rem;color:#fff;letter-spacing:1px;text-transform:uppercase;}
-.tpl-form-body{padding:1rem;}
-.tpl-form-field{margin-bottom:.65rem;}
-.tpl-form-field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:.57rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem;}
-.tpl-form-field input,.tpl-form-field select,.tpl-form-field textarea{width:100%;font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:.38rem .6rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;resize:vertical;transition:border-color .15s;}
-.tpl-form-field input:focus,.tpl-form-field select:focus,.tpl-form-field textarea:focus{border-color:var(--orange);}
-.tpl-char-count{font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--light);text-align:right;margin-top:2px;}
-.tpl-search-wrap{position:relative;margin-bottom:.75rem;}
-.tpl-search-inp{width:100%;font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.38rem .65rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;}
-.tpl-search-inp:focus{border-color:var(--orange);}
-
 /* ── TASKS ── */
 .tasks-layout{display:grid;grid-template-columns:1fr 275px;gap:2rem;}
 .task-form-box{border:1.5px solid var(--border);border-radius:var(--radius);padding:1.1rem;background:var(--surface);height:fit-content;}
@@ -432,8 +387,107 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 ::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 
-@media(max-width:1024px){.wo-layout{grid-template-columns:1fr;}.daily-sidebar{position:static;}.tpl-layout{grid-template-columns:1fr;}.tpl-form-box{position:static;}}
-@media(max-width:768px){.tasks-layout{grid-template-columns:1fr;}.ev-timer-box{grid-template-columns:repeat(2,1fr);}.ev-grid{grid-template-columns:1fr;}.tmr-cards{grid-template-columns:1fr;}.tmr-summary{grid-template-columns:1fr 1fr;}}
+/* ══════════════════════════════════════════
+   AI WRITER — complete styles
+   ══════════════════════════════════════════ */
+
+/* Layout */
+.aiw-wrap{display:grid;grid-template-columns:360px 1fr;gap:1.5rem;align-items:start;padding:2rem;}
+.aiw-sidebar{position:sticky;top:80px;display:flex;flex-direction:column;gap:0;border:1.5px solid var(--border-dark);border-radius:var(--radius);overflow:hidden;}
+.aiw-sidebar-head{background:var(--orange);padding:.85rem 1.1rem;display:flex;align-items:center;justify-content:space-between;}
+.aiw-sidebar-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.72rem;color:#fff;letter-spacing:2px;text-transform:uppercase;}
+.aiw-sidebar-sub{font-family:'IBM Plex Mono',monospace;font-size:.56rem;color:rgba(255,255,255,.65);letter-spacing:1px;}
+.aiw-sidebar-body{background:var(--bg);padding:1rem 1.1rem 1.2rem;}
+
+/* Form fields */
+.aiw-f{margin-bottom:.6rem;}
+.aiw-f label{display:block;font-family:'IBM Plex Mono',monospace;font-size:.56rem;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem;}
+.aiw-f input,.aiw-f textarea{width:100%;font-family:'IBM Plex Mono',monospace;font-size:.76rem;padding:.38rem .65rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;resize:vertical;}
+.aiw-f input:focus,.aiw-f textarea:focus{border-color:var(--orange);}
+.aiw-f input.aiw-err{border-color:var(--red);animation:aiwShake .3s ease;}
+@keyframes aiwShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.aiw-grid2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+.aiw-divider{font-family:'IBM Plex Mono',monospace;font-size:.54rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--light);margin:.8rem 0 .5rem;display:flex;align-items:center;gap:.5rem;}
+.aiw-divider::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* Toggle pill groups */
+.aiw-pills{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.1rem;}
+.aiw-pill{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:600;letter-spacing:.5px;padding:.28rem .65rem;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;user-select:none;}
+.aiw-pill:hover{border-color:var(--orange);color:var(--orange);}
+.aiw-pill.on{background:var(--orange);border-color:var(--orange);color:#fff;}
+.aiw-pill.on-blue{background:var(--blue);border-color:var(--blue);color:#fff;}
+.aiw-pill.on-green{background:var(--green);border-color:var(--green);color:#fff;}
+
+/* Generate button */
+.aiw-gen-btn{width:100%;margin-top:.9rem;padding:.7rem 1rem;background:var(--orange);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+.aiw-gen-btn:hover:not(:disabled){background:var(--orange-dark);transform:translateY(-1px);box-shadow:0 4px 16px rgba(232,107,37,.3);}
+.aiw-gen-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
+.aiw-gen-spinner{width:13px;height:13px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:aiwSpin .6s linear infinite;display:none;}
+.aiw-gen-btn.loading .aiw-gen-spinner{display:block;}
+
+/* Results panel */
+.aiw-results-wrap{min-height:60vh;}
+.aiw-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5rem 2rem;border:2px dashed var(--border);border-radius:var(--radius);text-align:center;gap:.75rem;}
+.aiw-empty-ico{font-size:2.8rem;opacity:.25;}
+.aiw-empty-lbl{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--light);letter-spacing:2px;line-height:2;}
+
+/* Section label row */
+.aiw-section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem;}
+.aiw-section-label{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.4rem;}
+
+/* Channel groups */
+.aiw-channel-group{margin-bottom:1.25rem;}
+.aiw-channel-head{display:flex;align-items:center;gap:.6rem;padding:.55rem .9rem;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;border-bottom:none;}
+.aiw-channel-icon{font-size:1rem;}
+.aiw-channel-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text);}
+.aiw-channel-count{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--muted);margin-left:auto;}
+
+/* Message cards */
+.aiw-card{border:1.5px solid var(--border);background:var(--bg);overflow:hidden;transition:border-color .15s;}
+.aiw-card:last-child{border-radius:0 0 var(--radius) var(--radius);}
+.aiw-card:not(:last-child){border-bottom-color:var(--border);}
+.aiw-card:hover{border-color:var(--orange);}
+.aiw-card-bar{padding:.55rem .9rem;background:var(--surface2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem;}
+.aiw-ver-badge{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:2px 8px;border-radius:3px;border:1.5px solid var(--orange);color:var(--orange);}
+.aiw-card-meta{display:flex;gap:.3rem;align-items:center;flex-wrap:wrap;}
+.aiw-meta-pill{font-family:'IBM Plex Mono',monospace;font-size:.54rem;padding:1px 7px;border:1px solid var(--border);border-radius:3px;color:var(--muted);}
+.aiw-card-btns{display:flex;gap:.3rem;}
+.aiw-btn-sm{font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:600;padding:3px 10px;border:1.5px solid var(--border);border-radius:3px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;white-space:nowrap;}
+.aiw-btn-sm:hover{border-color:var(--orange);color:var(--orange);}
+.aiw-btn-sm.copied{border-color:var(--green)!important;color:var(--green)!important;}
+.aiw-btn-sm.save{border-color:var(--blue);color:var(--blue);}
+.aiw-btn-sm.save:hover{background:var(--blue-light);}
+.aiw-card-body{padding:.9rem 1rem 1rem;}
+.aiw-subj{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);margin-bottom:.65rem;padding:.38rem .65rem;background:var(--surface);border-radius:var(--radius-sm);border-left:3px solid var(--orange);display:flex;align-items:baseline;gap:.4rem;}
+.aiw-subj strong{color:var(--text);font-size:.7rem;}
+.aiw-msg{font-size:.84rem;line-height:1.78;color:var(--text);white-space:pre-wrap;word-break:break-word;}
+.aiw-word-count{font-family:'IBM Plex Mono',monospace;font-size:.54rem;color:var(--light);margin-top:.6rem;text-align:right;}
+
+/* Loading state */
+.aiw-loading{display:flex;flex-direction:column;align-items:center;gap:1.25rem;padding:4rem 2rem;}
+.aiw-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--orange);border-radius:50%;animation:aiwSpin .65s linear infinite;}
+@keyframes aiwSpin{to{transform:rotate(360deg)}}
+.aiw-loading-label{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.aiw-steps{width:100%;max-width:260px;display:flex;flex-direction:column;gap:.3rem;}
+.aiw-step{font-family:'IBM Plex Mono',monospace;font-size:.58rem;display:flex;align-items:center;gap:.45rem;color:var(--light);transition:color .25s;}
+.aiw-step.active{color:var(--orange);}
+.aiw-step.done{color:var(--green);}
+.aiw-step-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* Error box */
+.aiw-err-box{background:var(--red-light);border:1.5px solid var(--red);border-radius:var(--radius);padding:1.1rem 1.3rem;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--red);line-height:1.7;}
+
+/* Regenerate bar */
+.aiw-regen-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;}
+
+/* History */
+.aiw-hist-row{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.85rem;}
+.aiw-hist-chip{font-family:'IBM Plex Mono',monospace;font-size:.57rem;padding:2px 9px;border:1px solid var(--border);border-radius:20px;cursor:pointer;color:var(--muted);background:var(--bg);transition:all .12s;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.aiw-hist-chip:hover{border-color:var(--orange);color:var(--orange);}
+
+@media(max-width:1100px){.aiw-wrap{grid-template-columns:1fr;}.aiw-sidebar{position:static;}}
+@media(max-width:1024px){.wo-layout{grid-template-columns:1fr;}.daily-sidebar{position:static;}}
+@media(max-width:768px){.tasks-layout{grid-template-columns:1fr;}.ev-timer-box{grid-template-columns:repeat(2,1fr);}.ev-grid{grid-template-columns:1fr;}.tmr-cards{grid-template-columns:1fr;}.tmr-summary{grid-template-columns:1fr 1fr;}.aiw-grid2{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -467,10 +521,10 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 <div class="tabs" id="mainTabs">
   <div class="tab active" onclick="switchTab('events',this)">Events</div>
   <div class="tab" onclick="switchTab('drive',this)">Drive</div>
-  <div class="tab" onclick="switchTab('templates',this)">Templates</div>
   <div class="tab" onclick="switchTab('tasks',this)">Tasks</div>
   <div class="tab" onclick="switchTab('workout',this)">Workout</div>
   <div class="tab" onclick="switchTab('timer',this)">Timer</div>
+  <div class="tab" onclick="switchTab('aiwriter',this)" style="color:var(--orange)">AI Writer</div>
 </div>
 
 <!-- EVENTS -->
@@ -488,81 +542,13 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 <!-- DRIVE -->
 <div class="page" id="tab-drive">
   <div class="sec-head">
-    <div><span class="sec-label">Google Drive</span><span class="badge" id="driveCount">0</span></div>
+    <div><span class="sec-label">Google Drive</span></div>
     <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
       <a class="drive-main-link" href="https://drive.google.com/drive/folders/1vPYsEjwgPQ33Uj4m624lJ07einY7ZW6D" target="_blank">📂 Open Drive Folder</a>
       <button class="btn btn-fill" onclick="openDriveModal()">+ Add Sheet</button>
     </div>
   </div>
-  <div class="drive-search-bar">
-    <input class="drive-search-input" id="driveSearchInput" placeholder="Search sheets by name or description…" oninput="filterDrive(this.value)">
-    <span class="drive-search-count" id="driveSearchCount"></span>
-  </div>
   <div class="drive-grid" id="driveGrid"></div>
-</div>
-
-<!-- TEMPLATES -->
-<div class="page" id="tab-templates">
-  <div class="tpl-layout">
-    <div>
-      <div class="sec-head" style="margin-bottom:.75rem">
-        <div><span class="sec-label">Saved Templates</span><span class="badge" id="tplCount">0</span></div>
-        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-          <select id="tplFilterTag" onchange="renderTemplates()" style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;padding:.3rem .6rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--muted);outline:none;cursor:pointer;">
-            <option value="">All types</option>
-            <option value="outreach">Outreach</option>
-            <option value="followup">Follow-Up</option>
-            <option value="confirmation">Confirmation</option>
-            <option value="rejection">Rejection</option>
-            <option value="general">General</option>
-          </select>
-        </div>
-      </div>
-      <div class="tpl-search-wrap">
-        <input class="tpl-search-inp" id="tplSearchInp" placeholder="Search templates by name, subject or content…" oninput="renderTemplates()">
-      </div>
-      <div class="tpl-grid" id="tplGrid">
-        <div class="tmr-empty">No templates yet — create your first one</div>
-      </div>
-    </div>
-
-    <!-- Sidebar form -->
-    <div class="tpl-form-box">
-      <div class="tpl-form-head">
-        <div class="tpl-form-title" id="tplFormTitle">New Template</div>
-      </div>
-      <div class="tpl-form-body">
-        <input type="hidden" id="tplEditId">
-        <div class="tpl-form-field">
-          <label>Template Name *</label>
-          <input id="tplName" placeholder="e.g. Keepit Outreach">
-        </div>
-        <div class="tpl-form-field">
-          <label>Type / Tag</label>
-          <select id="tplTag">
-            <option value="outreach">Outreach</option>
-            <option value="followup">Follow-Up</option>
-            <option value="confirmation">Confirmation</option>
-            <option value="rejection">Rejection</option>
-            <option value="general">General</option>
-          </select>
-        </div>
-        <div class="tpl-form-field">
-          <label>Subject Line *</label>
-          <input id="tplSubject" placeholder="Invitation to Oslo Tech Summit 2026">
-        </div>
-        <div class="tpl-form-field">
-          <label>Message Body *</label>
-          <textarea id="tplBody" rows="9" placeholder="Dear {{name}},&#10;&#10;We'd like to invite you to…&#10;&#10;Tip: use {{name}}, {{company}}, {{event}} as placeholders." oninput="updateTplCharCount()"></textarea>
-          <div class="tpl-char-count" id="tplCharCount">0 characters</div>
-        </div>
-        <div style="display:flex;gap:.5rem">
-          <button class="btn btn-ghost" style="flex:1" onclick="clearTplForm()">Clear</button>
-          <button class="btn btn-fill" style="flex:2" onclick="saveTemplate()">Save Template</button>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>
 
 <!-- TASKS -->
@@ -715,6 +701,135 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
     </div>
 
   </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     AI WRITER PAGE
+     ══════════════════════════════════════════════ -->
+<div class="page" id="tab-aiwriter" style="padding:0">
+<div class="aiw-wrap">
+
+  <!-- ── SIDEBAR: Input Form ── -->
+  <div class="aiw-sidebar">
+    <div class="aiw-sidebar-head">
+      <div>
+        <div class="aiw-sidebar-title">AI Writer</div>
+        <div class="aiw-sidebar-sub">B2B Event Outreach Agent</div>
+      </div>
+      <span style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:rgba(255,255,255,.5);letter-spacing:1px">Claude AI</span>
+    </div>
+    <div class="aiw-sidebar-body">
+
+      <div class="aiw-divider">Event Details</div>
+
+      <div class="aiw-f">
+        <label>Event Name *</label>
+        <input id="aiw-event" placeholder="Keepit Live Nordic Roadshow – Helsinki">
+      </div>
+      <div class="aiw-f">
+        <label>Event Description *</label>
+        <textarea id="aiw-desc" rows="3" placeholder="Executive cybersecurity event focused on resilience, geopolitics, and data protection for Nordic IT leaders."></textarea>
+      </div>
+      <div class="aiw-grid2">
+        <div class="aiw-f">
+          <label>Date</label>
+          <input id="aiw-date" type="date">
+        </div>
+        <div class="aiw-f">
+          <label>Time (e.g. 16:00–19:45)</label>
+          <input id="aiw-time" placeholder="16:00–19:45">
+        </div>
+      </div>
+      <div class="aiw-f">
+        <label>Location / Venue</label>
+        <input id="aiw-location" placeholder="NH Collection Helsinki Grand Hansa">
+      </div>
+      <div class="aiw-f">
+        <label>Organiser / Brand <span style="opacity:.45">(optional)</span></label>
+        <input id="aiw-brand" placeholder="Keepit, Fortinet, AWS…">
+      </div>
+
+      <div class="aiw-divider">Intelligence Settings</div>
+
+      <div class="aiw-f">
+        <label>Target Audience</label>
+        <div class="aiw-pills" id="aiw-audience-pills">
+          <div class="aiw-pill on" data-v="CISOs and Security Leaders" onclick="aiwTogglePill(this,'audience')">CISOs</div>
+          <div class="aiw-pill" data-v="CIOs and IT Directors" onclick="aiwTogglePill(this,'audience')">CIOs</div>
+          <div class="aiw-pill" data-v="Cloud and Infrastructure Leaders" onclick="aiwTogglePill(this,'audience')">Cloud</div>
+          <div class="aiw-pill" data-v="IT Managers and Technical Leaders" onclick="aiwTogglePill(this,'audience')">IT Mgr</div>
+          <div class="aiw-pill" data-v="C-Suite Executives" onclick="aiwTogglePill(this,'audience')">C-Suite</div>
+        </div>
+      </div>
+
+      <div class="aiw-f">
+        <label>Industry Focus</label>
+        <div class="aiw-pills" id="aiw-industry-pills">
+          <div class="aiw-pill on" data-v="Cybersecurity and Data Protection" onclick="aiwTogglePill(this,'industry')">Cybersecurity</div>
+          <div class="aiw-pill" data-v="Cloud Computing and Infrastructure" onclick="aiwTogglePill(this,'industry')">Cloud</div>
+          <div class="aiw-pill" data-v="Digital Transformation" onclick="aiwTogglePill(this,'industry')">Digital Transf.</div>
+          <div class="aiw-pill" data-v="IT Leadership and Strategy" onclick="aiwTogglePill(this,'industry')">IT Strategy</div>
+          <div class="aiw-pill" data-v="Compliance and Risk Management" onclick="aiwTogglePill(this,'industry')">Compliance</div>
+        </div>
+      </div>
+
+      <div class="aiw-divider">Output Format</div>
+
+      <div class="aiw-f">
+        <label>Channels to Generate</label>
+        <div class="aiw-pills" id="aiw-channel-pills">
+          <div class="aiw-pill on" data-v="email" onclick="aiwTogglePill(this,'channel')">Email</div>
+          <div class="aiw-pill on" data-v="linkedin" onclick="aiwTogglePill(this,'channel')">LinkedIn</div>
+          <div class="aiw-pill on" data-v="whatsapp" onclick="aiwTogglePill(this,'channel')">WhatsApp</div>
+        </div>
+      </div>
+
+      <div class="aiw-f">
+        <label>Tone</label>
+        <div class="aiw-pills" id="aiw-tone-pills">
+          <div class="aiw-pill" data-v="executive" onclick="aiwTogglePill(this,'tone')">Executive</div>
+          <div class="aiw-pill on" data-v="professional-warm" onclick="aiwTogglePill(this,'tone')">Pro + Warm</div>
+          <div class="aiw-pill" data-v="direct" onclick="aiwTogglePill(this,'tone')">Direct</div>
+          <div class="aiw-pill" data-v="conversational" onclick="aiwTogglePill(this,'tone')">Conversational</div>
+        </div>
+      </div>
+
+      <div class="aiw-f">
+        <label>Length</label>
+        <div class="aiw-pills" id="aiw-length-pills">
+          <div class="aiw-pill on" data-v="concise" onclick="aiwTogglePill(this,'tone2')">Concise</div>
+          <div class="aiw-pill" data-v="detailed" onclick="aiwTogglePill(this,'tone2')">Detailed</div>
+        </div>
+      </div>
+
+      <div class="aiw-f">
+        <label>Extra Context <span style="opacity:.4">(optional)</span></label>
+        <input id="aiw-extra" placeholder="Exclusive invite-only, limited seats, key speaker…">
+      </div>
+
+      <button class="aiw-gen-btn" id="aiwBtn" onclick="aiwRun()">
+        <div class="aiw-gen-spinner" id="aiwSpinner"></div>
+        <span id="aiwBtnLbl">Generate Messages</span>
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ── RESULTS PANEL ── -->
+  <div id="aiw-out">
+    <div class="aiw-empty">
+      <div class="aiw-empty-ico">✍️</div>
+      <div class="aiw-empty-lbl">
+        FILL IN YOUR EVENT DETAILS<br>
+        SELECT YOUR CHANNELS &amp; TONE<br>
+        HIT GENERATE<br><br>
+        EMAIL · LINKEDIN · WHATSAPP<br>
+        2 VARIATIONS EACH · READY TO COPY
+      </div>
+    </div>
+  </div>
+
+</div>
 </div>
 
 </div><!-- end #app -->
@@ -871,30 +986,6 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   </div>
 </div>
 
-<!-- Template Use Modal -->
-<div class="overlay" id="tplUseModal">
-  <div class="modal" style="width:560px">
-    <h3 id="tplUseTitle">Use Template</h3>
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);background:var(--surface);padding:.55rem .8rem;border-radius:var(--radius-sm);margin-bottom:.9rem;line-height:1.7">
-      Fill in the placeholders below, then copy the result to your clipboard.
-    </div>
-    <div id="tplUsePlaceholders" style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.9rem"></div>
-    <div style="margin-bottom:.5rem">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">Subject</div>
-      <div id="tplUseSubjectOut" style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;padding:.5rem .7rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);word-break:break-word;"></div>
-    </div>
-    <div style="margin-bottom:.75rem">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">Message</div>
-      <div id="tplUseBodyOut" style="font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:.6rem .8rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);white-space:pre-wrap;word-break:break-word;max-height:220px;overflow-y:auto;line-height:1.6;"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" onclick="closeModal('tplUseModal')">Close</button>
-      <button class="btn" onclick="copyTplSubject()" style="border-color:var(--blue);color:var(--blue)">Copy Subject</button>
-      <button class="btn btn-fill" onclick="copyTplBody()">Copy Message</button>
-    </div>
-  </div>
-</div>
-
 <div class="toasts" id="toasts"></div>
 
 <!-- ═══════════════════════════════════════════════════════
@@ -937,7 +1028,7 @@ const EV_STAGES = ['planning','outreach','confirmed','delivered'];
 const EV_LABELS = {planning:'PLANNING',outreach:'OUTREACH',confirmed:'CONFIRMED',delivered:'DELIVERED'};
 
 // ── State ─────────────────────────────────────────────────
-let S = { events:[], leads:[], tasks:[], driveSheets:[], workoutLogs:[], templates:[], prio:'med', theme:'light' };
+let S = { events:[], leads:[], tasks:[], driveSheets:[], workoutLogs:[], prio:'med', theme:'light' };
 let timerInt=null, currentEventId=null, editingEventId=null;
 let selectedExId=null, exCatFilter='all';
 let calExtraAttendees=[], calSelectedLeadIds=new Set(), calCurrentEvId=null;
@@ -982,7 +1073,7 @@ function mergeRemote(data) {
   const localTheme = S.theme;
   S = { ...S, ...data };
   if (!data.theme) S.theme = localTheme;
-  ['events','leads','tasks','driveSheets','workoutLogs','templates'].forEach(k => { if(!S[k]) S[k]=[]; });
+  ['events','leads','tasks','driveSheets','workoutLogs'].forEach(k => { if(!S[k]) S[k]=[]; });
 }
 
 async function saveToFirebase() {
@@ -1016,7 +1107,7 @@ function setSyncStatus(state) {
 }
 
 function renderAll() {
-  renderEvents(); renderDrive(); renderTasks(); renderTemplates();
+  renderEvents(); renderDrive(); renderTasks();
   if (document.getElementById('tab-workout').classList.contains('active')) renderWorkout();
   applyTheme();
 }
@@ -1120,6 +1211,7 @@ function renderEventDetail(evId) {
       <button class="btn" style="border-color:var(--blue);color:var(--blue)" onclick="openCalModal('${ev.id}')">📅 Calendar Invites</button>
       <button class="btn btn-ghost" onclick="openQRModal('${ev.id}')">📱 QR Check-In</button>
       <button class="btn btn-ghost" onclick="exportLeadsCSV('${ev.id}')">⬇ Export CSV</button>
+      <button class="btn" style="background:var(--orange);color:#fff;border-color:var(--orange)" onclick="goBack();aiwPrefillFromEvent('${ev.id}')">✍️ AI Writer</button>
     </div>
     <div class="ev-hero">
       <div class="ev-hero-top">
@@ -1252,51 +1344,7 @@ function exportLeadsCSV(evId){
 }
 
 // ── Drive ─────────────────────────────────────────────────
-function renderDrive(){
-  const g=document.getElementById('driveGrid');
-  const countEl=document.getElementById('driveCount');
-  g.innerHTML='';
-  if(!S.driveSheets.length){
-    g.innerHTML='<div class="ev-empty" style="grid-column:1/-1">NO SHEETS ADDED YET</div>';
-    if(countEl) countEl.textContent='0';
-    return;
-  }
-  if(countEl) countEl.textContent=S.driveSheets.length;
-  S.driveSheets.forEach(s=>{
-    const c=document.createElement('div');
-    c.className='drive-card';
-    c.dataset.searchText=(s.name+' '+(s.desc||'')).toLowerCase();
-    c.innerHTML=`<div class="drive-icon">📊</div><div class="drive-name">${s.name}</div>${s.desc?`<div class="drive-desc">${s.desc}</div>`:''}<div class="drive-url">${s.url.length>45?s.url.substring(0,45)+'…':s.url}</div><button class="drive-del" onclick="delSheet('${s.id}',event)">✕</button>`;
-    c.onclick=e=>{if(e.target.classList.contains('drive-del'))return;window.open(s.url,'_blank');};
-    g.appendChild(c);
-  });
-  // reapply existing search if any
-  const inp=document.getElementById('driveSearchInput');
-  if(inp && inp.value) filterDrive(inp.value);
-  else updateDriveCount();
-}
-
-function filterDrive(q){
-  const cards=document.querySelectorAll('#driveGrid .drive-card');
-  const query=(q||'').toLowerCase().trim();
-  let visible=0;
-  cards.forEach(c=>{
-    const match=!query||c.dataset.searchText.includes(query);
-    c.classList.toggle('hidden',!match);
-    if(match) visible++;
-  });
-  updateDriveCount(query, visible);
-}
-
-function updateDriveCount(query, visible){
-  const el=document.getElementById('driveSearchCount');
-  if(!el) return;
-  if(query && visible!==undefined){
-    el.textContent=`${visible} of ${S.driveSheets.length} shown`;
-  } else {
-    el.textContent='';
-  }
-}
+function renderDrive(){const g=document.getElementById('driveGrid');g.innerHTML='';if(!S.driveSheets.length){g.innerHTML='<div class="ev-empty" style="grid-column:1/-1">NO SHEETS ADDED YET</div>';return;}S.driveSheets.forEach(s=>{const c=document.createElement('div');c.className='drive-card';c.innerHTML=`<div class="drive-icon">📊</div><div class="drive-name">${s.name}</div>${s.desc?`<div class="drive-desc">${s.desc}</div>`:''}<div class="drive-url">${s.url.length>45?s.url.substring(0,45)+'…':s.url}</div><button class="drive-del" onclick="delSheet('${s.id}',event)">✕</button>`;c.onclick=e=>{if(e.target.classList.contains('drive-del'))return;window.open(s.url,'_blank');};g.appendChild(c);});}
 function openDriveModal(){['dsName','dsUrl','dsDesc'].forEach(i=>document.getElementById(i).value='');document.getElementById('driveModal').classList.add('open');setTimeout(()=>document.getElementById('dsName').focus(),100);}
 function saveDriveSheet(){const f=id=>document.getElementById(id).value.trim();if(!f('dsName')||!f('dsUrl')){toast('Name and URL required','err');return;}S.driveSheets.push({id:uid(),name:f('dsName'),url:f('dsUrl'),desc:f('dsDesc')});save();renderDrive();closeModal('driveModal');toast('Sheet added','ok');}
 function delSheet(id,e){e.stopPropagation();S.driveSheets=S.driveSheets.filter(x=>x.id!==id);save();renderDrive();}
@@ -1465,163 +1513,6 @@ function _tmrUpdateSummary(){
       <span style="font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--text)">${_tmrShort(s.dur)}</span>
       <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted)">${s.at}</span>
     </div>`).join('');
-}
-
-// ═══════════════════════════════════════════════════
-// ▶▶▶ TEMPLATES
-// ═══════════════════════════════════════════════════
-const TPL_TAG_LABELS = {outreach:'Outreach',followup:'Follow-Up',confirmation:'Confirmation',rejection:'Rejection',general:'General'};
-
-function renderTemplates(){
-  const grid=document.getElementById('tplGrid'); if(!grid) return;
-  const countEl=document.getElementById('tplCount');
-  const q=(document.getElementById('tplSearchInp')?.value||'').toLowerCase().trim();
-  const tagFilter=document.getElementById('tplFilterTag')?.value||'';
-  let list=[...S.templates];
-  if(tagFilter) list=list.filter(t=>t.tag===tagFilter);
-  if(q) list=list.filter(t=>(t.name+' '+t.subject+' '+t.body).toLowerCase().includes(q));
-  if(countEl) countEl.textContent=S.templates.length;
-  if(!list.length){
-    grid.innerHTML=`<div class="tmr-empty">${S.templates.length?'No templates match your search':'No templates yet — create your first one'}</div>`;
-    return;
-  }
-  grid.innerHTML='';
-  list.forEach(tpl=>{
-    const card=document.createElement('div'); card.className='tpl-card';
-    const tagClass=tpl.tag||'general';
-    const tagLabel=TPL_TAG_LABELS[tagClass]||tagClass;
-    const preview=tpl.body.length>120?tpl.body.substring(0,120)+'…':tpl.body;
-    const created=tpl.createdAt?new Date(tpl.createdAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
-    card.innerHTML=`
-      <div class="tpl-card-head" onclick="toggleTplCard('${tpl.id}')">
-        <span class="tpl-card-name">${tpl.name}</span>
-        <span class="tpl-card-tag ${tagClass}">${tagLabel}</span>
-        <div class="tpl-card-actions" onclick="event.stopPropagation()">
-          <button class="tpl-action-btn" onclick="openTplUseModal('${tpl.id}')">Use</button>
-          <button class="tpl-action-btn" onclick="editTemplate('${tpl.id}')">Edit</button>
-          <button class="tpl-del-btn" onclick="delTemplate('${tpl.id}')">✕</button>
-        </div>
-      </div>
-      <div class="tpl-body" id="tplbody-${tpl.id}">
-        <div class="tpl-subject-preview">Subject: <strong>${tpl.subject}</strong></div>
-        <div class="tpl-msg-preview">${escHtml(tpl.body)}</div>
-        <div class="tpl-copy-row">
-          <button class="tpl-action-btn" onclick="quickCopy('${tpl.id}','subject')">Copy Subject</button>
-          <button class="tpl-action-btn" onclick="quickCopy('${tpl.id}','body')">Copy Message</button>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--light);margin-left:auto;align-self:center">${created}</span>
-        </div>
-      </div>`;
-    grid.appendChild(card);
-  });
-}
-
-function toggleTplCard(id){
-  const body=document.getElementById('tplbody-'+id);
-  if(body) body.classList.toggle('open');
-}
-
-function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-
-function saveTemplate(){
-  const name=document.getElementById('tplName').value.trim();
-  const subject=document.getElementById('tplSubject').value.trim();
-  const body=document.getElementById('tplBody').value.trim();
-  const tag=document.getElementById('tplTag').value;
-  const editId=document.getElementById('tplEditId').value;
-  if(!name||!subject||!body){toast('Name, subject and message are required','err');return;}
-  if(editId){
-    const tpl=S.templates.find(t=>t.id===editId);
-    if(tpl){tpl.name=name;tpl.subject=subject;tpl.body=body;tpl.tag=tag;tpl.updatedAt=new Date().toISOString();}
-    toast('Template updated','ok');
-  } else {
-    S.templates.push({id:uid(),name,subject,body,tag,createdAt:new Date().toISOString()});
-    toast('Template saved','ok');
-  }
-  save(); clearTplForm(); renderTemplates();
-}
-
-function clearTplForm(){
-  document.getElementById('tplEditId').value='';
-  document.getElementById('tplName').value='';
-  document.getElementById('tplSubject').value='';
-  document.getElementById('tplBody').value='';
-  document.getElementById('tplTag').value='outreach';
-  document.getElementById('tplCharCount').textContent='0 characters';
-  document.getElementById('tplFormTitle').textContent='New Template';
-}
-
-function updateTplCharCount(){
-  const v=document.getElementById('tplBody').value;
-  document.getElementById('tplCharCount').textContent=v.length+' characters';
-}
-
-function editTemplate(id){
-  const tpl=S.templates.find(t=>t.id===id); if(!tpl)return;
-  document.getElementById('tplEditId').value=tpl.id;
-  document.getElementById('tplName').value=tpl.name;
-  document.getElementById('tplSubject').value=tpl.subject;
-  document.getElementById('tplBody').value=tpl.body;
-  document.getElementById('tplTag').value=tpl.tag||'general';
-  document.getElementById('tplCharCount').textContent=tpl.body.length+' characters';
-  document.getElementById('tplFormTitle').textContent='Edit Template';
-  document.getElementById('tplName').scrollIntoView({behavior:'smooth',block:'center'});
-}
-
-function delTemplate(id){
-  if(!confirm('Delete this template?'))return;
-  S.templates=S.templates.filter(t=>t.id!==id);
-  save(); renderTemplates(); toast('Template deleted');
-}
-
-function quickCopy(id,field){
-  const tpl=S.templates.find(t=>t.id===id); if(!tpl)return;
-  const text=field==='subject'?tpl.subject:tpl.body;
-  navigator.clipboard.writeText(text).then(()=>toast(field==='subject'?'Subject copied!':'Message copied!','ok')).catch(()=>{
-    const el=document.createElement('textarea');el.value=text;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);
-    toast(field==='subject'?'Subject copied!':'Message copied!','ok');
-  });
-}
-
-// Template Use Modal — fill placeholders then copy
-let _tplUseId=null;
-function openTplUseModal(id){
-  const tpl=S.templates.find(t=>t.id===id); if(!tpl)return;
-  _tplUseId=id;
-  document.getElementById('tplUseTitle').textContent='Use: '+tpl.name;
-  // detect placeholders like {{name}}
-  const matches=[...new Set([...(tpl.subject+' '+tpl.body).matchAll(/\{\{(\w+)\}\}/g)].map(m=>m[1]))];
-  const ph=document.getElementById('tplUsePlaceholders');
-  ph.innerHTML='';
-  if(matches.length){
-    matches.forEach(key=>{
-      const row=document.createElement('div');row.className='tpl-form-field';row.style.marginBottom='.45rem';
-      row.innerHTML=`<label>{{${key}}}</label><input class="tpl-ph-inp" data-key="${key}" placeholder="Enter ${key}…" oninput="updateTplPreview()">`;
-      ph.appendChild(row);
-    });
-  } else {
-    ph.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.65rem;color:var(--muted)">No placeholders found — ready to copy as-is.</div>';
-  }
-  updateTplPreview();
-  document.getElementById('tplUseModal').classList.add('open');
-}
-
-function updateTplPreview(){
-  const tpl=S.templates.find(t=>t.id===_tplUseId); if(!tpl)return;
-  const vals={};
-  document.querySelectorAll('.tpl-ph-inp').forEach(inp=>vals[inp.dataset.key]=inp.value||'{{'+inp.dataset.key+'}}');
-  const replace=str=>str.replace(/\{\{(\w+)\}\}/g,(_,k)=>vals[k]||'{{'+k+'}}');
-  document.getElementById('tplUseSubjectOut').textContent=replace(tpl.subject);
-  document.getElementById('tplUseBodyOut').textContent=replace(tpl.body);
-}
-
-function copyTplSubject(){
-  const text=document.getElementById('tplUseSubjectOut').textContent;
-  navigator.clipboard.writeText(text).then(()=>toast('Subject copied!','ok')).catch(()=>{const el=document.createElement('textarea');el.value=text;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);toast('Subject copied!','ok');});
-}
-
-function copyTplBody(){
-  const text=document.getElementById('tplUseBodyOut').textContent;
-  navigator.clipboard.writeText(text).then(()=>toast('Message copied!','ok')).catch(()=>{const el=document.createElement('textarea');el.value=text;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);toast('Message copied!','ok');});
 }
 
 // ═══════════════════════════════════════════════════
@@ -2073,7 +1964,7 @@ function toast(msg, type='') {
   setTimeout(() => el.remove(), 3000);
 }
 
-['eventModal','leadModal','driveModal','exModal','csvModal','calModal','qrModal','tplUseModal'].forEach(id => {
+['eventModal','leadModal','driveModal','exModal','csvModal','calModal','qrModal'].forEach(id => {
   const el = document.getElementById(id);
   if(el) el.addEventListener('click', function(e){ if(e.target===this) closeModal(id); });
 });
@@ -2087,6 +1978,559 @@ setTimeout(() => {
     toast('Firebase not connected — check your network', 'err');
   }
 }, 8000);
+
+/* ════════════════════════════════════════════════════════════
+   AI WRITER — B2B Event Outreach Specialist Agent
+   ════════════════════════════════════════════════════════════ */
+
+// ── Multi-select pill state ───────────────────────────────
+// Each group can have ONE selection (radio-style) or MANY (channel)
+const AIW = {
+  history: [],   // last 5 runs for quick reload
+  lastMsgs: {}   // { email: [v1,v2], linkedin: [...], whatsapp: [...] }
+};
+
+// Groups that allow multiple selections
+const AIW_MULTI = new Set(['channel','audience','industry']);
+
+function aiwTogglePill(el, group) {
+  const container = el.closest('.aiw-pills');
+  if (AIW_MULTI.has(group)) {
+    // multi-select: toggle this pill only
+    el.classList.toggle('on');
+  } else {
+    // single-select: deselect siblings
+    container.querySelectorAll('.aiw-pill').forEach(p => p.classList.remove('on'));
+    el.classList.add('on');
+  }
+}
+
+function aiwGetPills(containerId) {
+  const pills = document.querySelectorAll(`#${containerId} .aiw-pill.on`);
+  return [...pills].map(p => p.dataset.v);
+}
+
+// ── Validation ────────────────────────────────────────────
+function aiwValidate() {
+  const eventEl = document.getElementById('aiw-event');
+  const descEl  = document.getElementById('aiw-desc');
+  let ok = true;
+  [eventEl, descEl].forEach(el => {
+    if (!el.value.trim()) {
+      el.classList.add('aiw-err');
+      el.addEventListener('input', () => el.classList.remove('aiw-err'), { once: true });
+      ok = false;
+    }
+  });
+  const channels = aiwGetPills('aiw-channel-pills');
+  if (!channels.length) { toast('Select at least one channel', 'err'); ok = false; }
+  if (!ok) toast('Event Name and Description are required', 'err');
+  return ok;
+}
+
+// ── Prompt builder — the specialist brain ─────────────────
+function aiwBuildPrompt(p) {
+
+  // Format date nicely if provided
+  let dateStr = '';
+  if (p.date) {
+    try { dateStr = new Date(p.date + 'T12:00:00').toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' }); }
+    catch(e) { dateStr = p.date; }
+  }
+
+  // Build event context block
+  const eventBlock = [
+    `Event Name: ${p.event}`,
+    p.date    ? `Date: ${dateStr}` : null,
+    p.time    ? `Time: ${p.time}` : null,
+    p.location? `Location: ${p.location}` : null,
+    p.brand   ? `Organiser/Brand: ${p.brand}` : null,
+    `Description: ${p.desc}`,
+    p.extra   ? `Additional context: ${p.extra}` : null
+  ].filter(Boolean).join('\n');
+
+  // Audience & industry intelligence
+  const audiences  = p.audiences.length  ? p.audiences.join(', ')  : 'Senior IT and Security professionals';
+  const industries = p.industries.length ? p.industries.join(', ') : 'IT, Cybersecurity, Cloud';
+
+  // Tone mapping
+  const toneMap = {
+    'executive':         'authoritative and peer-level — written as one senior leader to another, ultra-concise, no pleasantries, pure signal',
+    'professional-warm': 'professional yet warm — formal enough for C-level, but with a human touch that feels genuine not automated',
+    'direct':            'direct and no-nonsense — straight to the value, minimal words, respects the reader\'s time completely',
+    'conversational':    'conversational and natural — reads like a message from a smart colleague, relaxed but still business-sharp'
+  };
+  const toneDesc = toneMap[p.tone] || toneMap['professional-warm'];
+
+  // Length mapping
+  const lengthMap = {
+    'concise':  'Keep each message tight: Email max 120 words, LinkedIn max 60 words, WhatsApp max 40 words.',
+    'detailed': 'Allow more depth: Email max 200 words, LinkedIn max 100 words, WhatsApp max 60 words.'
+  };
+  const lengthDesc = lengthMap[p.length] || lengthMap['concise'];
+
+  // Channel instructions — only build for requested channels
+  const channelBlocks = [];
+
+  if (p.channels.includes('email')) {
+    channelBlocks.push(`
+EMAIL (generate 2 variations):
+- Format: Subject line on first line as "Subject: ..." then blank line then email body
+- Include natural greeting (first name only style, but since we have no name: use a role-aware opener like "Hope this week's treating you well," or jump straight in)
+- Professional sign-off
+- One clear, soft CTA (not "click here" — more like "happy to share more details" or "let me know if this is relevant")
+- Version 1 and Version 2 must have genuinely different angles and openers`);
+  }
+
+  if (p.channels.includes('linkedin')) {
+    channelBlocks.push(`
+LINKEDIN DM (generate 2 variations):
+- No subject line
+- Max 4–5 short sentences
+- Open with something that acknowledges their world or current trends — NOT "I saw your profile"
+- Sound like a peer reaching out, not a sales rep
+- Soft CTA at the end
+- Version 1 and Version 2 must feel distinctly different`);
+  }
+
+  if (p.channels.includes('whatsapp')) {
+    channelBlocks.push(`
+WHATSAPP (generate 2 variations):
+- Ultra-short: 2–3 sentences max
+- Casual but professional — reads like a message from a trusted contact
+- No formal greeting, no sign-off
+- Jump straight to the point with warmth
+- Version 1 slightly warmer, Version 2 slightly more direct`);
+  }
+
+  // Banned phrases list — critical for human feel
+  const banned = [
+    'I hope this message finds you well',
+    'I am reaching out',
+    'I wanted to reach out',
+    'exciting opportunity',
+    'leverage',
+    'synergy',
+    'paradigm',
+    'game-changer',
+    'world-class',
+    'cutting-edge',
+    'solutions',
+    'Dear Sir/Madam',
+    'To whom it may concern',
+    'I trust this email finds you',
+    'Please do not hesitate',
+    'feel free to',
+    'touch base',
+    'circle back',
+    'going forward',
+    'at your earliest convenience',
+    'Best regards' // too formal/robotic — use "Best," or "Talk soon," instead
+  ].join(', ');
+
+  return `You are a senior B2B outreach specialist with 15 years of experience writing executive-level event invitations for IT, cybersecurity, and cloud audiences across the Nordics and Europe.
+
+You write messages that sound like they came from a real, smart human — not a marketing department. Senior executives get hundreds of generic emails. Your job is to write the ones they actually read.
+
+══ EVENT DETAILS ══
+${eventBlock}
+
+══ TARGET AUDIENCE ══
+${audiences}
+
+══ INDUSTRY CONTEXT ══
+${industries}
+
+══ TONE ══
+${toneDesc}
+
+══ LENGTH ══
+${lengthDesc}
+
+══ YOUR WRITING RULES ══
+1. Sound human. Every sentence must feel like a real person wrote it at their desk, not a template engine.
+2. NO placeholders — never use [Name], [Company], [Role]. Write without them. Use role-aware openers instead.
+3. BANNED PHRASES — never use any of these: ${banned}
+4. Focus on VALUE and RELEVANCE — what will the reader gain? Why should they give up 3 hours of their day?
+5. Peer-level framing — position this as an invitation between equals, not vendor-to-buyer.
+6. Exclusivity — subtly signal limited seats, curated audience, high-value peers in the room.
+7. Current relevance — weave in real-world context: geopolitical cyber threats, ransomware trends, NIS2/DORA compliance pressure, cloud sovereignty, AI security risks — whatever is relevant to the event topic.
+8. Each variation must be genuinely different — different angle, different opener, different emphasis. Not just slightly reworded.
+9. CTA must be soft and natural — not "Register now" or "Click here". More like "Let me know if you'd like the details" or "Happy to reserve you a spot."
+10. Output ONLY the messages. Zero explanations, zero meta-commentary, zero labels beyond the exact format below.
+
+══ OUTPUT FORMAT ══
+Use EXACTLY this structure, nothing else:
+
+${p.channels.includes('email') ? `---EMAIL_V1---
+[email version 1 here — subject line first]
+
+---EMAIL_V2---
+[email version 2 here — subject line first]` : ''}
+
+${p.channels.includes('linkedin') ? `---LINKEDIN_V1---
+[linkedin message version 1]
+
+---LINKEDIN_V2---
+[linkedin message version 2]` : ''}
+
+${p.channels.includes('whatsapp') ? `---WHATSAPP_V1---
+[whatsapp message version 1]
+
+---WHATSAPP_V2---
+[whatsapp message version 2]` : ''}
+
+---END---`;
+}
+
+// ── Parser — extract all channel versions from raw output ─
+function aiwParse(raw, channels) {
+  const result = {};
+
+  const patterns = {
+    email:    [/---EMAIL_V1---([\s\S]*?)(?=---EMAIL_V2---|---LINKEDIN|---WHATSAPP|---END)/,     /---EMAIL_V2---([\s\S]*?)(?=---LINKEDIN|---WHATSAPP|---END)/],
+    linkedin: [/---LINKEDIN_V1---([\s\S]*?)(?=---LINKEDIN_V2---|---WHATSAPP|---END)/,           /---LINKEDIN_V2---([\s\S]*?)(?=---WHATSAPP|---END)/],
+    whatsapp: [/---WHATSAPP_V1---([\s\S]*?)(?=---WHATSAPP_V2---|---END)/,                       /---WHATSAPP_V2---([\s\S]*?)(?=---END)/]
+  };
+
+  channels.forEach(ch => {
+    const [r1, r2] = patterns[ch] || [];
+    const v1 = r1 ? (raw.match(r1)?.[1] || '').trim() : '';
+    const v2 = r2 ? (raw.match(r2)?.[1] || '').trim() : '';
+    if (v1 || v2) result[ch] = [v1, v2].filter(Boolean);
+  });
+
+  // Fallback: if parsing fails, split by double newlines and distribute
+  if (!Object.keys(result).length) {
+    const chunks = raw.split(/\n{3,}/).map(c => c.trim()).filter(c => c.length > 30);
+    let i = 0;
+    channels.forEach(ch => { result[ch] = [chunks[i++] || '', chunks[i++] || ''].filter(Boolean); });
+  }
+
+  return result;
+}
+
+// ── Extract subject from email text ───────────────────────
+function aiwSubject(text) {
+  const m = text.match(/^Subject:\s*(.+)/im);
+  if (m) return { subject: m[1].trim(), body: text.replace(/^Subject:\s*.+\n*/im, '').trim() };
+  return { subject: null, body: text };
+}
+
+// ── Loading animation ─────────────────────────────────────
+const AIW_STEPS = [
+  'Analysing event context and audience…',
+  'Inferring audience intelligence…',
+  'Crafting channel-specific angles…',
+  'Writing 2 variations per channel…',
+  'Reviewing tone and human feel…',
+  'Finalising messages…'
+];
+
+function aiwShowLoading() {
+  document.getElementById('aiw-out').innerHTML = `
+    <div class="aiw-loading">
+      <div class="aiw-spinner"></div>
+      <div class="aiw-loading-label">Writing your messages…</div>
+      <div class="aiw-steps">
+        ${AIW_STEPS.map((s,i) => `<div class="aiw-step" id="aws${i}"><div class="aiw-step-dot"></div>${s}</div>`).join('')}
+      </div>
+    </div>`;
+
+  let i = 0;
+  const t = setInterval(() => {
+    if (i > 0) { const p = document.getElementById('aws'+(i-1)); if(p) p.className='aiw-step done'; }
+    const c = document.getElementById('aws'+i); if(c) c.className='aiw-step active';
+    i++;
+    if (i >= AIW_STEPS.length) clearInterval(t);
+  }, 900);
+  return t;
+}
+
+// ── Render all results ────────────────────────────────────
+function aiwRenderResults(msgs, params) {
+  AIW.lastMsgs = msgs;
+
+  const CHANNEL_META = {
+    email:    { icon:'📧', name:'Email',    color:'var(--orange)' },
+    linkedin: { icon:'💼', name:'LinkedIn', color:'var(--blue)'   },
+    whatsapp: { icon:'💬', name:'WhatsApp', color:'var(--green)'  }
+  };
+
+  // History chips
+  const histHtml = AIW.history.length
+    ? `<div class="aiw-hist-row">${AIW.history.slice(0,5).map((h,i)=>
+        `<div class="aiw-hist-chip" onclick="aiwLoadHist(${i})" title="${h.event}">${h.event.substring(0,22)}…</div>`
+      ).join('')}</div>`
+    : '';
+
+  // Count total messages generated
+  const totalMsgs = Object.values(msgs).reduce((a,v) => a + v.length, 0);
+
+  // Build channel group HTML
+  const channelHtml = Object.entries(msgs).map(([ch, versions]) => {
+    const meta = CHANNEL_META[ch] || { icon:'✉️', name: ch, color:'var(--orange)' };
+
+    const cardsHtml = versions.map((rawText, idx) => {
+      const isEmail = ch === 'email';
+      const { subject, body } = isEmail ? aiwSubject(rawText) : { subject: null, body: rawText };
+      const wordCount = body.trim().split(/\s+/).length;
+      const safeBody = body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const safeSub  = subject ? subject.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';
+      const bodyId = `aiwb-${ch}-${idx}`;
+      const subjId = `aiws-${ch}-${idx}`;
+
+      return `
+        <div class="aiw-card">
+          <div class="aiw-card-bar">
+            <span class="aiw-ver-badge" style="border-color:${meta.color};color:${meta.color}">Version ${idx+1}</span>
+            <div class="aiw-card-meta">
+              <span class="aiw-meta-pill">${wordCount} words</span>
+              <span class="aiw-meta-pill">${params.tone}</span>
+              <span class="aiw-meta-pill">${params.length}</span>
+            </div>
+            <div class="aiw-card-btns">
+              ${isEmail && subject ? `<button class="aiw-btn-sm" onclick="aiwCopy('${subjId}',this)">Copy Subject</button>` : ''}
+              <button class="aiw-btn-sm" onclick="aiwCopy('${bodyId}',this)">Copy</button>
+              <button class="aiw-btn-sm save" onclick="aiwSaveTpl('${ch}',${idx})">Save Template</button>
+            </div>
+          </div>
+          <div class="aiw-card-body">
+            ${subject ? `<div class="aiw-subj"><strong>Subject:</strong> <span id="${subjId}">${safeSub}</span></div>` : ''}
+            <div class="aiw-msg" id="${bodyId}">${safeBody}</div>
+            <div class="aiw-word-count">${wordCount} words · ${body.length} chars</div>
+          </div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="aiw-channel-group">
+        <div class="aiw-channel-head">
+          <span class="aiw-channel-icon">${meta.icon}</span>
+          <span class="aiw-channel-name" style="color:${meta.color}">${meta.name}</span>
+          <span class="aiw-channel-count">${versions.length} variation${versions.length!==1?'s':''}</span>
+        </div>
+        ${cardsHtml}
+      </div>`;
+  }).join('');
+
+  document.getElementById('aiw-out').innerHTML = `
+    ${histHtml}
+    <div class="aiw-regen-bar">
+      <div>
+        <span class="sec-label">Generated Messages</span>
+        <span class="badge">${totalMsgs}</span>
+      </div>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <button class="btn btn-ghost" style="font-size:.62rem" onclick="aiwRun()">↺ Regenerate</button>
+        <button class="btn btn-ghost" style="font-size:.62rem" onclick="aiwCopyAll()">Copy All</button>
+      </div>
+    </div>
+    ${channelHtml}`;
+}
+
+// ── Copy helpers ──────────────────────────────────────────
+function aiwCopy(elId, btn) {
+  const el = document.getElementById(elId);
+  if (!el) return;
+  const text = el.textContent;
+  const orig = btn.textContent;
+  navigator.clipboard.writeText(text).catch(() => {
+    const t = document.createElement('textarea');
+    t.value = text; document.body.appendChild(t); t.select();
+    document.execCommand('copy'); document.body.removeChild(t);
+  });
+  btn.textContent = '✓ Copied!';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2200);
+  toast('Copied to clipboard', 'ok');
+}
+
+function aiwCopyAll() {
+  const parts = [];
+  Object.entries(AIW.lastMsgs).forEach(([ch, versions]) => {
+    const name = { email:'EMAIL', linkedin:'LINKEDIN', whatsapp:'WHATSAPP' }[ch] || ch.toUpperCase();
+    versions.forEach((v, i) => parts.push(`── ${name} VERSION ${i+1} ──\n${v}`));
+  });
+  const text = parts.join('\n\n');
+  navigator.clipboard.writeText(text).catch(() => {
+    const t = document.createElement('textarea');
+    t.value = text; document.body.appendChild(t); t.select();
+    document.execCommand('copy'); document.body.removeChild(t);
+  });
+  toast(`All ${parts.length} messages copied!`, 'ok');
+}
+
+// ── Save to Templates (if Templates tab exists) ───────────
+function aiwSaveTpl(ch, idx) {
+  if (typeof S === 'undefined' || !S.templates) S.templates = S.templates || [];
+  const versions = AIW.lastMsgs[ch];
+  if (!versions || !versions[idx]) return;
+  const raw = versions[idx];
+  const eventName = document.getElementById('aiw-event').value.trim();
+  const isEmail = ch === 'email';
+  const { subject, body } = isEmail ? aiwSubject(raw) : { subject: null, body: raw };
+  const name = `${ch.charAt(0).toUpperCase()+ch.slice(1)} — ${eventName.substring(0,30)} (v${idx+1})`;
+  if (!S.templates) S.templates = [];
+  S.templates.push({
+    id: uid(), name,
+    subject: subject || `Invitation: ${eventName}`,
+    body, tag: 'outreach',
+    createdAt: new Date().toISOString(),
+    source: 'ai-writer'
+  });
+  if (typeof save === 'function') save();
+  toast('Saved to Templates!', 'ok');
+}
+
+// ── History ───────────────────────────────────────────────
+function aiwSaveHist(params) {
+  AIW.history.unshift(params);
+  if (AIW.history.length > 5) AIW.history.pop();
+}
+
+function aiwLoadHist(idx) {
+  const h = AIW.history[idx];
+  if (!h) return;
+  document.getElementById('aiw-event').value    = h.event    || '';
+  document.getElementById('aiw-desc').value     = h.desc     || '';
+  document.getElementById('aiw-date').value     = h.date     || '';
+  document.getElementById('aiw-time').value     = h.time     || '';
+  document.getElementById('aiw-location').value = h.location || '';
+  document.getElementById('aiw-brand').value    = h.brand    || '';
+  document.getElementById('aiw-extra').value    = h.extra    || '';
+
+  // Restore pills
+  const restorePills = (containerId, values, multi) => {
+    document.querySelectorAll(`#${containerId} .aiw-pill`).forEach(p => {
+      if (multi) {
+        p.classList.toggle('on', values.includes(p.dataset.v));
+      } else {
+        p.classList.toggle('on', p.dataset.v === values);
+      }
+    });
+  };
+  restorePills('aiw-channel-pills',  h.channels,   true);
+  restorePills('aiw-audience-pills', h.audiences,  true);
+  restorePills('aiw-industry-pills', h.industries, true);
+  restorePills('aiw-tone-pills',     h.tone,       false);
+  restorePills('aiw-length-pills',   h.length,     false);
+  toast('Previous run loaded', 'ok');
+}
+
+// ── Prefill from Event (called from event detail page) ────
+function aiwPrefillFromEvent(evId) {
+  const ev = (typeof S !== 'undefined') ? S.events.find(e => e.id === evId) : null;
+  if (!ev) return;
+  document.getElementById('aiw-event').value = ev.name || '';
+  if (ev.date) {
+    try { document.getElementById('aiw-date').value = ev.date.substring(0,10); } catch(e){}
+    try {
+      if (ev.date.length > 10) {
+        const t = ev.date.substring(11,16);
+        document.getElementById('aiw-time').value = t;
+      }
+    } catch(e){}
+  }
+  if (ev.dateEnd) {
+    try {
+      const t = ev.dateEnd.substring(11,16);
+      const cur = document.getElementById('aiw-time').value;
+      if (cur) document.getElementById('aiw-time').value = cur + '–' + t;
+    } catch(e){}
+  }
+  document.getElementById('aiw-location').value = ev.region || '';
+  if (ev.client) document.getElementById('aiw-brand').value = ev.client;
+  if (ev.notes)  document.getElementById('aiw-desc').value  = ev.notes;
+  // Switch to AI Writer tab
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-aiwriter').classList.add('active');
+  document.querySelector('[onclick="switchTab(\'aiwriter\',this)"]')?.classList.add('active');
+  toast('Event loaded into AI Writer', 'ok');
+}
+
+// ── Main generate function ────────────────────────────────
+async function aiwRun() {
+  if (!aiwValidate()) return;
+
+  const params = {
+    event:      document.getElementById('aiw-event').value.trim(),
+    desc:       document.getElementById('aiw-desc').value.trim(),
+    date:       document.getElementById('aiw-date').value,
+    time:       document.getElementById('aiw-time').value.trim(),
+    location:   document.getElementById('aiw-location').value.trim(),
+    brand:      document.getElementById('aiw-brand').value.trim(),
+    extra:      document.getElementById('aiw-extra').value.trim(),
+    channels:   aiwGetPills('aiw-channel-pills'),
+    audiences:  aiwGetPills('aiw-audience-pills'),
+    industries: aiwGetPills('aiw-industry-pills'),
+    tone:       aiwGetPills('aiw-tone-pills')[0]   || 'professional-warm',
+    length:     aiwGetPills('aiw-length-pills')[0] || 'concise'
+  };
+
+  aiwSaveHist({ ...params });
+
+  // UI — loading state
+  const btn = document.getElementById('aiwBtn');
+  const lbl = document.getElementById('aiwBtnLbl');
+  const spn = document.getElementById('aiwSpinner');
+  btn.disabled = true;
+  lbl.textContent = 'Generating…';
+  spn.style.display = 'block';
+  const stepTimer = aiwShowLoading();
+
+  try {
+    const prompt = aiwBuildPrompt(params);
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 3000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    clearInterval(stepTimer);
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error?.message || `API error ${res.status}`);
+    }
+
+    const data = await res.json();
+    const rawText = (data.content || []).filter(c => c.type === 'text').map(c => c.text).join('');
+
+    const msgs = aiwParse(rawText, params.channels);
+
+    if (!Object.keys(msgs).length) {
+      throw new Error('No messages were returned. The AI may have hit a formatting issue — please try again.');
+    }
+
+    aiwRenderResults(msgs, params);
+
+    const total = Object.values(msgs).reduce((a,v) => a + v.length, 0);
+    toast(`${total} messages generated!`, 'ok');
+
+  } catch (err) {
+    clearInterval(stepTimer);
+    document.getElementById('aiw-out').innerHTML = `
+      <div class="aiw-err-box">
+        <strong>Generation failed</strong><br><br>
+        ${err.message || 'Unknown error. Please check your connection.'}<br><br>
+        <button class="aiw-btn-sm" style="margin-top:.5rem" onclick="aiwRun()">Try Again</button>
+      </div>`;
+    toast('Generation failed', 'err');
+  } finally {
+    btn.disabled = false;
+    lbl.textContent = 'Generate Messages';
+    spn.style.display = 'none';
+  }
+}
+
+/* ════ END AI WRITER ════ */
 </script>
 </body>
 </html>
