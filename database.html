@@ -432,8 +432,146 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 ::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 
-@media(max-width:1024px){.wo-layout{grid-template-columns:1fr;}.daily-sidebar{position:static;}.tpl-layout{grid-template-columns:1fr;}.tpl-form-box{position:static;}}
-@media(max-width:768px){.tasks-layout{grid-template-columns:1fr;}.ev-timer-box{grid-template-columns:repeat(2,1fr);}.ev-grid{grid-template-columns:1fr;}.tmr-cards{grid-template-columns:1fr;}.tmr-summary{grid-template-columns:1fr 1fr;}}
+/* ══════════════════════════════════
+   ATTENTION PANEL
+   ══════════════════════════════════ */
+.attn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem;margin-bottom:1.5rem;}
+.attn-card{border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);overflow:hidden;}
+.attn-card-head{padding:.6rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid var(--border);}
+.attn-card-icon{font-size:1rem;}
+.attn-card-title{font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
+.attn-card-count{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:700;padding:1px 7px;border-radius:3px;}
+.attn-card-count.red{background:var(--red-light);color:var(--red);}
+.attn-card-count.yellow{background:var(--yellow-light);color:var(--yellow);}
+.attn-card-count.blue{background:var(--blue-light);color:var(--blue);}
+.attn-card-count.green{background:var(--green-light);color:var(--green);}
+.attn-item{padding:.55rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:.6rem;cursor:pointer;transition:background .08s;}
+.attn-item:last-child{border-bottom:none;}
+.attn-item:hover{background:var(--surface);}
+.attn-item-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:.3rem;}
+.attn-item-dot.red{background:var(--red);}
+.attn-item-dot.yellow{background:var(--yellow);}
+.attn-item-dot.blue{background:var(--blue);}
+.attn-item-dot.orange{background:var(--orange);}
+.attn-item-body{flex:1;}
+.attn-item-label{font-size:.78rem;font-weight:600;line-height:1.3;}
+.attn-item-sub{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);margin-top:1px;}
+.attn-item-age{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--light);flex-shrink:0;}
+.attn-empty{padding:1.1rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--light);text-align:center;letter-spacing:1px;}
+.attn-hero{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:1.5rem;}
+.attn-hero-card{border:1.5px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;text-align:center;background:var(--bg);}
+.attn-hero-num{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.8rem;line-height:1;}
+.attn-hero-num.red{color:var(--red);}
+.attn-hero-num.yellow{color:var(--yellow);}
+.attn-hero-num.orange{color:var(--orange);}
+.attn-hero-num.green{color:var(--green);}
+.attn-hero-lbl{font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:.3rem;}
+
+/* ══════════════════════════════════
+   TIMEZONE HELPER
+   ══════════════════════════════════ */
+.tz-layout{display:grid;grid-template-columns:1fr 280px;gap:1.5rem;align-items:start;}
+.tz-main{}
+.tz-cities{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.2rem;}
+.tz-city-row{border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);overflow:hidden;transition:border-color .15s;}
+.tz-city-row:hover{border-color:var(--orange);}
+.tz-city-top{display:flex;align-items:center;padding:.65rem 1rem;gap:.75rem;}
+.tz-city-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.85rem;flex:1;}
+.tz-city-time{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.5rem;letter-spacing:2px;}
+.tz-city-time.working{color:var(--green);}
+.tz-city-time.off{color:var(--muted);}
+.tz-city-meta{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);}
+.tz-city-del{background:none;border:none;color:var(--light);cursor:pointer;font-size:.75rem;padding:3px;transition:color .1s;}
+.tz-city-del:hover{color:var(--red);}
+.tz-city-bar-wrap{height:6px;background:var(--surface);position:relative;overflow:hidden;}
+.tz-city-bar-fill{position:absolute;top:0;left:0;height:100%;background:var(--green);opacity:.5;transition:width .5s;}
+.tz-city-bar-work{position:absolute;top:0;height:100%;background:var(--green);opacity:.25;}
+.tz-overlap-box{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:1.2rem;}
+.tz-overlap-title{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;}
+.tz-overlap-grid{display:flex;gap:2px;height:24px;}
+.tz-overlap-slot{flex:1;border-radius:2px;position:relative;}
+.tz-overlap-slot.all{background:var(--green);}
+.tz-overlap-slot.partial{background:var(--yellow);}
+.tz-overlap-slot.none{background:var(--surface2);}
+.tz-overlap-labels{display:flex;justify-content:space-between;margin-top:.3rem;}
+.tz-overlap-lbl{font-family:'IBM Plex Mono',monospace;font-size:.5rem;color:var(--light);}
+.tz-best-box{background:var(--orange-light);border:1.5px solid var(--orange);border-radius:var(--radius);padding:.8rem 1rem;margin-bottom:1.2rem;}
+.tz-best-title{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:.3rem;}
+.tz-best-time{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.95rem;color:var(--text);}
+.tz-best-sub{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);margin-top:.2rem;}
+.tz-sidebar-box{border:1.5px solid var(--border-dark);border-radius:var(--radius);overflow:hidden;background:var(--bg);position:sticky;top:80px;}
+.tz-sidebar-head{background:var(--orange);padding:.75rem 1rem;}
+.tz-sidebar-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.7rem;color:#fff;letter-spacing:2px;text-transform:uppercase;}
+.tz-sidebar-body{padding:.9rem;}
+.tz-preset-list{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.8rem;}
+.tz-preset-item{display:flex;align-items:center;justify-content:space-between;padding:.42rem .65rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .12s;background:var(--bg);}
+.tz-preset-item:hover{border-color:var(--orange);background:var(--orange-light);}
+.tz-preset-name{font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:600;}
+.tz-preset-cities{font-family:'IBM Plex Mono',monospace;font-size:.57rem;color:var(--muted);}
+.tz-preset-del{background:none;border:none;color:var(--light);cursor:pointer;font-size:.65rem;}
+.tz-preset-del:hover{color:var(--red);}
+.tz-quick-cities{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.7rem;}
+.tz-quick-btn{font-family:'IBM Plex Mono',monospace;font-size:.6rem;padding:3px 9px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;}
+.tz-quick-btn:hover{border-color:var(--orange);color:var(--orange);}
+
+/* ══════════════════════════════════
+   FINANCE DASHBOARD
+   ══════════════════════════════════ */
+.fin-layout{display:grid;grid-template-columns:1fr 300px;gap:1.5rem;align-items:start;}
+.fin-hero{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.5rem;}
+.fin-hero-card{border:1.5px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.2rem;background:var(--bg);}
+.fin-hero-card.highlight{background:var(--orange);border-color:var(--orange);}
+.fin-hero-card.profit{background:var(--green-light);border-color:var(--green);}
+.fin-hero-card.loss{background:var(--red-light);border-color:var(--red);}
+.fin-hero-label{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+.fin-hero-card.highlight .fin-hero-label{color:rgba(255,255,255,.75);}
+.fin-hero-num{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.8rem;line-height:1;}
+.fin-hero-card.highlight .fin-hero-num{color:#fff;}
+.fin-hero-card.profit .fin-hero-num{color:var(--green);}
+.fin-hero-card.loss .fin-hero-num{color:var(--red);}
+.fin-hero-sub{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);margin-top:.3rem;}
+.fin-hero-card.highlight .fin-hero-sub{color:rgba(255,255,255,.65);}
+.fin-ev-select{font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.38rem .65rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;cursor:pointer;transition:border-color .15s;}
+.fin-ev-select:focus{border-color:var(--orange);}
+.fin-table-wrap{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem;}
+.fin-table{width:100%;border-collapse:collapse;}
+.fin-table thead th{padding:.5rem .85rem;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:.57rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--border);background:var(--surface);white-space:nowrap;}
+.fin-table tbody tr{border-bottom:1px solid var(--border);transition:background .07s;}
+.fin-table tbody tr:last-child{border-bottom:none;}
+.fin-table tbody tr:hover{background:var(--orange-light);}
+.fin-table td{padding:.55rem .85rem;font-size:.8rem;vertical-align:middle;}
+.fin-td-mono{font-family:'IBM Plex Mono',monospace;font-size:.75rem;}
+.fin-td-over{color:var(--red);font-weight:600;}
+.fin-td-ok{color:var(--green);}
+.fin-over-badge{font-family:'IBM Plex Mono',monospace;font-size:.55rem;padding:1px 6px;background:var(--red-light);border:1px solid var(--red);color:var(--red);border-radius:3px;margin-left:.4rem;}
+.fin-cat-pill{font-family:'IBM Plex Mono',monospace;font-size:.57rem;padding:2px 7px;border:1px solid var(--border);border-radius:3px;color:var(--muted);}
+.fin-del-btn{background:none;border:none;color:var(--light);cursor:pointer;font-size:.68rem;padding:2px;}
+.fin-del-btn:hover{color:var(--red);}
+.fin-add-row{padding:.42rem .85rem;font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);cursor:pointer;transition:all .1s;letter-spacing:1px;border-top:1px solid var(--border);background:var(--surface);}
+.fin-add-row:hover{color:var(--orange);background:var(--orange-light);}
+.fin-sidebar-box{border:1.5px solid var(--border-dark);border-radius:var(--radius);overflow:hidden;background:var(--bg);position:sticky;top:80px;}
+.fin-sidebar-head{background:var(--orange);padding:.75rem 1rem;}
+.fin-sidebar-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.7rem;color:#fff;letter-spacing:2px;text-transform:uppercase;}
+.fin-sidebar-body{padding:.9rem;}
+.fin-form-field{margin-bottom:.55rem;}
+.fin-form-field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem;}
+.fin-form-field input,.fin-form-field select{width:100%;font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:.35rem .58rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;}
+.fin-form-field input:focus,.fin-form-field select:focus{border-color:var(--orange);}
+.fin-quick-bar{display:flex;gap:.4rem;margin-bottom:.6rem;flex-wrap:wrap;}
+.fin-quick-cat{font-family:'IBM Plex Mono',monospace;font-size:.58rem;padding:3px 8px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;}
+.fin-quick-cat:hover,.fin-quick-cat.sel{border-color:var(--orange);color:var(--orange);background:var(--orange-light);}
+.fin-summary-row{display:flex;align-items:center;justify-content:space-between;padding:.42rem 0;border-bottom:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:.68rem;}
+.fin-summary-row:last-child{border-bottom:none;}
+.fin-summary-key{color:var(--muted);}
+.fin-summary-val{font-weight:700;}
+.fin-bar-row{margin-bottom:.5rem;}
+.fin-bar-label{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);margin-bottom:2px;}
+.fin-bar{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;}
+.fin-bar-fill{height:100%;border-radius:3px;background:var(--orange);transition:width .4s;}
+.fin-bar-fill.over{background:var(--red);}
+
+@media(max-width:1024px){.wo-layout{grid-template-columns:1fr;}.daily-sidebar{position:static;}.tpl-layout{grid-template-columns:1fr;}.tpl-form-box{position:static;}.tz-layout{grid-template-columns:1fr;}.tz-sidebar-box{position:static;}.fin-layout{grid-template-columns:1fr;}.fin-sidebar-box{position:static;}.attn-hero{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:768px){.tasks-layout{grid-template-columns:1fr;}.ev-timer-box{grid-template-columns:repeat(2,1fr);}.ev-grid{grid-template-columns:1fr;}.tmr-cards{grid-template-columns:1fr;}.tmr-summary{grid-template-columns:1fr 1fr;}.fin-hero{grid-template-columns:1fr;}.attn-hero{grid-template-columns:repeat(2,1fr);}}
 </style>
 </head>
 <body>
@@ -466,6 +604,9 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 
 <div class="tabs" id="mainTabs">
   <div class="tab active" onclick="switchTab('events',this)">Events</div>
+  <div class="tab" onclick="switchTab('attention',this)" id="tab-btn-attention">Attention</div>
+  <div class="tab" onclick="switchTab('finance',this)">Finance</div>
+  <div class="tab" onclick="switchTab('timezone',this)">Timezones</div>
   <div class="tab" onclick="switchTab('drive',this)">Drive</div>
   <div class="tab" onclick="switchTab('templates',this)">Templates</div>
   <div class="tab" onclick="switchTab('tasks',this)">Tasks</div>
@@ -717,6 +858,142 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   </div>
 </div>
 
+<!-- ══════════ ATTENTION PANEL ══════════ -->
+<div class="page" id="tab-attention">
+  <div class="sec-head">
+    <div><span class="sec-label">What Needs Attention</span><span class="badge" id="attnBadge">0</span></div>
+    <button class="btn btn-ghost" onclick="renderAttention()">↺ Refresh</button>
+  </div>
+  <div class="attn-hero">
+    <div class="attn-hero-card"><div class="attn-hero-num red" id="attn-overdue">0</div><div class="attn-hero-lbl">Overdue Follow-Ups</div></div>
+    <div class="attn-hero-card"><div class="attn-hero-num yellow" id="attn-tasks">0</div><div class="attn-hero-lbl">Overdue Tasks</div></div>
+    <div class="attn-hero-card"><div class="attn-hero-num orange" id="attn-events">0</div><div class="attn-hero-lbl">Events This Week</div></div>
+    <div class="attn-hero-card"><div class="attn-hero-num green" id="attn-deals">0</div><div class="attn-hero-lbl">Active Deals</div></div>
+  </div>
+  <div class="attn-grid" id="attnGrid"></div>
+</div>
+
+<!-- ══════════ FINANCE DASHBOARD ══════════ -->
+<div class="page" id="tab-finance">
+  <div class="fin-layout">
+    <div>
+      <div class="sec-head">
+        <div><span class="sec-label">Financial Dashboard</span></div>
+        <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+          <select class="fin-ev-select" id="finEvSelect" onchange="renderFinance()">
+            <option value="">Select Event…</option>
+          </select>
+          <button class="btn btn-ghost" onclick="finDuplicateBudget()">⧉ Duplicate Budget</button>
+        </div>
+      </div>
+      <!-- Hero KPIs -->
+      <div class="fin-hero" id="finHero">
+        <div class="fin-hero-card highlight"><div class="fin-hero-label">Total Revenue</div><div class="fin-hero-num" id="fin-revenue">€0</div><div class="fin-hero-sub" id="fin-per-att-rev">—</div></div>
+        <div class="fin-hero-card"><div class="fin-hero-label">Total Costs</div><div class="fin-hero-num" id="fin-costs">€0</div><div class="fin-hero-sub" id="fin-per-att-cost">—</div></div>
+        <div class="fin-hero-card" id="fin-pl-card"><div class="fin-hero-label">Profit / Loss</div><div class="fin-hero-num" id="fin-pl">€0</div><div class="fin-hero-sub" id="fin-margin">—</div></div>
+      </div>
+      <!-- Expenses table -->
+      <div class="sec-head" style="margin-bottom:.7rem"><span class="sec-label">Cost Breakdown</span></div>
+      <div class="fin-table-wrap">
+        <table class="fin-table">
+          <thead><tr><th>Category</th><th>Description</th><th>Planned</th><th>Actual</th><th>Variance</th><th></th></tr></thead>
+          <tbody id="finExpBody"></tbody>
+        </table>
+        <div class="fin-add-row" onclick="finFocusAdd()">+ QUICK ADD EXPENSE</div>
+      </div>
+      <!-- Category bar chart -->
+      <div class="sec-head" style="margin-bottom:.7rem;margin-top:1rem"><span class="sec-label">By Category</span></div>
+      <div id="finCatBars"></div>
+    </div>
+    <!-- Sidebar -->
+    <div class="fin-sidebar-box">
+      <div class="fin-sidebar-head"><div class="fin-sidebar-title" id="finSideTitle">Add Expense</div></div>
+      <div class="fin-sidebar-body">
+        <input type="hidden" id="finEditId">
+        <div class="fin-form-field"><label>Category</label>
+          <div class="fin-quick-bar" id="finCatBtns">
+            <div class="fin-quick-cat sel" data-v="venue" onclick="finSelCat(this)">Venue</div>
+            <div class="fin-quick-cat" data-v="catering" onclick="finSelCat(this)">Catering</div>
+            <div class="fin-quick-cat" data-v="travel" onclick="finSelCat(this)">Travel</div>
+            <div class="fin-quick-cat" data-v="marketing" onclick="finSelCat(this)">Marketing</div>
+            <div class="fin-quick-cat" data-v="tech" onclick="finSelCat(this)">Tech</div>
+            <div class="fin-quick-cat" data-v="staff" onclick="finSelCat(this)">Staff</div>
+            <div class="fin-quick-cat" data-v="misc" onclick="finSelCat(this)">Misc</div>
+          </div>
+        </div>
+        <div class="fin-form-field"><label>Description *</label><input id="finDesc" placeholder="Venue rental…" onkeydown="if(event.key==='Enter')finSaveExp()"></div>
+        <div class="fin-form-field"><label>Planned (€)</label><input id="finPlanned" type="number" placeholder="0" min="0" step="0.01"></div>
+        <div class="fin-form-field"><label>Actual (€)</label><input id="finActual" type="number" placeholder="0" min="0" step="0.01"></div>
+        <div style="display:flex;gap:.4rem;margin-bottom:1rem">
+          <button class="btn btn-ghost" style="flex:1" onclick="finClearForm()">Clear</button>
+          <button class="btn btn-fill" style="flex:2" onclick="finSaveExp()">Save Expense</button>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:.85rem">
+          <div class="fin-form-field"><label>Event Revenue (€)</label><input id="finRevInput" type="number" placeholder="0" min="0" step="0.01" oninput="finSaveRevenue()"></div>
+          <div class="fin-form-field"><label>Attendees</label><input id="finAttendeesInput" type="number" placeholder="0" min="0" oninput="finSaveRevenue()"></div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:.85rem;margin-top:.3rem">
+          <div class="sec-label" style="margin-bottom:.6rem">Summary</div>
+          <div id="finSummaryRows"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ TIMEZONE HELPER ══════════ -->
+<div class="page" id="tab-timezone">
+  <div class="tz-layout">
+    <div>
+      <div class="sec-head">
+        <div><span class="sec-label">World Clock</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted)" id="tzLocalTime"></div>
+      </div>
+      <div class="tz-cities" id="tzCities"></div>
+      <!-- Visual overlap bar -->
+      <div class="tz-overlap-box">
+        <div class="tz-overlap-title">Working Hours Overlap (9:00–17:00 per city)</div>
+        <div class="tz-overlap-grid" id="tzOverlapGrid"></div>
+        <div class="tz-overlap-labels">
+          <span class="tz-overlap-lbl">00:00</span>
+          <span class="tz-overlap-lbl">06:00</span>
+          <span class="tz-overlap-lbl">12:00</span>
+          <span class="tz-overlap-lbl">18:00</span>
+          <span class="tz-overlap-lbl">24:00</span>
+        </div>
+      </div>
+      <!-- Best time suggestion -->
+      <div class="tz-best-box" id="tzBestBox">
+        <div class="tz-best-title">Best Meeting Window</div>
+        <div class="tz-best-time" id="tzBestTime">Add at least 2 cities to see suggestion</div>
+        <div class="tz-best-sub" id="tzBestSub"></div>
+      </div>
+    </div>
+    <!-- Sidebar -->
+    <div class="tz-sidebar-box">
+      <div class="tz-sidebar-head"><div class="tz-sidebar-title">Add City</div></div>
+      <div class="tz-sidebar-body">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem">Quick Add</div>
+        <div class="tz-quick-cities" id="tzQuickCities"></div>
+        <div style="border-top:1px solid var(--border);padding-top:.75rem;margin-bottom:.75rem">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem">Custom City</div>
+          <select id="tzCitySelect" style="width:100%;font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.35rem .6rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;margin-bottom:.4rem;" onchange="if(this.value)tzAddCity(this.value)">
+            <option value="">Select timezone…</option>
+          </select>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:.75rem">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem">Saved Presets</div>
+          <div id="tzPresets" style="display:flex;flex-direction:column;gap:.35rem;margin-bottom:.6rem"></div>
+          <div style="display:flex;gap:.4rem">
+            <input id="tzPresetName" style="flex:1;font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.35rem .6rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;" placeholder="Preset name…">
+            <button class="btn btn-fill" style="font-size:.62rem" onclick="tzSavePreset()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div><!-- end #app -->
 
 <!-- ═══════════════ MODALS ═══════════════════════ -->
@@ -937,7 +1214,7 @@ const EV_STAGES = ['planning','outreach','confirmed','delivered'];
 const EV_LABELS = {planning:'PLANNING',outreach:'OUTREACH',confirmed:'CONFIRMED',delivered:'DELIVERED'};
 
 // ── State ─────────────────────────────────────────────────
-let S = { events:[], leads:[], tasks:[], driveSheets:[], workoutLogs:[], templates:[], prio:'med', theme:'light' };
+let S = { events:[], leads:[], tasks:[], driveSheets:[], workoutLogs:[], templates:[], finances:[], tzCities:[], tzPresets:[], prio:'med', theme:'light' };
 let timerInt=null, currentEventId=null, editingEventId=null;
 let selectedExId=null, exCatFilter='all';
 let calExtraAttendees=[], calSelectedLeadIds=new Set(), calCurrentEvId=null;
@@ -982,7 +1259,7 @@ function mergeRemote(data) {
   const localTheme = S.theme;
   S = { ...S, ...data };
   if (!data.theme) S.theme = localTheme;
-  ['events','leads','tasks','driveSheets','workoutLogs','templates'].forEach(k => { if(!S[k]) S[k]=[]; });
+  ['events','leads','tasks','driveSheets','workoutLogs','templates','finances','tzCities','tzPresets'].forEach(k => { if(!S[k]) S[k]=[]; });
 }
 
 async function saveToFirebase() {
@@ -1016,8 +1293,10 @@ function setSyncStatus(state) {
 }
 
 function renderAll() {
-  renderEvents(); renderDrive(); renderTasks(); renderTemplates();
+  renderEvents(); renderDrive(); renderTasks(); renderTemplates(); renderAttention();
+  populateFinEventSelect(); renderTimezone();
   if (document.getElementById('tab-workout').classList.contains('active')) renderWorkout();
+  if (document.getElementById('tab-finance').classList.contains('active')) renderFinance();
   applyTheme();
 }
 
@@ -1031,6 +1310,12 @@ function applyTheme() {
 
 // ── Navigation ────────────────────────────────────────────
 function switchTab(name,el) {
+  // Clear timezone interval when leaving tab
+  if (name !== 'timezone' && _tzInterval) {
+    clearInterval(_tzInterval);
+    _tzInterval = null;
+  }
+  
   closeEventDetail();
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -1038,6 +1323,9 @@ function switchTab(name,el) {
   if(el) el.classList.add('active');
   updateBC();
   if(name==='workout') renderWorkout();
+  if(name==='finance'){populateFinEventSelect();renderFinance();}
+  if(name==='attention') renderAttention();
+  if(name==='timezone') renderTimezone();
 }
 function openEventDetail(evId) {
   currentEventId=evId;
@@ -1158,7 +1446,8 @@ function renderEventDetail(evId) {
       <div class="table-wrap">
         <table class="leads-table"><thead><tr>
           <th>#</th><th>First</th><th>Last</th><th>Email</th><th>Phone</th><th>Company</th><th>Title</th><th>LinkedIn</th><th>Status</th><th>Check-In</th><th>Notes</th><th></th>
-        </tr></thead><tbody id="leadsBody"></tbody></table>
+        </tr></thead><tbody id="leadsBody"></tbody>
+        </table>
       </div>
       <div class="table-add" onclick="openLeadModal('${ev.id}')">+ ADD LEAD</div>
     </div>
@@ -1198,7 +1487,7 @@ function renderLeads(evId,filter) {
 function filterLeads(f,evId,el){document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderLeads(evId,f);}
 function cycleStatus(id){const l=S.leads.find(x=>x.id===id);const idx=LEAD_COLS.indexOf(l.status);l.status=LEAD_COLS[(idx+1)%LEAD_COLS.length];save();if(currentEventId)renderEventDetail(currentEventId);toast('→ '+LEAD_LABELS[l.status]);}
 function openLeadModal(evId){document.getElementById('ldEventId').value=evId;['ldFirst','ldLast','ldEmail','ldPhone','ldCompany','ldTitle','ldLinkedin','ldNotes'].forEach(i=>document.getElementById(i).value='');document.getElementById('ldStatus').value='leads';document.getElementById('leadModal').classList.add('open');setTimeout(()=>document.getElementById('ldFirst').focus(),100);}
-function saveLead(){const f=id=>document.getElementById(id).value.trim();if(!f('ldFirst')){toast('First name required','err');return;}const evId=document.getElementById('ldEventId').value;S.leads.push({id:uid(),eventId:evId,firstName:f('ldFirst'),lastName:f('ldLast'),email:f('ldEmail'),phone:f('ldPhone'),company:f('ldCompany'),title:f('ldTitle'),linkedin:f('ldLinkedin'),notes:f('ldNotes'),status:f('ldStatus')||'leads',checkedIn:false});save();if(currentEventId===evId)renderEventDetail(evId);renderEvents();closeModal('leadModal');toast('Lead added','ok');}
+function saveLead(){const f=id=>document.getElementById(id).value.trim();if(!f('ldFirst')){toast('First name required','err');return;}const evId=document.getElementById('ldEventId').value;S.leads.push({id:uid(),eventId:evId,firstName:f('ldFirst'),lastName:f('ldLast'),email:f('ldEmail'),phone:f('ldPhone'),company:f('ldCompany'),title:f('ldTitle'),linkedin:f('ldLinkedin'),notes:f('ldNotes'),status:f('ldStatus')||'leads',checkedIn:false,createdAt:new Date().toISOString()});save();if(currentEventId===evId)renderEventDetail(evId);renderEvents();closeModal('leadModal');toast('Lead added','ok');}
 function delLead(id,e){if(e)e.stopPropagation();S.leads=S.leads.filter(x=>x.id!==id);save();if(currentEventId)renderEventDetail(currentEventId);renderEvents();toast('Lead removed');}
 
 // ── CSV Import ────────────────────────────────────────────
@@ -1225,7 +1514,7 @@ function importCSV(){
       if(cols.name>=0){const parts=(c[cols.name]||'').trim().split(' ');fn=parts[0];ln=parts.slice(1).join(' ');}
       else{fn=(c[cols.first]||'').trim();ln=cols.last>=0?(c[cols.last]||'').trim():'';}
       if(!fn){errors.push(`Row ${rn}: missing name`);return;}
-      imported.push({id:uid(),eventId:evId,firstName:fn,lastName:ln,email,phone:cols.phone>=0?(c[cols.phone]||'').trim():'',company:cols.company>=0?(c[cols.company]||'').trim():'',title:cols.title>=0?(c[cols.title]||'').trim():'',linkedin:cols.linkedin>=0?(c[cols.linkedin]||'').trim():'',notes:'',status:'leads',checkedIn:false});
+      imported.push({id:uid(),eventId:evId,firstName:fn,lastName:ln,email,phone:cols.phone>=0?(c[cols.phone]||'').trim():'',company:cols.company>=0?(c[cols.company]||'').trim():'',title:cols.title>=0?(c[cols.title]||'').trim():'',linkedin:cols.linkedin>=0?(c[cols.linkedin]||'').trim():'',notes:'',status:'leads',checkedIn:false,createdAt:new Date().toISOString()});
       existing.add(email.toLowerCase());
     });
     imported.forEach(l=>S.leads.push(l));
@@ -2087,6 +2376,544 @@ setTimeout(() => {
     toast('Firebase not connected — check your network', 'err');
   }
 }, 8000);
+
+// ═══════════════════════════════════════════════════════════
+// ▶▶▶  ATTENTION PANEL
+// ═══════════════════════════════════════════════════════════
+
+function renderAttention() {
+  const now = new Date();
+  const todayStr = now.toISOString().split('T')[0];
+  const weekMs = 7 * 24 * 3600 * 1000;
+
+  // ── Overdue follow-ups: leads in "waiting" status with tasks overdue, or leads without recent contact
+  const overdueFollowups = S.leads.filter(l => {
+    if (l.status === 'rejected') return false;
+    if (l.status === 'deal') return false;
+    // Waiting leads older than 7 days with no follow-up
+    if (l.status === 'waiting') {
+      const created = l.createdAt ? new Date(l.createdAt) : null;
+      if (created && (now - created) > weekMs) return true;
+    }
+    // Leads status stuck in "leads" for > 14 days
+    if (l.status === 'leads') {
+      const created = l.createdAt ? new Date(l.createdAt) : null;
+      if (created && (now - created) > 14 * 24 * 3600 * 1000) return true;
+    }
+    return false;
+  });
+
+  // ── Overdue tasks
+  const overdueTasks = S.tasks.filter(t => !t.done && t.due && t.due < todayStr);
+
+  // ── Events this week
+  const eventsThisWeek = S.events.filter(ev => {
+    if (!ev.date) return false;
+    const d = new Date(ev.date);
+    return d >= now && d <= new Date(now.getTime() + weekMs);
+  });
+
+  // ── Active deals
+  const activeDeals = S.leads.filter(l => l.status === 'deal');
+
+  // ── Events within 3 days
+  const eventsSoon = S.events.filter(ev => {
+    if (!ev.date || ev.stage === 'delivered') return false;
+    const d = new Date(ev.date);
+    const diff = d - now;
+    return diff > 0 && diff < 3 * 24 * 3600 * 1000;
+  });
+
+  // Update hero numbers
+  document.getElementById('attn-overdue').textContent = overdueFollowups.length + overdueTasks.length;
+  document.getElementById('attn-tasks').textContent = overdueTasks.length;
+  document.getElementById('attn-events').textContent = eventsThisWeek.length;
+  document.getElementById('attn-deals').textContent = activeDeals.length;
+
+  const total = overdueFollowups.length + overdueTasks.length + eventsSoon.length;
+  document.getElementById('attnBadge').textContent = total;
+
+  // Update tab badge
+  const tabBtn = document.getElementById('tab-btn-attention');
+  if (tabBtn && total > 0) tabBtn.style.color = 'var(--red)';
+
+  const grid = document.getElementById('attnGrid');
+
+  const makeCard = (title, icon, colorClass, items, emptyMsg) => {
+    const countHtml = items.length
+      ? `<span class="attn-card-count ${colorClass}">${items.length}</span>`
+      : `<span class="attn-card-count green">✓</span>`;
+    const itemsHtml = items.length
+      ? items.map(i => `
+          <div class="attn-item" onclick="${i.action||''}">
+            <div class="attn-item-dot ${i.color||colorClass}"></div>
+            <div class="attn-item-body">
+              <div class="attn-item-label">${i.label}</div>
+              <div class="attn-item-sub">${i.sub||''}</div>
+            </div>
+            <div class="attn-item-age">${i.age||''}</div>
+          </div>`).join('')
+      : `<div class="attn-empty">${emptyMsg}</div>`;
+    return `<div class="attn-card">
+      <div class="attn-card-head">
+        <span class="attn-card-icon">${icon}</span>
+        <span class="attn-card-title">${title}</span>
+        ${countHtml}
+      </div>
+      ${itemsHtml}
+    </div>`;
+  };
+
+  const daysSince = (iso) => {
+    if (!iso) return '';
+    const d = Math.floor((now - new Date(iso)) / 86400000);
+    return d === 0 ? 'today' : d === 1 ? '1d ago' : `${d}d ago`;
+  };
+
+  const daysUntil = (dateStr) => {
+    if (!dateStr) return '';
+    const d = Math.ceil((new Date(dateStr) - now) / 86400000);
+    return d === 0 ? 'today' : d === 1 ? 'tomorrow' : `in ${d}d`;
+  };
+
+  // Build overdue follow-up items
+  const followupItems = overdueFollowups.slice(0,6).map(l => {
+    const ev = S.events.find(e => e.id === l.eventId);
+    return {
+      label: `${l.firstName} ${l.lastName}${l.company ? ' · '+l.company : ''}`,
+      sub: `Status: ${l.status.toUpperCase()} · ${ev ? ev.name : 'Unknown event'}`,
+      age: daysSince(l.createdAt),
+      color: l.status === 'waiting' ? 'red' : 'yellow',
+      action: ev ? `openEventDetail('${l.eventId}')` : ''
+    };
+  });
+
+  // Overdue tasks
+  const taskItems = overdueTasks.slice(0,6).map(t => ({
+    label: t.text,
+    sub: `Due: ${fmtDate(t.due)} · Priority: ${(t.prio||'').toUpperCase()}`,
+    age: daysUntil(t.due),
+    color: t.prio === 'high' ? 'red' : 'yellow',
+    action: "switchTab('tasks',document.querySelector('[onclick=\"switchTab(\\'tasks\\',this)\"]'))"
+  }));
+
+  // Events soon
+  const eventSoonItems = eventsSoon.slice(0,5).map(ev => {
+    const leads = S.leads.filter(l => l.eventId === ev.id);
+    const checked = leads.filter(l => l.checkedIn).length;
+    return {
+      label: ev.name,
+      sub: `${fmtDT(ev.date)} · ${leads.length} leads · ${checked} checked in`,
+      age: daysUntil(ev.date),
+      color: 'orange',
+      action: `openEventDetail('${ev.id}')`
+    };
+  });
+
+  // Leads stuck in pipeline
+  const stuckItems = S.leads.filter(l=>l.status==='leads'&&l.createdAt&&(now-new Date(l.createdAt))>14*24*3600*1000).slice(0,5).map(l => {
+    const ev = S.events.find(e=>e.id===l.eventId);
+    return {
+      label: `${l.firstName} ${l.lastName} · ${l.status.toUpperCase()}`,
+      sub: ev ? ev.name : '',
+      age: daysSince(l.createdAt),
+      color: 'yellow',
+      action: ev ? `openEventDetail('${l.eventId}')` : ''
+    };
+  });
+
+  const allFollow = [...followupItems, ...taskItems.slice(0,3)];
+
+  grid.innerHTML = [
+    makeCard('Overdue Follow-Ups', '🔴', 'red', allFollow.slice(0,6), 'All follow-ups are on track'),
+    makeCard('Overdue Tasks', '⚡', 'yellow', taskItems, 'No overdue tasks'),
+    makeCard('Events This Week', '📅', 'blue', eventSoonItems, 'No events in the next 3 days'),
+    makeCard('Stuck in Pipeline', '⏳', 'yellow', stuckItems, 'No stale leads in pipeline')
+  ].join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// ▶▶▶  FINANCE DASHBOARD
+// ═══════════════════════════════════════════════════════════
+
+const FIN_CATS = ['venue','catering','travel','marketing','tech','staff','misc'];
+let _finCat = 'venue';
+
+function finSelCat(el) {
+  document.querySelectorAll('.fin-quick-cat').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  _finCat = el.dataset.v;
+}
+
+function finGetEvId() { return document.getElementById('finEvSelect').value; }
+
+function finGetRecord(evId) {
+  if (!evId) return null;
+  let rec = S.finances.find(f=>f.eventId===evId);
+  if (!rec) { rec={id:uid(),eventId:evId,revenue:0,attendees:0,expenses:[]}; S.finances.push(rec); }
+  return rec;
+}
+
+function populateFinEventSelect() {
+  const sel = document.getElementById('finEvSelect');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">Select Event…</option>';
+  S.events.forEach(ev => {
+    const opt = document.createElement('option');
+    opt.value = ev.id; opt.textContent = ev.name;
+    sel.appendChild(opt);
+  });
+  if (cur) sel.value = cur;
+}
+
+function renderFinance() {
+  populateFinEventSelect();
+  const evId = finGetEvId();
+  const rec = evId ? finGetRecord(evId) : null;
+
+  const fmt = n => '€' + (n||0).toLocaleString('en-GB',{minimumFractionDigits:0,maximumFractionDigits:0});
+  const expenses = rec ? rec.expenses : [];
+  const totalActual = expenses.reduce((a,e)=>a+(parseFloat(e.actual)||0),0);
+  const totalPlanned = expenses.reduce((a,e)=>a+(parseFloat(e.planned)||0),0);
+  const revenue = parseFloat(rec?.revenue||0);
+  const attendees = parseInt(rec?.attendees||0)||1;
+  const pl = revenue - totalActual;
+
+  // Hero cards
+  document.getElementById('fin-revenue').textContent = fmt(revenue);
+  document.getElementById('fin-costs').textContent = fmt(totalActual);
+  document.getElementById('fin-pl').textContent = (pl>=0?'+':'')+fmt(pl);
+  document.getElementById('fin-per-att-rev').textContent = attendees>1?`${fmt(revenue/attendees)} / attendee`:'Set attendees →';
+  document.getElementById('fin-per-att-cost').textContent = attendees>1?`${fmt(totalActual/attendees)} / attendee`:'';
+  document.getElementById('fin-margin').textContent = revenue>0?`${Math.round((pl/revenue)*100)}% margin`:'No revenue set';
+
+  const plCard = document.getElementById('fin-pl-card');
+  plCard.className = 'fin-hero-card ' + (pl>0?'profit':pl<0?'loss':'');
+
+  // Revenue / attendees inputs
+  if (rec) {
+    document.getElementById('finRevInput').value = rec.revenue||'';
+    document.getElementById('finAttendeesInput').value = rec.attendees||'';
+  } else {
+    document.getElementById('finRevInput').value = '';
+    document.getElementById('finAttendeesInput').value = '';
+  }
+
+  // Expenses table
+  const tbody = document.getElementById('finExpBody');
+  if (!expenses.length) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--light)">NO EXPENSES YET — ADD ONE →</td></tr>`;
+  } else {
+    tbody.innerHTML = expenses.map(e => {
+      const actual = parseFloat(e.actual)||0;
+      const planned = parseFloat(e.planned)||0;
+      const variance = actual - planned;
+      const over = planned > 0 && actual > planned;
+      return `<tr>
+        <td><span class="fin-cat-pill">${e.category||'misc'}</span></td>
+        <td style="font-weight:600">${e.desc}${over?'<span class="fin-over-badge">OVER</span>':''}</td>
+        <td class="fin-td-mono">${planned?fmt(planned):'—'}</td>
+        <td class="fin-td-mono ${over?'fin-td-over':'fin-td-ok'}">${actual?fmt(actual):'—'}</td>
+        <td class="fin-td-mono ${variance>0?'fin-td-over':variance<0?'fin-td-ok':''}">${variance!==0?(variance>0?'+':'')+fmt(variance):'—'}</td>
+        <td><button class="fin-del-btn" onclick="finDelExp('${evId}','${e.id}')">✕</button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  // Category breakdown bars
+  const catTotals = {};
+  FIN_CATS.forEach(c=>catTotals[c]={planned:0,actual:0});
+  expenses.forEach(e=>{
+    const c=e.category||'misc';
+    if(catTotals[c]){catTotals[c].planned+=parseFloat(e.planned)||0;catTotals[c].actual+=parseFloat(e.actual)||0;}
+  });
+  const maxVal = Math.max(...Object.values(catTotals).map(v=>Math.max(v.planned,v.actual)),1);
+  const barsEl = document.getElementById('finCatBars');
+  const activeCats = FIN_CATS.filter(c=>catTotals[c].planned>0||catTotals[c].actual>0);
+  if(!activeCats.length){barsEl.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.65rem;color:var(--light);padding:.5rem 0">No expenses to chart</div>';return;}
+  barsEl.innerHTML = activeCats.map(c=>{
+    const {planned,actual}=catTotals[c];
+    const over=planned>0&&actual>planned;
+    return `<div class="fin-bar-row">
+      <div class="fin-bar-label"><span style="text-transform:capitalize">${c}</span><span>${fmt(actual)}${planned?` / ${fmt(planned)}`:''}</span></div>
+      <div class="fin-bar"><div class="fin-bar-fill${over?' over':''}" style="width:${Math.min(100,(actual/maxVal)*100)}%"></div></div>
+    </div>`;
+  }).join('');
+
+  // Summary sidebar
+  const summaryEl = document.getElementById('finSummaryRows');
+  summaryEl.innerHTML = [
+    {k:'Revenue',v:fmt(revenue)},
+    {k:'Total Planned',v:fmt(totalPlanned)},
+    {k:'Total Actual',v:fmt(totalActual)},
+    {k:'Variance',v:(totalActual-totalPlanned>0?'+':'')+fmt(totalActual-totalPlanned)},
+    {k:'P/L',v:(pl>=0?'+':'')+fmt(pl)},
+    {k:'Attendees',v:attendees>1?attendees:'Not set'},
+  ].map(r=>`<div class="fin-summary-row"><span class="fin-summary-key">${r.k}</span><span class="fin-summary-val">${r.v}</span></div>`).join('');
+}
+
+function finSaveRevenue() {
+  const evId = finGetEvId(); if(!evId)return;
+  const rec = finGetRecord(evId);
+  rec.revenue = parseFloat(document.getElementById('finRevInput').value)||0;
+  rec.attendees = parseInt(document.getElementById('finAttendeesInput').value)||0;
+  save(); renderFinance();
+}
+
+function finSaveExp() {
+  const evId = finGetEvId();
+  if(!evId){toast('Select an event first','err');return;}
+  const desc = document.getElementById('finDesc').value.trim();
+  if(!desc){toast('Description required','err');return;}
+  const rec = finGetRecord(evId);
+  const editId = document.getElementById('finEditId').value;
+  if(editId){
+    const ex=rec.expenses.find(e=>e.id===editId);
+    if(ex){ex.category=_finCat;ex.desc=desc;ex.planned=document.getElementById('finPlanned').value;ex.actual=document.getElementById('finActual').value;}
+    toast('Expense updated','ok');
+  } else {
+    rec.expenses.push({id:uid(),category:_finCat,desc,planned:document.getElementById('finPlanned').value||0,actual:document.getElementById('finActual').value||0});
+    toast('Expense added','ok');
+  }
+  finClearForm(); save(); renderFinance();
+}
+
+function finDelExp(evId,expId){
+  const rec=finGetRecord(evId); if(!rec)return;
+  rec.expenses=rec.expenses.filter(e=>e.id!==expId);
+  save(); renderFinance(); toast('Removed');
+}
+
+function finClearForm(){
+  document.getElementById('finEditId').value='';
+  document.getElementById('finDesc').value='';
+  document.getElementById('finPlanned').value='';
+  document.getElementById('finActual').value='';
+  document.getElementById('finSideTitle').textContent='Add Expense';
+}
+
+function finFocusAdd(){ document.getElementById('finDesc').focus(); }
+
+function finDuplicateBudget(){
+  const evId = finGetEvId();
+  if(!evId){toast('Select an event to duplicate','err');return;}
+  const rec = finGetRecord(evId);
+  if(!rec.expenses.length){toast('No budget to duplicate','err');return;}
+  const newId=uid();
+  const newRec={id:newId,eventId:'__dup_'+newId,revenue:rec.revenue,attendees:rec.attendees,expenses:rec.expenses.map(e=>({...e,id:uid(),actual:0}))};
+  S.finances.push(newRec);
+  // prompt for event to attach
+  const evName=S.events.find(e=>e.id===evId)?.name||'';
+  toast(`Budget duplicated (planned costs copied, actuals cleared) — attach to a new event in Finance tab`,'ok');
+  save();
+}
+
+// ═══════════════════════════════════════════════════════════
+// ▶▶▶  TIMEZONE HELPER
+// ═══════════════════════════════════════════════════════════
+
+const TZ_ZONES = [
+  {name:'Oslo',tz:'Europe/Oslo'},{name:'London',tz:'Europe/London'},{name:'New York',tz:'America/New_York'},
+  {name:'Los Angeles',tz:'America/Los_Angeles'},{name:'Chicago',tz:'America/Chicago'},
+  {name:'Toronto',tz:'America/Toronto'},{name:'São Paulo',tz:'America/Sao_Paulo'},
+  {name:'Reykjavik',tz:'Atlantic/Reykjavik'},{name:'Paris',tz:'Europe/Paris'},
+  {name:'Berlin',tz:'Europe/Berlin'},{name:'Amsterdam',tz:'Europe/Amsterdam'},
+  {name:'Stockholm',tz:'Europe/Stockholm'},{name:'Helsinki',tz:'Europe/Helsinki'},
+  {name:'Warsaw',tz:'Europe/Warsaw'},{name:'Kyiv',tz:'Europe/Kyiv'},
+  {name:'Moscow',tz:'Europe/Moscow'},{name:'Istanbul',tz:'Europe/Istanbul'},
+  {name:'Dubai',tz:'Asia/Dubai'},{name:'Riyadh',tz:'Asia/Riyadh'},
+  {name:'Mumbai',tz:'Asia/Kolkata'},{name:'Delhi',tz:'Asia/Kolkata'},
+  {name:'Bangkok',tz:'Asia/Bangkok'},{name:'Singapore',tz:'Asia/Singapore'},
+  {name:'Hong Kong',tz:'Asia/Hong_Kong'},{name:'Shanghai',tz:'Asia/Shanghai'},
+  {name:'Tokyo',tz:'Asia/Tokyo'},{name:'Seoul',tz:'Asia/Seoul'},
+  {name:'Sydney',tz:'Australia/Sydney'},{name:'Auckland',tz:'Pacific/Auckland'},
+  {name:'Nairobi',tz:'Africa/Nairobi'},{name:'Lagos',tz:'Africa/Lagos'},
+  {name:'Johannesburg',tz:'Africa/Johannesburg'},{name:'Cairo',tz:'Africa/Cairo'},
+];
+
+const TZ_QUICK = ['Oslo','London','New York','Dubai','Singapore','Tokyo','Sydney'];
+let _tzInterval = null;
+
+function tzAddCity(tzOrName){
+  const zone = TZ_ZONES.find(z=>z.tz===tzOrName||z.name===tzOrName);
+  if(!zone)return;
+  if(S.tzCities.find(c=>c.tz===zone.tz)){toast('Already added','err');return;}
+  S.tzCities.push({name:zone.name,tz:zone.tz});
+  save(); renderTimezone(); toast(`${zone.name} added`,'ok');
+}
+
+function tzRemoveCity(tz){
+  S.tzCities=S.tzCities.filter(c=>c.tz!==tz);
+  save(); renderTimezone();
+}
+
+function tzSavePreset(){
+  const name=document.getElementById('tzPresetName').value.trim();
+  if(!name){toast('Enter preset name','err');return;}
+  if(!S.tzCities.length){toast('Add cities first','err');return;}
+  S.tzPresets.push({id:uid(),name,cities:[...S.tzCities]});
+  document.getElementById('tzPresetName').value='';
+  save(); renderTimezone(); toast('Preset saved','ok');
+}
+
+function tzLoadPreset(id){
+  const p=S.tzPresets.find(x=>x.id===id);
+  if(!p)return;
+  S.tzCities=[...p.cities];
+  save(); renderTimezone(); toast(`Loaded: ${p.name}`,'ok');
+}
+
+function tzDelPreset(id){
+  S.tzPresets=S.tzPresets.filter(p=>p.id!==id);
+  save(); renderTimezone();
+}
+
+function tzGetLocalHour(tz){
+  try{
+    const s=new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'numeric',minute:'numeric',hour12:false}).format(new Date());
+    if (!s || !s.includes(':')) return 0;
+    const [h,m]=s.split(':').map(Number);
+    return h+(m/60);
+  }catch{return 0;}
+}
+
+function tzGetTimeStr(tz){
+  try{
+    return new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
+  }catch{return '--:--';}
+}
+
+function tzGetDayLabel(tz){
+  try{
+    const d=new Intl.DateTimeFormat('en-GB',{timeZone:tz,weekday:'short',day:'numeric',month:'short'}).format(new Date());
+    return d;
+  }catch{return '';}
+}
+
+function renderTimezone(){
+  if(_tzInterval){clearInterval(_tzInterval);_tzInterval=null;}
+
+  // Populate select
+  const sel=document.getElementById('tzCitySelect');
+  sel.innerHTML='<option value="">Select timezone…</option>';
+  TZ_ZONES.forEach(z=>{
+    const opt=document.createElement('option');
+    opt.value=z.tz; opt.textContent=`${z.name} (${z.tz})`;
+    sel.appendChild(opt);
+  });
+
+  // Quick city buttons
+  document.getElementById('tzQuickCities').innerHTML=TZ_QUICK.map(name=>`
+    <div class="tz-quick-btn" onclick="tzAddCity('${name}')">${name}</div>`).join('');
+
+  // Presets
+  const presetsEl=document.getElementById('tzPresets');
+  presetsEl.innerHTML=!S.tzPresets.length
+    ?'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.62rem;color:var(--light)">No presets yet</div>'
+    :S.tzPresets.map(p=>`
+      <div class="tz-preset-item" onclick="tzLoadPreset('${p.id}')">
+        <div><div class="tz-preset-name">${p.name}</div><div class="tz-preset-cities">${p.cities.map(c=>c.name).join(', ')}</div></div>
+        <button class="tz-preset-del" onclick="event.stopPropagation();tzDelPreset('${p.id}')">✕</button>
+      </div>`).join('');
+
+  function doRender(){
+    // Local time header
+    const localTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const localStr = new Intl.DateTimeFormat('en-GB',{timeZone:localTZ,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
+    const el=document.getElementById('tzLocalTime');
+    if(el) el.textContent=`Your time: ${localStr}`;
+
+    // Cities
+    const citiesEl=document.getElementById('tzCities');
+    if(!citiesEl)return;
+    if(!S.tzCities.length){
+      citiesEl.innerHTML=`<div class="tmr-empty">No cities added — use Quick Add or the dropdown →</div>`;
+    } else {
+      citiesEl.innerHTML=S.tzCities.map(c=>{
+        const hour=tzGetLocalHour(c.tz);
+        const timeStr=tzGetTimeStr(c.tz);
+        const dayLbl=tzGetDayLabel(c.tz);
+        const isWorking=hour>=9&&hour<17;
+        const pct=Math.min(100,(hour/24)*100);
+        const workStart=(9/24)*100;
+        const workEnd=(17/24)*100;
+        return `<div class="tz-city-row">
+          <div class="tz-city-top">
+            <div>
+              <div class="tz-city-name">${c.name}</div>
+              <div class="tz-city-meta">${c.tz} · ${dayLbl}</div>
+            </div>
+            <div>
+              <div class="tz-city-time ${isWorking?'working':'off'}">${timeStr}</div>
+              <div class="tz-city-meta" style="text-align:right">${isWorking?'🟢 Working':'🔴 Off hours'}</div>
+            </div>
+            <button class="tz-city-del" onclick="tzRemoveCity('${c.tz}')">✕</button>
+          </div>
+          <div class="tz-city-bar-wrap">
+            <div class="tz-city-bar-work" style="left:${workStart}%;width:${workEnd-workStart}%"></div>
+            <div class="tz-city-bar-fill" style="width:${pct}%"></div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // Overlap grid — 24 slots (1hr each), show how many cities are working that hour
+    const overlapEl=document.getElementById('tzOverlapGrid');
+    if(overlapEl&&S.tzCities.length>0){
+      const slots=Array.from({length:24},(_,h)=>{
+        const count=S.tzCities.filter(c=>{
+          try{
+            const now=new Date();
+            const test=new Date(now);
+            test.setUTCHours(h,0,0,0);
+            const cityHour=parseFloat(new Intl.DateTimeFormat('en',{timeZone:c.tz,hour:'numeric',minute:'numeric',hour12:false}).format(test).replace(':','.'));
+            return cityHour>=9&&cityHour<17;
+          }catch{return false;}
+        }).length;
+        return count;
+      });
+      const maxCount=Math.max(...slots,1);
+      overlapEl.innerHTML=slots.map((cnt,h)=>{
+        const cls=cnt===S.tzCities.length?'all':cnt>0?'partial':'none';
+        return `<div class="tz-overlap-slot ${cls}" title="${String(h).padStart(2,'0')}:00 — ${cnt}/${S.tzCities.length} cities working"></div>`;
+      }).join('');
+
+      // Best time: find longest consecutive window where ALL cities are in working hours
+      let bestStart=-1,bestLen=0,curStart=-1,curLen=0;
+      slots.forEach((cnt,h)=>{
+        if(cnt===S.tzCities.length&&S.tzCities.length>0){
+          if(curStart<0)curStart=h;
+          curLen++;
+          if(curLen>bestLen){bestLen=curLen;bestStart=curStart;}
+        } else {curStart=-1;curLen=0;}
+      });
+      const bestEl=document.getElementById('tzBestTime');
+      const bestSub=document.getElementById('tzBestSub');
+      if(bestStart>=0&&S.tzCities.length>1){
+        const fmt=h=>`${String(h).padStart(2,'0')}:00`;
+        bestEl.textContent=`${fmt(bestStart)} – ${fmt(bestStart+bestLen)} UTC`;
+        bestSub.textContent=S.tzCities.map(c=>{
+          const start=new Date();start.setUTCHours(bestStart,0,0,0);
+          const end=new Date();end.setUTCHours(bestStart+bestLen,0,0,0);
+          const s=new Intl.DateTimeFormat('en-GB',{timeZone:c.tz,hour:'2-digit',minute:'2-digit',hour12:false}).format(start);
+          const e=new Intl.DateTimeFormat('en-GB',{timeZone:c.tz,hour:'2-digit',minute:'2-digit',hour12:false}).format(end);
+          return `${c.name}: ${s}–${e}`;
+        }).join(' · ');
+      } else if(S.tzCities.length<=1){
+        if(bestEl)bestEl.textContent='Add at least 2 cities to see suggestion';
+        if(bestSub)bestSub.textContent='';
+      } else {
+        if(bestEl)bestEl.textContent='No full overlap — try partial overlap window';
+        // partial: most cities overlap
+        const partStart=slots.indexOf(Math.max(...slots));
+        if(bestSub&&partStart>=0)bestSub.textContent=`Best partial: ${String(partStart).padStart(2,'0')}:00 UTC (${slots[partStart]}/${S.tzCities.length} cities)`;
+      }
+    }
+  }
+
+  doRender();
+  _tzInterval=setInterval(doRender,10000); // refresh every 10s
+}
 </script>
 </body>
 </html>
