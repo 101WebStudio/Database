@@ -208,6 +208,51 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .drive-main-link{display:inline-flex;align-items:center;gap:.5rem;font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--orange);text-decoration:none;border:1.5px solid var(--orange);border-radius:var(--radius-sm);padding:.38rem .85rem;transition:all .15s;}
 .drive-main-link:hover{background:var(--orange);color:#fff;}
 
+/* ── DRIVE SEARCH ── */
+.drive-search-bar{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;}
+.drive-search-input{flex:1;font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:.42rem .7rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;}
+.drive-search-input:focus{border-color:var(--orange);}
+.drive-search-count{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);white-space:nowrap;}
+.drive-card.hidden{display:none;}
+
+/* ── TEMPLATES ── */
+.tpl-layout{display:grid;grid-template-columns:1fr 320px;gap:2rem;align-items:start;}
+.tpl-grid{display:flex;flex-direction:column;gap:.6rem;}
+.tpl-card{border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);overflow:hidden;transition:border-color .15s;}
+.tpl-card:hover{border-color:var(--orange);}
+.tpl-card-head{padding:.7rem 1rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;gap:.75rem;}
+.tpl-card-head:hover .tpl-card-name{color:var(--orange);}
+.tpl-card-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.82rem;flex:1;}
+.tpl-card-tag{font-family:'IBM Plex Mono',monospace;font-size:.56rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:2px 7px;border:1px solid var(--border);border-radius:3px;color:var(--muted);white-space:nowrap;}
+.tpl-card-tag.outreach{border-color:var(--orange);color:var(--orange);}
+.tpl-card-tag.followup{border-color:var(--blue);color:var(--blue);}
+.tpl-card-tag.confirmation{border-color:var(--green);color:var(--green);}
+.tpl-card-tag.rejection{border-color:var(--red);color:var(--red);}
+.tpl-card-tag.general{border-color:var(--muted);color:var(--muted);}
+.tpl-card-actions{display:flex;gap:.3rem;align-items:center;}
+.tpl-action-btn{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:600;padding:3px 9px;border:1.5px solid var(--border);border-radius:3px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;white-space:nowrap;}
+.tpl-action-btn:hover{border-color:var(--orange);color:var(--orange);}
+.tpl-del-btn{background:none;border:none;font-size:.68rem;color:var(--light);cursor:pointer;padding:3px 5px;transition:color .1s;}
+.tpl-del-btn:hover{color:var(--red);}
+.tpl-body{display:none;padding:.75rem 1rem 1rem;border-top:1px solid var(--border);background:var(--surface);}
+.tpl-body.open{display:block;}
+.tpl-subject-preview{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:1px;margin-bottom:.5rem;}
+.tpl-subject-preview strong{color:var(--text);}
+.tpl-msg-preview{font-size:.8rem;color:var(--text);line-height:1.6;white-space:pre-wrap;word-break:break-word;max-height:200px;overflow-y:auto;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.6rem .8rem;}
+.tpl-copy-row{display:flex;gap:.5rem;margin-top:.65rem;flex-wrap:wrap;}
+.tpl-form-box{border:1.5px solid var(--border-dark);border-radius:var(--radius);overflow:hidden;background:var(--bg);height:fit-content;position:sticky;top:80px;}
+.tpl-form-head{padding:.75rem 1.1rem;background:var(--orange);}
+.tpl-form-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.72rem;color:#fff;letter-spacing:1px;text-transform:uppercase;}
+.tpl-form-body{padding:1rem;}
+.tpl-form-field{margin-bottom:.65rem;}
+.tpl-form-field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:.57rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem;}
+.tpl-form-field input,.tpl-form-field select,.tpl-form-field textarea{width:100%;font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:.38rem .6rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;resize:vertical;transition:border-color .15s;}
+.tpl-form-field input:focus,.tpl-form-field select:focus,.tpl-form-field textarea:focus{border-color:var(--orange);}
+.tpl-char-count{font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--light);text-align:right;margin-top:2px;}
+.tpl-search-wrap{position:relative;margin-bottom:.75rem;}
+.tpl-search-inp{width:100%;font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.38rem .65rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;}
+.tpl-search-inp:focus{border-color:var(--orange);}
+
 /* ── TASKS ── */
 .tasks-layout{display:grid;grid-template-columns:1fr 275px;gap:2rem;}
 .task-form-box{border:1.5px solid var(--border);border-radius:var(--radius);padding:1.1rem;background:var(--surface);height:fit-content;}
@@ -387,7 +432,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 ::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 
-@media(max-width:1024px){.wo-layout{grid-template-columns:1fr;}.daily-sidebar{position:static;}}
+@media(max-width:1024px){.wo-layout{grid-template-columns:1fr;}.daily-sidebar{position:static;}.tpl-layout{grid-template-columns:1fr;}.tpl-form-box{position:static;}}
 @media(max-width:768px){.tasks-layout{grid-template-columns:1fr;}.ev-timer-box{grid-template-columns:repeat(2,1fr);}.ev-grid{grid-template-columns:1fr;}.tmr-cards{grid-template-columns:1fr;}.tmr-summary{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
@@ -422,6 +467,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 <div class="tabs" id="mainTabs">
   <div class="tab active" onclick="switchTab('events',this)">Events</div>
   <div class="tab" onclick="switchTab('drive',this)">Drive</div>
+  <div class="tab" onclick="switchTab('templates',this)">Templates</div>
   <div class="tab" onclick="switchTab('tasks',this)">Tasks</div>
   <div class="tab" onclick="switchTab('workout',this)">Workout</div>
   <div class="tab" onclick="switchTab('timer',this)">Timer</div>
@@ -442,13 +488,81 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 <!-- DRIVE -->
 <div class="page" id="tab-drive">
   <div class="sec-head">
-    <div><span class="sec-label">Google Drive</span></div>
+    <div><span class="sec-label">Google Drive</span><span class="badge" id="driveCount">0</span></div>
     <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
       <a class="drive-main-link" href="https://drive.google.com/drive/folders/1vPYsEjwgPQ33Uj4m624lJ07einY7ZW6D" target="_blank">📂 Open Drive Folder</a>
       <button class="btn btn-fill" onclick="openDriveModal()">+ Add Sheet</button>
     </div>
   </div>
+  <div class="drive-search-bar">
+    <input class="drive-search-input" id="driveSearchInput" placeholder="Search sheets by name or description…" oninput="filterDrive(this.value)">
+    <span class="drive-search-count" id="driveSearchCount"></span>
+  </div>
   <div class="drive-grid" id="driveGrid"></div>
+</div>
+
+<!-- TEMPLATES -->
+<div class="page" id="tab-templates">
+  <div class="tpl-layout">
+    <div>
+      <div class="sec-head" style="margin-bottom:.75rem">
+        <div><span class="sec-label">Saved Templates</span><span class="badge" id="tplCount">0</span></div>
+        <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+          <select id="tplFilterTag" onchange="renderTemplates()" style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;padding:.3rem .6rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--muted);outline:none;cursor:pointer;">
+            <option value="">All types</option>
+            <option value="outreach">Outreach</option>
+            <option value="followup">Follow-Up</option>
+            <option value="confirmation">Confirmation</option>
+            <option value="rejection">Rejection</option>
+            <option value="general">General</option>
+          </select>
+        </div>
+      </div>
+      <div class="tpl-search-wrap">
+        <input class="tpl-search-inp" id="tplSearchInp" placeholder="Search templates by name, subject or content…" oninput="renderTemplates()">
+      </div>
+      <div class="tpl-grid" id="tplGrid">
+        <div class="tmr-empty">No templates yet — create your first one</div>
+      </div>
+    </div>
+
+    <!-- Sidebar form -->
+    <div class="tpl-form-box">
+      <div class="tpl-form-head">
+        <div class="tpl-form-title" id="tplFormTitle">New Template</div>
+      </div>
+      <div class="tpl-form-body">
+        <input type="hidden" id="tplEditId">
+        <div class="tpl-form-field">
+          <label>Template Name *</label>
+          <input id="tplName" placeholder="e.g. Keepit Outreach">
+        </div>
+        <div class="tpl-form-field">
+          <label>Type / Tag</label>
+          <select id="tplTag">
+            <option value="outreach">Outreach</option>
+            <option value="followup">Follow-Up</option>
+            <option value="confirmation">Confirmation</option>
+            <option value="rejection">Rejection</option>
+            <option value="general">General</option>
+          </select>
+        </div>
+        <div class="tpl-form-field">
+          <label>Subject Line *</label>
+          <input id="tplSubject" placeholder="Invitation to Oslo Tech Summit 2026">
+        </div>
+        <div class="tpl-form-field">
+          <label>Message Body *</label>
+          <textarea id="tplBody" rows="9" placeholder="Dear {{name}},&#10;&#10;We'd like to invite you to…&#10;&#10;Tip: use {{name}}, {{company}}, {{event}} as placeholders." oninput="updateTplCharCount()"></textarea>
+          <div class="tpl-char-count" id="tplCharCount">0 characters</div>
+        </div>
+        <div style="display:flex;gap:.5rem">
+          <button class="btn btn-ghost" style="flex:1" onclick="clearTplForm()">Clear</button>
+          <button class="btn btn-fill" style="flex:2" onclick="saveTemplate()">Save Template</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- TASKS -->
@@ -757,6 +871,30 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   </div>
 </div>
 
+<!-- Template Use Modal -->
+<div class="overlay" id="tplUseModal">
+  <div class="modal" style="width:560px">
+    <h3 id="tplUseTitle">Use Template</h3>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);background:var(--surface);padding:.55rem .8rem;border-radius:var(--radius-sm);margin-bottom:.9rem;line-height:1.7">
+      Fill in the placeholders below, then copy the result to your clipboard.
+    </div>
+    <div id="tplUsePlaceholders" style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.9rem"></div>
+    <div style="margin-bottom:.5rem">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">Subject</div>
+      <div id="tplUseSubjectOut" style="font-family:'IBM Plex Mono',monospace;font-size:.78rem;padding:.5rem .7rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);word-break:break-word;"></div>
+    </div>
+    <div style="margin-bottom:.75rem">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem">Message</div>
+      <div id="tplUseBodyOut" style="font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:.6rem .8rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);white-space:pre-wrap;word-break:break-word;max-height:220px;overflow-y:auto;line-height:1.6;"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('tplUseModal')">Close</button>
+      <button class="btn" onclick="copyTplSubject()" style="border-color:var(--blue);color:var(--blue)">Copy Subject</button>
+      <button class="btn btn-fill" onclick="copyTplBody()">Copy Message</button>
+    </div>
+  </div>
+</div>
+
 <div class="toasts" id="toasts"></div>
 
 <!-- ═══════════════════════════════════════════════════════
@@ -799,7 +937,7 @@ const EV_STAGES = ['planning','outreach','confirmed','delivered'];
 const EV_LABELS = {planning:'PLANNING',outreach:'OUTREACH',confirmed:'CONFIRMED',delivered:'DELIVERED'};
 
 // ── State ─────────────────────────────────────────────────
-let S = { events:[], leads:[], tasks:[], driveSheets:[], workoutLogs:[], prio:'med', theme:'light' };
+let S = { events:[], leads:[], tasks:[], driveSheets:[], workoutLogs:[], templates:[], prio:'med', theme:'light' };
 let timerInt=null, currentEventId=null, editingEventId=null;
 let selectedExId=null, exCatFilter='all';
 let calExtraAttendees=[], calSelectedLeadIds=new Set(), calCurrentEvId=null;
@@ -844,7 +982,7 @@ function mergeRemote(data) {
   const localTheme = S.theme;
   S = { ...S, ...data };
   if (!data.theme) S.theme = localTheme;
-  ['events','leads','tasks','driveSheets','workoutLogs'].forEach(k => { if(!S[k]) S[k]=[]; });
+  ['events','leads','tasks','driveSheets','workoutLogs','templates'].forEach(k => { if(!S[k]) S[k]=[]; });
 }
 
 async function saveToFirebase() {
@@ -878,7 +1016,7 @@ function setSyncStatus(state) {
 }
 
 function renderAll() {
-  renderEvents(); renderDrive(); renderTasks();
+  renderEvents(); renderDrive(); renderTasks(); renderTemplates();
   if (document.getElementById('tab-workout').classList.contains('active')) renderWorkout();
   applyTheme();
 }
@@ -1114,7 +1252,51 @@ function exportLeadsCSV(evId){
 }
 
 // ── Drive ─────────────────────────────────────────────────
-function renderDrive(){const g=document.getElementById('driveGrid');g.innerHTML='';if(!S.driveSheets.length){g.innerHTML='<div class="ev-empty" style="grid-column:1/-1">NO SHEETS ADDED YET</div>';return;}S.driveSheets.forEach(s=>{const c=document.createElement('div');c.className='drive-card';c.innerHTML=`<div class="drive-icon">📊</div><div class="drive-name">${s.name}</div>${s.desc?`<div class="drive-desc">${s.desc}</div>`:''}<div class="drive-url">${s.url.length>45?s.url.substring(0,45)+'…':s.url}</div><button class="drive-del" onclick="delSheet('${s.id}',event)">✕</button>`;c.onclick=e=>{if(e.target.classList.contains('drive-del'))return;window.open(s.url,'_blank');};g.appendChild(c);});}
+function renderDrive(){
+  const g=document.getElementById('driveGrid');
+  const countEl=document.getElementById('driveCount');
+  g.innerHTML='';
+  if(!S.driveSheets.length){
+    g.innerHTML='<div class="ev-empty" style="grid-column:1/-1">NO SHEETS ADDED YET</div>';
+    if(countEl) countEl.textContent='0';
+    return;
+  }
+  if(countEl) countEl.textContent=S.driveSheets.length;
+  S.driveSheets.forEach(s=>{
+    const c=document.createElement('div');
+    c.className='drive-card';
+    c.dataset.searchText=(s.name+' '+(s.desc||'')).toLowerCase();
+    c.innerHTML=`<div class="drive-icon">📊</div><div class="drive-name">${s.name}</div>${s.desc?`<div class="drive-desc">${s.desc}</div>`:''}<div class="drive-url">${s.url.length>45?s.url.substring(0,45)+'…':s.url}</div><button class="drive-del" onclick="delSheet('${s.id}',event)">✕</button>`;
+    c.onclick=e=>{if(e.target.classList.contains('drive-del'))return;window.open(s.url,'_blank');};
+    g.appendChild(c);
+  });
+  // reapply existing search if any
+  const inp=document.getElementById('driveSearchInput');
+  if(inp && inp.value) filterDrive(inp.value);
+  else updateDriveCount();
+}
+
+function filterDrive(q){
+  const cards=document.querySelectorAll('#driveGrid .drive-card');
+  const query=(q||'').toLowerCase().trim();
+  let visible=0;
+  cards.forEach(c=>{
+    const match=!query||c.dataset.searchText.includes(query);
+    c.classList.toggle('hidden',!match);
+    if(match) visible++;
+  });
+  updateDriveCount(query, visible);
+}
+
+function updateDriveCount(query, visible){
+  const el=document.getElementById('driveSearchCount');
+  if(!el) return;
+  if(query && visible!==undefined){
+    el.textContent=`${visible} of ${S.driveSheets.length} shown`;
+  } else {
+    el.textContent='';
+  }
+}
 function openDriveModal(){['dsName','dsUrl','dsDesc'].forEach(i=>document.getElementById(i).value='');document.getElementById('driveModal').classList.add('open');setTimeout(()=>document.getElementById('dsName').focus(),100);}
 function saveDriveSheet(){const f=id=>document.getElementById(id).value.trim();if(!f('dsName')||!f('dsUrl')){toast('Name and URL required','err');return;}S.driveSheets.push({id:uid(),name:f('dsName'),url:f('dsUrl'),desc:f('dsDesc')});save();renderDrive();closeModal('driveModal');toast('Sheet added','ok');}
 function delSheet(id,e){e.stopPropagation();S.driveSheets=S.driveSheets.filter(x=>x.id!==id);save();renderDrive();}
@@ -1283,6 +1465,163 @@ function _tmrUpdateSummary(){
       <span style="font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--text)">${_tmrShort(s.dur)}</span>
       <span style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted)">${s.at}</span>
     </div>`).join('');
+}
+
+// ═══════════════════════════════════════════════════
+// ▶▶▶ TEMPLATES
+// ═══════════════════════════════════════════════════
+const TPL_TAG_LABELS = {outreach:'Outreach',followup:'Follow-Up',confirmation:'Confirmation',rejection:'Rejection',general:'General'};
+
+function renderTemplates(){
+  const grid=document.getElementById('tplGrid'); if(!grid) return;
+  const countEl=document.getElementById('tplCount');
+  const q=(document.getElementById('tplSearchInp')?.value||'').toLowerCase().trim();
+  const tagFilter=document.getElementById('tplFilterTag')?.value||'';
+  let list=[...S.templates];
+  if(tagFilter) list=list.filter(t=>t.tag===tagFilter);
+  if(q) list=list.filter(t=>(t.name+' '+t.subject+' '+t.body).toLowerCase().includes(q));
+  if(countEl) countEl.textContent=S.templates.length;
+  if(!list.length){
+    grid.innerHTML=`<div class="tmr-empty">${S.templates.length?'No templates match your search':'No templates yet — create your first one'}</div>`;
+    return;
+  }
+  grid.innerHTML='';
+  list.forEach(tpl=>{
+    const card=document.createElement('div'); card.className='tpl-card';
+    const tagClass=tpl.tag||'general';
+    const tagLabel=TPL_TAG_LABELS[tagClass]||tagClass;
+    const preview=tpl.body.length>120?tpl.body.substring(0,120)+'…':tpl.body;
+    const created=tpl.createdAt?new Date(tpl.createdAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'';
+    card.innerHTML=`
+      <div class="tpl-card-head" onclick="toggleTplCard('${tpl.id}')">
+        <span class="tpl-card-name">${tpl.name}</span>
+        <span class="tpl-card-tag ${tagClass}">${tagLabel}</span>
+        <div class="tpl-card-actions" onclick="event.stopPropagation()">
+          <button class="tpl-action-btn" onclick="openTplUseModal('${tpl.id}')">Use</button>
+          <button class="tpl-action-btn" onclick="editTemplate('${tpl.id}')">Edit</button>
+          <button class="tpl-del-btn" onclick="delTemplate('${tpl.id}')">✕</button>
+        </div>
+      </div>
+      <div class="tpl-body" id="tplbody-${tpl.id}">
+        <div class="tpl-subject-preview">Subject: <strong>${tpl.subject}</strong></div>
+        <div class="tpl-msg-preview">${escHtml(tpl.body)}</div>
+        <div class="tpl-copy-row">
+          <button class="tpl-action-btn" onclick="quickCopy('${tpl.id}','subject')">Copy Subject</button>
+          <button class="tpl-action-btn" onclick="quickCopy('${tpl.id}','body')">Copy Message</button>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--light);margin-left:auto;align-self:center">${created}</span>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+function toggleTplCard(id){
+  const body=document.getElementById('tplbody-'+id);
+  if(body) body.classList.toggle('open');
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function saveTemplate(){
+  const name=document.getElementById('tplName').value.trim();
+  const subject=document.getElementById('tplSubject').value.trim();
+  const body=document.getElementById('tplBody').value.trim();
+  const tag=document.getElementById('tplTag').value;
+  const editId=document.getElementById('tplEditId').value;
+  if(!name||!subject||!body){toast('Name, subject and message are required','err');return;}
+  if(editId){
+    const tpl=S.templates.find(t=>t.id===editId);
+    if(tpl){tpl.name=name;tpl.subject=subject;tpl.body=body;tpl.tag=tag;tpl.updatedAt=new Date().toISOString();}
+    toast('Template updated','ok');
+  } else {
+    S.templates.push({id:uid(),name,subject,body,tag,createdAt:new Date().toISOString()});
+    toast('Template saved','ok');
+  }
+  save(); clearTplForm(); renderTemplates();
+}
+
+function clearTplForm(){
+  document.getElementById('tplEditId').value='';
+  document.getElementById('tplName').value='';
+  document.getElementById('tplSubject').value='';
+  document.getElementById('tplBody').value='';
+  document.getElementById('tplTag').value='outreach';
+  document.getElementById('tplCharCount').textContent='0 characters';
+  document.getElementById('tplFormTitle').textContent='New Template';
+}
+
+function updateTplCharCount(){
+  const v=document.getElementById('tplBody').value;
+  document.getElementById('tplCharCount').textContent=v.length+' characters';
+}
+
+function editTemplate(id){
+  const tpl=S.templates.find(t=>t.id===id); if(!tpl)return;
+  document.getElementById('tplEditId').value=tpl.id;
+  document.getElementById('tplName').value=tpl.name;
+  document.getElementById('tplSubject').value=tpl.subject;
+  document.getElementById('tplBody').value=tpl.body;
+  document.getElementById('tplTag').value=tpl.tag||'general';
+  document.getElementById('tplCharCount').textContent=tpl.body.length+' characters';
+  document.getElementById('tplFormTitle').textContent='Edit Template';
+  document.getElementById('tplName').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function delTemplate(id){
+  if(!confirm('Delete this template?'))return;
+  S.templates=S.templates.filter(t=>t.id!==id);
+  save(); renderTemplates(); toast('Template deleted');
+}
+
+function quickCopy(id,field){
+  const tpl=S.templates.find(t=>t.id===id); if(!tpl)return;
+  const text=field==='subject'?tpl.subject:tpl.body;
+  navigator.clipboard.writeText(text).then(()=>toast(field==='subject'?'Subject copied!':'Message copied!','ok')).catch(()=>{
+    const el=document.createElement('textarea');el.value=text;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);
+    toast(field==='subject'?'Subject copied!':'Message copied!','ok');
+  });
+}
+
+// Template Use Modal — fill placeholders then copy
+let _tplUseId=null;
+function openTplUseModal(id){
+  const tpl=S.templates.find(t=>t.id===id); if(!tpl)return;
+  _tplUseId=id;
+  document.getElementById('tplUseTitle').textContent='Use: '+tpl.name;
+  // detect placeholders like {{name}}
+  const matches=[...new Set([...(tpl.subject+' '+tpl.body).matchAll(/\{\{(\w+)\}\}/g)].map(m=>m[1]))];
+  const ph=document.getElementById('tplUsePlaceholders');
+  ph.innerHTML='';
+  if(matches.length){
+    matches.forEach(key=>{
+      const row=document.createElement('div');row.className='tpl-form-field';row.style.marginBottom='.45rem';
+      row.innerHTML=`<label>{{${key}}}</label><input class="tpl-ph-inp" data-key="${key}" placeholder="Enter ${key}…" oninput="updateTplPreview()">`;
+      ph.appendChild(row);
+    });
+  } else {
+    ph.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.65rem;color:var(--muted)">No placeholders found — ready to copy as-is.</div>';
+  }
+  updateTplPreview();
+  document.getElementById('tplUseModal').classList.add('open');
+}
+
+function updateTplPreview(){
+  const tpl=S.templates.find(t=>t.id===_tplUseId); if(!tpl)return;
+  const vals={};
+  document.querySelectorAll('.tpl-ph-inp').forEach(inp=>vals[inp.dataset.key]=inp.value||'{{'+inp.dataset.key+'}}');
+  const replace=str=>str.replace(/\{\{(\w+)\}\}/g,(_,k)=>vals[k]||'{{'+k+'}}');
+  document.getElementById('tplUseSubjectOut').textContent=replace(tpl.subject);
+  document.getElementById('tplUseBodyOut').textContent=replace(tpl.body);
+}
+
+function copyTplSubject(){
+  const text=document.getElementById('tplUseSubjectOut').textContent;
+  navigator.clipboard.writeText(text).then(()=>toast('Subject copied!','ok')).catch(()=>{const el=document.createElement('textarea');el.value=text;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);toast('Subject copied!','ok');});
+}
+
+function copyTplBody(){
+  const text=document.getElementById('tplUseBodyOut').textContent;
+  navigator.clipboard.writeText(text).then(()=>toast('Message copied!','ok')).catch(()=>{const el=document.createElement('textarea');el.value=text;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);toast('Message copied!','ok');});
 }
 
 // ═══════════════════════════════════════════════════
@@ -1734,7 +2073,7 @@ function toast(msg, type='') {
   setTimeout(() => el.remove(), 3000);
 }
 
-['eventModal','leadModal','driveModal','exModal','csvModal','calModal','qrModal'].forEach(id => {
+['eventModal','leadModal','driveModal','exModal','csvModal','calModal','qrModal','tplUseModal'].forEach(id => {
   const el = document.getElementById(id);
   if(el) el.addEventListener('click', function(e){ if(e.target===this) closeModal(id); });
 });
