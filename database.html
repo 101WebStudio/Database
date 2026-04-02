@@ -387,107 +387,65 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 ::-webkit-scrollbar{width:4px;height:4px;}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 
-/* ══════════════════════════════════════════
-   AI WRITER — complete styles
-   ══════════════════════════════════════════ */
-
-/* Layout */
-.aiw-wrap{display:grid;grid-template-columns:360px 1fr;gap:1.5rem;align-items:start;padding:2rem;}
-.aiw-sidebar{position:sticky;top:80px;display:flex;flex-direction:column;gap:0;border:1.5px solid var(--border-dark);border-radius:var(--radius);overflow:hidden;}
-.aiw-sidebar-head{background:var(--orange);padding:.85rem 1.1rem;display:flex;align-items:center;justify-content:space-between;}
-.aiw-sidebar-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.72rem;color:#fff;letter-spacing:2px;text-transform:uppercase;}
-.aiw-sidebar-sub{font-family:'IBM Plex Mono',monospace;font-size:.56rem;color:rgba(255,255,255,.65);letter-spacing:1px;}
-.aiw-sidebar-body{background:var(--bg);padding:1rem 1.1rem 1.2rem;}
-
-/* Form fields */
-.aiw-f{margin-bottom:.6rem;}
-.aiw-f label{display:block;font-family:'IBM Plex Mono',monospace;font-size:.56rem;letter-spacing:1.8px;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem;}
-.aiw-f input,.aiw-f textarea{width:100%;font-family:'IBM Plex Mono',monospace;font-size:.76rem;padding:.38rem .65rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;resize:vertical;}
-.aiw-f input:focus,.aiw-f textarea:focus{border-color:var(--orange);}
-.aiw-f input.aiw-err{border-color:var(--red);animation:aiwShake .3s ease;}
-@keyframes aiwShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
-.aiw-grid2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
-.aiw-divider{font-family:'IBM Plex Mono',monospace;font-size:.54rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--light);margin:.8rem 0 .5rem;display:flex;align-items:center;gap:.5rem;}
-.aiw-divider::after{content:'';flex:1;height:1px;background:var(--border);}
-
-/* Toggle pill groups */
-.aiw-pills{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:.1rem;}
-.aiw-pill{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:600;letter-spacing:.5px;padding:.28rem .65rem;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;user-select:none;}
-.aiw-pill:hover{border-color:var(--orange);color:var(--orange);}
-.aiw-pill.on{background:var(--orange);border-color:var(--orange);color:#fff;}
-.aiw-pill.on-blue{background:var(--blue);border-color:var(--blue);color:#fff;}
-.aiw-pill.on-green{background:var(--green);border-color:var(--green);color:#fff;}
-
-/* Generate button */
-.aiw-gen-btn{width:100%;margin-top:.9rem;padding:.7rem 1rem;background:var(--orange);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem;}
-.aiw-gen-btn:hover:not(:disabled){background:var(--orange-dark);transform:translateY(-1px);box-shadow:0 4px 16px rgba(232,107,37,.3);}
-.aiw-gen-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none;}
-.aiw-gen-spinner{width:13px;height:13px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:aiwSpin .6s linear infinite;display:none;}
-.aiw-gen-btn.loading .aiw-gen-spinner{display:block;}
-
-/* Results panel */
-.aiw-results-wrap{min-height:60vh;}
-.aiw-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5rem 2rem;border:2px dashed var(--border);border-radius:var(--radius);text-align:center;gap:.75rem;}
-.aiw-empty-ico{font-size:2.8rem;opacity:.25;}
-.aiw-empty-lbl{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--light);letter-spacing:2px;line-height:2;}
-
-/* Section label row */
-.aiw-section-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem;}
-.aiw-section-label{font-family:'IBM Plex Mono',monospace;font-size:.62rem;letter-spacing:3px;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:.4rem;}
-
-/* Channel groups */
-.aiw-channel-group{margin-bottom:1.25rem;}
-.aiw-channel-head{display:flex;align-items:center;gap:.6rem;padding:.55rem .9rem;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius) var(--radius) 0 0;border-bottom:none;}
-.aiw-channel-icon{font-size:1rem;}
-.aiw-channel-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.72rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text);}
-.aiw-channel-count{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--muted);margin-left:auto;}
-
-/* Message cards */
-.aiw-card{border:1.5px solid var(--border);background:var(--bg);overflow:hidden;transition:border-color .15s;}
-.aiw-card:last-child{border-radius:0 0 var(--radius) var(--radius);}
-.aiw-card:not(:last-child){border-bottom-color:var(--border);}
+/* ── AI WRITER ── */
+.aiw-layout{display:grid;grid-template-columns:380px 1fr;gap:1.5rem;align-items:start;}
+.aiw-panel{border:1.5px solid var(--border-dark);border-radius:var(--radius);overflow:hidden;background:var(--bg);position:sticky;top:80px;}
+.aiw-panel-head{padding:.8rem 1.1rem;background:var(--orange);display:flex;align-items:center;justify-content:space-between;}
+.aiw-panel-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.72rem;color:#fff;letter-spacing:1.5px;text-transform:uppercase;}
+.aiw-panel-body{padding:1rem 1.1rem;}
+.aiw-field{margin-bottom:.65rem;}
+.aiw-field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:.57rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.22rem;}
+.aiw-field input,.aiw-field select{width:100%;font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:.38rem .6rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;}
+.aiw-field input:focus,.aiw-field select:focus{border-color:var(--orange);}
+.aiw-field input.err-field{border-color:var(--red);}
+.aiw-row2{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+.aiw-section-sep{font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:2.5px;text-transform:uppercase;color:var(--light);margin:.75rem 0 .55rem;display:flex;align-items:center;gap:.5rem;}
+.aiw-section-sep::after{content:'';flex:1;height:1px;background:var(--border);}
+.aiw-toggle-row{display:flex;gap:.35rem;margin-bottom:.65rem;}
+.aiw-toggle-btn{flex:1;font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:600;letter-spacing:.5px;padding:.3rem .4rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;text-align:center;}
+.aiw-toggle-btn:hover{border-color:var(--orange);color:var(--orange);}
+.aiw-toggle-btn.sel{border-color:var(--orange);background:var(--orange);color:#fff;}
+.aiw-generate-btn{width:100%;padding:.65rem;background:var(--orange);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'IBM Plex Mono',monospace;font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .2s;margin-top:.25rem;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+.aiw-generate-btn:hover:not(:disabled){background:var(--orange-dark);transform:translateY(-1px);}
+.aiw-generate-btn:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+.aiw-results{display:flex;flex-direction:column;gap:1rem;}
+.aiw-empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5rem 2rem;border:2px dashed var(--border);border-radius:var(--radius);text-align:center;}
+.aiw-empty-icon{font-size:2.5rem;margin-bottom:1rem;opacity:.4;}
+.aiw-empty-txt{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--light);letter-spacing:2px;line-height:1.8;}
+.aiw-card{border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);overflow:hidden;transition:border-color .18s;}
 .aiw-card:hover{border-color:var(--orange);}
-.aiw-card-bar{padding:.55rem .9rem;background:var(--surface2);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem;}
-.aiw-ver-badge{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:2px 8px;border-radius:3px;border:1.5px solid var(--orange);color:var(--orange);}
-.aiw-card-meta{display:flex;gap:.3rem;align-items:center;flex-wrap:wrap;}
-.aiw-meta-pill{font-family:'IBM Plex Mono',monospace;font-size:.54rem;padding:1px 7px;border:1px solid var(--border);border-radius:3px;color:var(--muted);}
-.aiw-card-btns{display:flex;gap:.3rem;}
-.aiw-btn-sm{font-family:'IBM Plex Mono',monospace;font-size:.58rem;font-weight:600;padding:3px 10px;border:1.5px solid var(--border);border-radius:3px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;white-space:nowrap;}
-.aiw-btn-sm:hover{border-color:var(--orange);color:var(--orange);}
-.aiw-btn-sm.copied{border-color:var(--green)!important;color:var(--green)!important;}
-.aiw-btn-sm.save{border-color:var(--blue);color:var(--blue);}
-.aiw-btn-sm.save:hover{background:var(--blue-light);}
-.aiw-card-body{padding:.9rem 1rem 1rem;}
-.aiw-subj{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);margin-bottom:.65rem;padding:.38rem .65rem;background:var(--surface);border-radius:var(--radius-sm);border-left:3px solid var(--orange);display:flex;align-items:baseline;gap:.4rem;}
-.aiw-subj strong{color:var(--text);font-size:.7rem;}
-.aiw-msg{font-size:.84rem;line-height:1.78;color:var(--text);white-space:pre-wrap;word-break:break-word;}
-.aiw-word-count{font-family:'IBM Plex Mono',monospace;font-size:.54rem;color:var(--light);margin-top:.6rem;text-align:right;}
-
-/* Loading state */
-.aiw-loading{display:flex;flex-direction:column;align-items:center;gap:1.25rem;padding:4rem 2rem;}
-.aiw-spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--orange);border-radius:50%;animation:aiwSpin .65s linear infinite;}
+.aiw-card-head{padding:.65rem 1rem;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;}
+.aiw-card-ver{font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--orange);}
+.aiw-card-badges{display:flex;gap:.35rem;align-items:center;}
+.aiw-badge{font-family:'IBM Plex Mono',monospace;font-size:.55rem;padding:2px 7px;border:1px solid var(--border);border-radius:3px;color:var(--muted);}
+.aiw-card-actions{display:flex;gap:.35rem;}
+.aiw-act-btn{font-family:'IBM Plex Mono',monospace;font-size:.6rem;font-weight:600;padding:4px 11px;border:1.5px solid var(--border);border-radius:3px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;}
+.aiw-act-btn:hover{border-color:var(--orange);color:var(--orange);}
+.aiw-act-btn.copied{border-color:var(--green);color:var(--green);}
+.aiw-act-btn.save-tpl{border-color:var(--blue);color:var(--blue);}
+.aiw-act-btn.save-tpl:hover{background:var(--blue-light);}
+.aiw-card-body{padding:1rem 1.1rem;}
+.aiw-subject-line{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);margin-bottom:.65rem;padding:.4rem .65rem;background:var(--surface);border-radius:var(--radius-sm);border-left:3px solid var(--orange);}
+.aiw-subject-line strong{color:var(--text);}
+.aiw-message-text{font-size:.85rem;line-height:1.75;color:var(--text);white-space:pre-wrap;word-break:break-word;}
+.aiw-char-badge{font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--light);margin-top:.7rem;text-align:right;}
+.aiw-loading-wrap{display:flex;flex-direction:column;align-items:center;gap:1.5rem;padding:4rem 2rem;}
+.aiw-spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--orange);border-radius:50%;animation:aiwSpin .7s linear infinite;}
 @keyframes aiwSpin{to{transform:rotate(360deg)}}
-.aiw-loading-label{font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
-.aiw-steps{width:100%;max-width:260px;display:flex;flex-direction:column;gap:.3rem;}
-.aiw-step{font-family:'IBM Plex Mono',monospace;font-size:.58rem;display:flex;align-items:center;gap:.45rem;color:var(--light);transition:color .25s;}
+.aiw-loading-txt{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.aiw-loading-steps{display:flex;flex-direction:column;gap:.3rem;width:100%;max-width:280px;}
+.aiw-step{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--light);display:flex;align-items:center;gap:.5rem;transition:color .3s;}
 .aiw-step.active{color:var(--orange);}
 .aiw-step.done{color:var(--green);}
-.aiw-step-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
-
-/* Error box */
-.aiw-err-box{background:var(--red-light);border:1.5px solid var(--red);border-radius:var(--radius);padding:1.1rem 1.3rem;font-family:'IBM Plex Mono',monospace;font-size:.7rem;color:var(--red);line-height:1.7;}
-
-/* Regenerate bar */
-.aiw-regen-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem;}
-
-/* History */
-.aiw-hist-row{display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:.85rem;}
-.aiw-hist-chip{font-family:'IBM Plex Mono',monospace;font-size:.57rem;padding:2px 9px;border:1px solid var(--border);border-radius:20px;cursor:pointer;color:var(--muted);background:var(--bg);transition:all .12s;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.aiw-step-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.aiw-error-box{background:var(--red-light);border:1.5px solid var(--red);border-radius:var(--radius);padding:1.1rem 1.3rem;font-family:'IBM Plex Mono',monospace;font-size:.72rem;color:var(--red);line-height:1.6;}
+.aiw-history-strip{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem;}
+.aiw-hist-chip{font-family:'IBM Plex Mono',monospace;font-size:.58rem;padding:3px 10px;border:1px solid var(--border);border-radius:20px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;}
 .aiw-hist-chip:hover{border-color:var(--orange);color:var(--orange);}
+.aiw-results-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.85rem;flex-wrap:wrap;gap:.5rem;}
 
-@media(max-width:1100px){.aiw-wrap{grid-template-columns:1fr;}.aiw-sidebar{position:static;}}
-@media(max-width:1024px){.wo-layout{grid-template-columns:1fr;}.daily-sidebar{position:static;}}
-@media(max-width:768px){.tasks-layout{grid-template-columns:1fr;}.ev-timer-box{grid-template-columns:repeat(2,1fr);}.ev-grid{grid-template-columns:1fr;}.tmr-cards{grid-template-columns:1fr;}.tmr-summary{grid-template-columns:1fr 1fr;}.aiw-grid2{grid-template-columns:1fr;}}
+@media(max-width:1024px){.wo-layout{grid-template-columns:1fr;}.daily-sidebar{position:static;}.aiw-layout{grid-template-columns:1fr;}.aiw-panel{position:static;}}
+@media(max-width:768px){.tasks-layout{grid-template-columns:1fr;}.ev-timer-box{grid-template-columns:repeat(2,1fr);}.ev-grid{grid-template-columns:1fr;}.tmr-cards{grid-template-columns:1fr;}.tmr-summary{grid-template-columns:1fr 1fr;}.aiw-row2{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -524,7 +482,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   <div class="tab" onclick="switchTab('tasks',this)">Tasks</div>
   <div class="tab" onclick="switchTab('workout',this)">Workout</div>
   <div class="tab" onclick="switchTab('timer',this)">Timer</div>
-  <div class="tab" onclick="switchTab('aiwriter',this)" style="color:var(--orange)">AI Writer</div>
+  <div class="tab" onclick="switchTab('aiwriter',this)" style="color:var(--orange);border-bottom-color:transparent">AI Writer</div>
 </div>
 
 <!-- EVENTS -->
@@ -703,133 +661,110 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════
-     AI WRITER PAGE
-     ══════════════════════════════════════════════ -->
-<div class="page" id="tab-aiwriter" style="padding:0">
-<div class="aiw-wrap">
+<!-- AI WRITER -->
+<div class="page" id="tab-aiwriter">
+  <div class="aiw-layout">
 
-  <!-- ── SIDEBAR: Input Form ── -->
-  <div class="aiw-sidebar">
-    <div class="aiw-sidebar-head">
-      <div>
-        <div class="aiw-sidebar-title">AI Writer</div>
-        <div class="aiw-sidebar-sub">B2B Event Outreach Agent</div>
+    <!-- ── LEFT PANEL: Input Form ── -->
+    <div class="aiw-panel">
+      <div class="aiw-panel-head">
+        <span class="aiw-panel-title">AI Message Writer</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:rgba(255,255,255,.7)">Powered by Claude</span>
       </div>
-      <span style="font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:rgba(255,255,255,.5);letter-spacing:1px">Claude AI</span>
+      <div class="aiw-panel-body">
+
+        <div class="aiw-section-sep">Recipient</div>
+
+        <div class="aiw-field">
+          <label>Full Name *</label>
+          <input id="aiw-name" placeholder="John Smith">
+        </div>
+        <div class="aiw-row2">
+          <div class="aiw-field">
+            <label>Job Title *</label>
+            <input id="aiw-role" placeholder="CTO">
+          </div>
+          <div class="aiw-field">
+            <label>Company *</label>
+            <input id="aiw-company" placeholder="Acme Corp">
+          </div>
+        </div>
+
+        <div class="aiw-section-sep">Event</div>
+
+        <div class="aiw-field">
+          <label>Event Name *</label>
+          <input id="aiw-event" placeholder="Oslo Tech Summit 2026">
+        </div>
+        <div class="aiw-row2">
+          <div class="aiw-field">
+            <label>Date</label>
+            <input id="aiw-date" type="date">
+          </div>
+          <div class="aiw-field">
+            <label>Time</label>
+            <input id="aiw-time" type="time">
+          </div>
+        </div>
+        <div class="aiw-field">
+          <label>Location</label>
+          <input id="aiw-location" placeholder="Oslo Spektrum, Norway">
+        </div>
+
+        <div class="aiw-section-sep">Message Settings</div>
+
+        <div class="aiw-field">
+          <label>Channel</label>
+          <div class="aiw-toggle-row" id="aiw-channel-row">
+            <div class="aiw-toggle-btn sel" data-val="Email" onclick="aiwSelect('channel',this)">Email</div>
+            <div class="aiw-toggle-btn" data-val="LinkedIn" onclick="aiwSelect('channel',this)">LinkedIn</div>
+            <div class="aiw-toggle-btn" data-val="WhatsApp" onclick="aiwSelect('channel',this)">WhatsApp</div>
+          </div>
+        </div>
+
+        <div class="aiw-field">
+          <label>Tone</label>
+          <div class="aiw-toggle-row" id="aiw-tone-row">
+            <div class="aiw-toggle-btn" data-val="Professional" onclick="aiwSelect('tone',this)">Pro</div>
+            <div class="aiw-toggle-btn sel" data-val="Friendly" onclick="aiwSelect('tone',this)">Friendly</div>
+            <div class="aiw-toggle-btn" data-val="Casual" onclick="aiwSelect('tone',this)">Casual</div>
+            <div class="aiw-toggle-btn" data-val="Executive" onclick="aiwSelect('tone',this)">Exec</div>
+          </div>
+        </div>
+
+        <div class="aiw-field">
+          <label>Length</label>
+          <div class="aiw-toggle-row" id="aiw-length-row">
+            <div class="aiw-toggle-btn sel" data-val="Short" onclick="aiwSelect('length',this)">Short</div>
+            <div class="aiw-toggle-btn" data-val="Detailed" onclick="aiwSelect('length',this)">Detailed</div>
+          </div>
+        </div>
+
+        <div class="aiw-field">
+          <label>Extra Context <span style="opacity:.5">(optional)</span></label>
+          <input id="aiw-context" placeholder="Mention partnership, exclusive invite, etc.">
+        </div>
+
+        <button class="aiw-generate-btn" id="aiwGenBtn" onclick="aiwGenerate()">
+          <span id="aiwGenBtnTxt">Generate 3 Versions</span>
+        </button>
+
+      </div>
     </div>
-    <div class="aiw-sidebar-body">
 
-      <div class="aiw-divider">Event Details</div>
-
-      <div class="aiw-f">
-        <label>Event Name *</label>
-        <input id="aiw-event" placeholder="Keepit Live Nordic Roadshow – Helsinki">
-      </div>
-      <div class="aiw-f">
-        <label>Event Description *</label>
-        <textarea id="aiw-desc" rows="3" placeholder="Executive cybersecurity event focused on resilience, geopolitics, and data protection for Nordic IT leaders."></textarea>
-      </div>
-      <div class="aiw-grid2">
-        <div class="aiw-f">
-          <label>Date</label>
-          <input id="aiw-date" type="date">
-        </div>
-        <div class="aiw-f">
-          <label>Time (e.g. 16:00–19:45)</label>
-          <input id="aiw-time" placeholder="16:00–19:45">
+    <!-- ── RIGHT PANEL: Results ── -->
+    <div id="aiw-results-panel">
+      <!-- Empty state shown by default -->
+      <div class="aiw-empty-state" id="aiwEmptyState">
+        <div class="aiw-empty-icon">✍️</div>
+        <div class="aiw-empty-txt">
+          FILL IN THE FORM<br>AND HIT GENERATE<br><br>
+          3 UNIQUE VERSIONS<br>READY TO COPY IN SECONDS
         </div>
       </div>
-      <div class="aiw-f">
-        <label>Location / Venue</label>
-        <input id="aiw-location" placeholder="NH Collection Helsinki Grand Hansa">
-      </div>
-      <div class="aiw-f">
-        <label>Organiser / Brand <span style="opacity:.45">(optional)</span></label>
-        <input id="aiw-brand" placeholder="Keepit, Fortinet, AWS…">
-      </div>
-
-      <div class="aiw-divider">Intelligence Settings</div>
-
-      <div class="aiw-f">
-        <label>Target Audience</label>
-        <div class="aiw-pills" id="aiw-audience-pills">
-          <div class="aiw-pill on" data-v="CISOs and Security Leaders" onclick="aiwTogglePill(this,'audience')">CISOs</div>
-          <div class="aiw-pill" data-v="CIOs and IT Directors" onclick="aiwTogglePill(this,'audience')">CIOs</div>
-          <div class="aiw-pill" data-v="Cloud and Infrastructure Leaders" onclick="aiwTogglePill(this,'audience')">Cloud</div>
-          <div class="aiw-pill" data-v="IT Managers and Technical Leaders" onclick="aiwTogglePill(this,'audience')">IT Mgr</div>
-          <div class="aiw-pill" data-v="C-Suite Executives" onclick="aiwTogglePill(this,'audience')">C-Suite</div>
-        </div>
-      </div>
-
-      <div class="aiw-f">
-        <label>Industry Focus</label>
-        <div class="aiw-pills" id="aiw-industry-pills">
-          <div class="aiw-pill on" data-v="Cybersecurity and Data Protection" onclick="aiwTogglePill(this,'industry')">Cybersecurity</div>
-          <div class="aiw-pill" data-v="Cloud Computing and Infrastructure" onclick="aiwTogglePill(this,'industry')">Cloud</div>
-          <div class="aiw-pill" data-v="Digital Transformation" onclick="aiwTogglePill(this,'industry')">Digital Transf.</div>
-          <div class="aiw-pill" data-v="IT Leadership and Strategy" onclick="aiwTogglePill(this,'industry')">IT Strategy</div>
-          <div class="aiw-pill" data-v="Compliance and Risk Management" onclick="aiwTogglePill(this,'industry')">Compliance</div>
-        </div>
-      </div>
-
-      <div class="aiw-divider">Output Format</div>
-
-      <div class="aiw-f">
-        <label>Channels to Generate</label>
-        <div class="aiw-pills" id="aiw-channel-pills">
-          <div class="aiw-pill on" data-v="email" onclick="aiwTogglePill(this,'channel')">Email</div>
-          <div class="aiw-pill on" data-v="linkedin" onclick="aiwTogglePill(this,'channel')">LinkedIn</div>
-          <div class="aiw-pill on" data-v="whatsapp" onclick="aiwTogglePill(this,'channel')">WhatsApp</div>
-        </div>
-      </div>
-
-      <div class="aiw-f">
-        <label>Tone</label>
-        <div class="aiw-pills" id="aiw-tone-pills">
-          <div class="aiw-pill" data-v="executive" onclick="aiwTogglePill(this,'tone')">Executive</div>
-          <div class="aiw-pill on" data-v="professional-warm" onclick="aiwTogglePill(this,'tone')">Pro + Warm</div>
-          <div class="aiw-pill" data-v="direct" onclick="aiwTogglePill(this,'tone')">Direct</div>
-          <div class="aiw-pill" data-v="conversational" onclick="aiwTogglePill(this,'tone')">Conversational</div>
-        </div>
-      </div>
-
-      <div class="aiw-f">
-        <label>Length</label>
-        <div class="aiw-pills" id="aiw-length-pills">
-          <div class="aiw-pill on" data-v="concise" onclick="aiwTogglePill(this,'tone2')">Concise</div>
-          <div class="aiw-pill" data-v="detailed" onclick="aiwTogglePill(this,'tone2')">Detailed</div>
-        </div>
-      </div>
-
-      <div class="aiw-f">
-        <label>Extra Context <span style="opacity:.4">(optional)</span></label>
-        <input id="aiw-extra" placeholder="Exclusive invite-only, limited seats, key speaker…">
-      </div>
-
-      <button class="aiw-gen-btn" id="aiwBtn" onclick="aiwRun()">
-        <div class="aiw-gen-spinner" id="aiwSpinner"></div>
-        <span id="aiwBtnLbl">Generate Messages</span>
-      </button>
-
     </div>
+
   </div>
-
-  <!-- ── RESULTS PANEL ── -->
-  <div id="aiw-out">
-    <div class="aiw-empty">
-      <div class="aiw-empty-ico">✍️</div>
-      <div class="aiw-empty-lbl">
-        FILL IN YOUR EVENT DETAILS<br>
-        SELECT YOUR CHANNELS &amp; TONE<br>
-        HIT GENERATE<br><br>
-        EMAIL · LINKEDIN · WHATSAPP<br>
-        2 VARIATIONS EACH · READY TO COPY
-      </div>
-    </div>
-  </div>
-
-</div>
 </div>
 
 </div><!-- end #app -->
@@ -1211,7 +1146,7 @@ function renderEventDetail(evId) {
       <button class="btn" style="border-color:var(--blue);color:var(--blue)" onclick="openCalModal('${ev.id}')">📅 Calendar Invites</button>
       <button class="btn btn-ghost" onclick="openQRModal('${ev.id}')">📱 QR Check-In</button>
       <button class="btn btn-ghost" onclick="exportLeadsCSV('${ev.id}')">⬇ Export CSV</button>
-      <button class="btn" style="background:var(--orange);color:#fff;border-color:var(--orange)" onclick="goBack();aiwPrefillFromEvent('${ev.id}')">✍️ AI Writer</button>
+      <button class="btn" style="border-color:var(--orange);color:var(--orange)" onclick="goBack();aiwPrefillFromEvent('${ev.id}')">✍️ AI Writer</button>
     </div>
     <div class="ev-hero">
       <div class="ev-hero-top">
@@ -1979,558 +1914,432 @@ setTimeout(() => {
   }
 }, 8000);
 
-/* ════════════════════════════════════════════════════════════
-   AI WRITER — B2B Event Outreach Specialist Agent
-   ════════════════════════════════════════════════════════════ */
+// ═══════════════════════════════════════════════════════════
+// ▶▶▶  AI WRITER  —  Full messaging agent
+// ═══════════════════════════════════════════════════════════
 
-// ── Multi-select pill state ───────────────────────────────
-// Each group can have ONE selection (radio-style) or MANY (channel)
-const AIW = {
-  history: [],   // last 5 runs for quick reload
-  lastMsgs: {}   // { email: [v1,v2], linkedin: [...], whatsapp: [...] }
+// ── State ────────────────────────────────────────────────
+const aiwState = {
+  channel: 'Email',
+  tone: 'Friendly',
+  length: 'Short',
+  history: [],       // last 5 generation param-sets for quick-reload
+  lastResults: []    // current 3 messages
 };
 
-// Groups that allow multiple selections
-const AIW_MULTI = new Set(['channel','audience','industry']);
-
-function aiwTogglePill(el, group) {
-  const container = el.closest('.aiw-pills');
-  if (AIW_MULTI.has(group)) {
-    // multi-select: toggle this pill only
-    el.classList.toggle('on');
-  } else {
-    // single-select: deselect siblings
-    container.querySelectorAll('.aiw-pill').forEach(p => p.classList.remove('on'));
-    el.classList.add('on');
-  }
+// ── Toggle buttons (channel / tone / length) ────────────
+function aiwSelect(group, el) {
+  const row = document.getElementById('aiw-' + group + '-row');
+  row.querySelectorAll('.aiw-toggle-btn').forEach(b => b.classList.remove('sel'));
+  el.classList.add('sel');
+  aiwState[group] = el.dataset.val;
 }
 
-function aiwGetPills(containerId) {
-  const pills = document.querySelectorAll(`#${containerId} .aiw-pill.on`);
-  return [...pills].map(p => p.dataset.v);
-}
-
-// ── Validation ────────────────────────────────────────────
+// ── Validation ───────────────────────────────────────────
 function aiwValidate() {
-  const eventEl = document.getElementById('aiw-event');
-  const descEl  = document.getElementById('aiw-desc');
+  const required = [
+    { id: 'aiw-name',    label: 'Full Name' },
+    { id: 'aiw-role',    label: 'Job Title' },
+    { id: 'aiw-company', label: 'Company'   },
+    { id: 'aiw-event',   label: 'Event Name'}
+  ];
   let ok = true;
-  [eventEl, descEl].forEach(el => {
+  required.forEach(f => {
+    const el = document.getElementById(f.id);
     if (!el.value.trim()) {
-      el.classList.add('aiw-err');
-      el.addEventListener('input', () => el.classList.remove('aiw-err'), { once: true });
+      el.classList.add('err-field');
+      el.addEventListener('input', () => el.classList.remove('err-field'), { once: true });
       ok = false;
     }
   });
-  const channels = aiwGetPills('aiw-channel-pills');
-  if (!channels.length) { toast('Select at least one channel', 'err'); ok = false; }
-  if (!ok) toast('Event Name and Description are required', 'err');
+  if (!ok) toast('Please fill in all required fields (*)', 'err');
   return ok;
 }
 
-// ── Prompt builder — the specialist brain ─────────────────
-function aiwBuildPrompt(p) {
+// ── Prompt builder ───────────────────────────────────────
+function aiwBuildPrompt(params) {
+  const { name, role, company, event, date, time, location, channel, tone, length, context } = params;
 
-  // Format date nicely if provided
+  // Format date/time nicely if provided
   let dateStr = '';
-  if (p.date) {
-    try { dateStr = new Date(p.date + 'T12:00:00').toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' }); }
-    catch(e) { dateStr = p.date; }
+  if (date) {
+    try { dateStr = new Date(date + 'T12:00:00').toLocaleDateString('en-GB', { weekday:'long', day:'numeric', month:'long', year:'numeric' }); }
+    catch(e) { dateStr = date; }
   }
+  const timeStr = time || '';
+  const locationStr = location || '';
+  const contextStr = context ? `\nExtra context the message should include: ${context}` : '';
 
-  // Build event context block
-  const eventBlock = [
-    `Event Name: ${p.event}`,
-    p.date    ? `Date: ${dateStr}` : null,
-    p.time    ? `Time: ${p.time}` : null,
-    p.location? `Location: ${p.location}` : null,
-    p.brand   ? `Organiser/Brand: ${p.brand}` : null,
-    `Description: ${p.desc}`,
-    p.extra   ? `Additional context: ${p.extra}` : null
-  ].filter(Boolean).join('\n');
-
-  // Audience & industry intelligence
-  const audiences  = p.audiences.length  ? p.audiences.join(', ')  : 'Senior IT and Security professionals';
-  const industries = p.industries.length ? p.industries.join(', ') : 'IT, Cybersecurity, Cloud';
-
-  // Tone mapping
+  // Tone instructions mapped precisely
   const toneMap = {
-    'executive':         'authoritative and peer-level — written as one senior leader to another, ultra-concise, no pleasantries, pure signal',
-    'professional-warm': 'professional yet warm — formal enough for C-level, but with a human touch that feels genuine not automated',
-    'direct':            'direct and no-nonsense — straight to the value, minimal words, respects the reader\'s time completely',
-    'conversational':    'conversational and natural — reads like a message from a smart colleague, relaxed but still business-sharp'
+    Professional: 'formal and professional — business language, no slang, respectful distance',
+    Friendly:     'warm and friendly — personal but still business-appropriate, light energy',
+    Casual:       'relaxed and conversational — like a message from a colleague, informal but not sloppy',
+    Executive:    'concise and authoritative — written as senior executive to senior executive, no fluff, direct value proposition'
   };
-  const toneDesc = toneMap[p.tone] || toneMap['professional-warm'];
 
-  // Length mapping
+  // Channel formatting rules
+  const channelRules = {
+    Email:    'Write a complete email: start with "Subject: [subject line]" on its own line, then a blank line, then the email body with proper greeting and sign-off.',
+    LinkedIn: 'Write a LinkedIn direct message: short, no subject line, conversational opener, max 5 sentences, no formal sign-off needed.',
+    WhatsApp: 'Write a WhatsApp message: very brief, casual opener, max 3-4 sentences, feels personal not corporate, can use light punctuation for readability.'
+  };
+
+  // Length instructions
   const lengthMap = {
-    'concise':  'Keep each message tight: Email max 120 words, LinkedIn max 60 words, WhatsApp max 40 words.',
-    'detailed': 'Allow more depth: Email max 200 words, LinkedIn max 100 words, WhatsApp max 60 words.'
+    Short:    'Keep it concise — 3 to 5 sentences maximum for the body (excluding subject line).',
+    Detailed: 'Write a fuller message — include event highlights, what they will gain, and a clear CTA. 7 to 10 sentences.'
   };
-  const lengthDesc = lengthMap[p.length] || lengthMap['concise'];
 
-  // Channel instructions — only build for requested channels
-  const channelBlocks = [];
+  return `You are an expert B2B event marketing copywriter. Generate EXACTLY 3 completely different message variations for inviting a professional to an event.
 
-  if (p.channels.includes('email')) {
-    channelBlocks.push(`
-EMAIL (generate 2 variations):
-- Format: Subject line on first line as "Subject: ..." then blank line then email body
-- Include natural greeting (first name only style, but since we have no name: use a role-aware opener like "Hope this week's treating you well," or jump straight in)
-- Professional sign-off
-- One clear, soft CTA (not "click here" — more like "happy to share more details" or "let me know if this is relevant")
-- Version 1 and Version 2 must have genuinely different angles and openers`);
-  }
+RECIPIENT:
+- Name: ${name}
+- Job Title: ${role}
+- Company: ${company}
 
-  if (p.channels.includes('linkedin')) {
-    channelBlocks.push(`
-LINKEDIN DM (generate 2 variations):
-- No subject line
-- Max 4–5 short sentences
-- Open with something that acknowledges their world or current trends — NOT "I saw your profile"
-- Sound like a peer reaching out, not a sales rep
-- Soft CTA at the end
-- Version 1 and Version 2 must feel distinctly different`);
-  }
+EVENT:
+- Event Name: ${event}${dateStr ? '\n- Date: ' + dateStr : ''}${timeStr ? '\n- Time: ' + timeStr : ''}${locationStr ? '\n- Location: ' + locationStr : ''}${contextStr}
 
-  if (p.channels.includes('whatsapp')) {
-    channelBlocks.push(`
-WHATSAPP (generate 2 variations):
-- Ultra-short: 2–3 sentences max
-- Casual but professional — reads like a message from a trusted contact
-- No formal greeting, no sign-off
-- Jump straight to the point with warmth
-- Version 1 slightly warmer, Version 2 slightly more direct`);
-  }
+CHANNEL: ${channel}
+${channelRules[channel]}
 
-  // Banned phrases list — critical for human feel
-  const banned = [
-    'I hope this message finds you well',
-    'I am reaching out',
-    'I wanted to reach out',
-    'exciting opportunity',
-    'leverage',
-    'synergy',
-    'paradigm',
-    'game-changer',
-    'world-class',
-    'cutting-edge',
-    'solutions',
-    'Dear Sir/Madam',
-    'To whom it may concern',
-    'I trust this email finds you',
-    'Please do not hesitate',
-    'feel free to',
-    'touch base',
-    'circle back',
-    'going forward',
-    'at your earliest convenience',
-    'Best regards' // too formal/robotic — use "Best," or "Talk soon," instead
-  ].join(', ');
+TONE: ${toneMap[tone]}
 
-  return `You are a senior B2B outreach specialist with 15 years of experience writing executive-level event invitations for IT, cybersecurity, and cloud audiences across the Nordics and Europe.
+LENGTH: ${lengthMap[length]}
 
-You write messages that sound like they came from a real, smart human — not a marketing department. Senior executives get hundreds of generic emails. Your job is to write the ones they actually read.
+CRITICAL RULES — follow every one:
+1. Each variation must feel genuinely different — different angle, different opener, different structure
+2. Sound like a real human wrote it, NOT a bot. Avoid corporate clichés like "I hope this message finds you well", "I am reaching out", "exciting opportunity", "leverage", "synergy"
+3. Use the recipient's first name naturally (extract it: "${name.split(' ')[0]}")
+4. Reference their role (${role}) and company (${company}) to make it feel personal, not mass-sent
+5. Every message needs ONE clear call to action
+6. Do not add any explanations, labels, or meta-commentary — output the messages ONLY
+7. Tailor the message to what a ${role} at ${company} would care about
 
-══ EVENT DETAILS ══
-${eventBlock}
-
-══ TARGET AUDIENCE ══
-${audiences}
-
-══ INDUSTRY CONTEXT ══
-${industries}
-
-══ TONE ══
-${toneDesc}
-
-══ LENGTH ══
-${lengthDesc}
-
-══ YOUR WRITING RULES ══
-1. Sound human. Every sentence must feel like a real person wrote it at their desk, not a template engine.
-2. NO placeholders — never use [Name], [Company], [Role]. Write without them. Use role-aware openers instead.
-3. BANNED PHRASES — never use any of these: ${banned}
-4. Focus on VALUE and RELEVANCE — what will the reader gain? Why should they give up 3 hours of their day?
-5. Peer-level framing — position this as an invitation between equals, not vendor-to-buyer.
-6. Exclusivity — subtly signal limited seats, curated audience, high-value peers in the room.
-7. Current relevance — weave in real-world context: geopolitical cyber threats, ransomware trends, NIS2/DORA compliance pressure, cloud sovereignty, AI security risks — whatever is relevant to the event topic.
-8. Each variation must be genuinely different — different angle, different opener, different emphasis. Not just slightly reworded.
-9. CTA must be soft and natural — not "Register now" or "Click here". More like "Let me know if you'd like the details" or "Happy to reserve you a spot."
-10. Output ONLY the messages. Zero explanations, zero meta-commentary, zero labels beyond the exact format below.
-
-══ OUTPUT FORMAT ══
-Use EXACTLY this structure, nothing else:
-
-${p.channels.includes('email') ? `---EMAIL_V1---
-[email version 1 here — subject line first]
-
----EMAIL_V2---
-[email version 2 here — subject line first]` : ''}
-
-${p.channels.includes('linkedin') ? `---LINKEDIN_V1---
-[linkedin message version 1]
-
----LINKEDIN_V2---
-[linkedin message version 2]` : ''}
-
-${p.channels.includes('whatsapp') ? `---WHATSAPP_V1---
-[whatsapp message version 1]
-
----WHATSAPP_V2---
-[whatsapp message version 2]` : ''}
-
+OUTPUT FORMAT — use this EXACT structure, nothing else:
+---VERSION_1---
+[message here]
+---VERSION_2---
+[message here]
+---VERSION_3---
+[message here]
 ---END---`;
 }
 
-// ── Parser — extract all channel versions from raw output ─
-function aiwParse(raw, channels) {
-  const result = {};
-
-  const patterns = {
-    email:    [/---EMAIL_V1---([\s\S]*?)(?=---EMAIL_V2---|---LINKEDIN|---WHATSAPP|---END)/,     /---EMAIL_V2---([\s\S]*?)(?=---LINKEDIN|---WHATSAPP|---END)/],
-    linkedin: [/---LINKEDIN_V1---([\s\S]*?)(?=---LINKEDIN_V2---|---WHATSAPP|---END)/,           /---LINKEDIN_V2---([\s\S]*?)(?=---WHATSAPP|---END)/],
-    whatsapp: [/---WHATSAPP_V1---([\s\S]*?)(?=---WHATSAPP_V2---|---END)/,                       /---WHATSAPP_V2---([\s\S]*?)(?=---END)/]
-  };
-
-  channels.forEach(ch => {
-    const [r1, r2] = patterns[ch] || [];
-    const v1 = r1 ? (raw.match(r1)?.[1] || '').trim() : '';
-    const v2 = r2 ? (raw.match(r2)?.[1] || '').trim() : '';
-    if (v1 || v2) result[ch] = [v1, v2].filter(Boolean);
-  });
-
-  // Fallback: if parsing fails, split by double newlines and distribute
-  if (!Object.keys(result).length) {
-    const chunks = raw.split(/\n{3,}/).map(c => c.trim()).filter(c => c.length > 30);
-    let i = 0;
-    channels.forEach(ch => { result[ch] = [chunks[i++] || '', chunks[i++] || ''].filter(Boolean); });
+// ── Parser: splits raw AI output into 3 messages ─────────
+function aiwParseVersions(raw) {
+  const versions = [];
+  const regex = /---VERSION_(\d)---([\s\S]*?)(?=---VERSION_\d---|---END---|$)/g;
+  let m;
+  while ((m = regex.exec(raw)) !== null) {
+    const text = m[2].trim();
+    if (text) versions.push(text);
   }
-
-  return result;
+  // Fallback: if regex fails, try splitting by double newline chunks
+  if (versions.length < 2) {
+    const chunks = raw.split(/\n{3,}/).map(c => c.trim()).filter(c => c.length > 40);
+    return chunks.slice(0, 3);
+  }
+  return versions.slice(0, 3);
 }
 
-// ── Extract subject from email text ───────────────────────
-function aiwSubject(text) {
+// ── Extract subject line for email ───────────────────────
+function aiwExtractSubject(text) {
   const m = text.match(/^Subject:\s*(.+)/im);
-  if (m) return { subject: m[1].trim(), body: text.replace(/^Subject:\s*.+\n*/im, '').trim() };
+  if (m) {
+    const subject = m[1].trim();
+    const body = text.replace(/^Subject:\s*.+\n*/im, '').trim();
+    return { subject, body };
+  }
   return { subject: null, body: text };
 }
 
-// ── Loading animation ─────────────────────────────────────
+// ── Loading animation ────────────────────────────────────
 const AIW_STEPS = [
-  'Analysing event context and audience…',
-  'Inferring audience intelligence…',
-  'Crafting channel-specific angles…',
-  'Writing 2 variations per channel…',
-  'Reviewing tone and human feel…',
+  'Analysing recipient profile…',
+  'Crafting personalised angles…',
+  'Generating 3 unique versions…',
+  'Polishing tone and language…',
   'Finalising messages…'
 ];
 
 function aiwShowLoading() {
-  document.getElementById('aiw-out').innerHTML = `
-    <div class="aiw-loading">
+  const panel = document.getElementById('aiw-results-panel');
+  panel.innerHTML = `
+    <div class="aiw-loading-wrap">
       <div class="aiw-spinner"></div>
-      <div class="aiw-loading-label">Writing your messages…</div>
-      <div class="aiw-steps">
-        ${AIW_STEPS.map((s,i) => `<div class="aiw-step" id="aws${i}"><div class="aiw-step-dot"></div>${s}</div>`).join('')}
+      <div class="aiw-loading-txt">Writing your messages…</div>
+      <div class="aiw-loading-steps" id="aiwSteps">
+        ${AIW_STEPS.map((s,i) => `<div class="aiw-step" id="aiwstep-${i}"><div class="aiw-step-dot"></div>${s}</div>`).join('')}
       </div>
     </div>`;
 
+  // Animate steps sequentially
   let i = 0;
-  const t = setInterval(() => {
-    if (i > 0) { const p = document.getElementById('aws'+(i-1)); if(p) p.className='aiw-step done'; }
-    const c = document.getElementById('aws'+i); if(c) c.className='aiw-step active';
+  const stepTimer = setInterval(() => {
+    if (i > 0) {
+      const prev = document.getElementById('aiwstep-'+(i-1));
+      if (prev) prev.className = 'aiw-step done';
+    }
+    const cur = document.getElementById('aiwstep-'+i);
+    if (cur) cur.className = 'aiw-step active';
     i++;
-    if (i >= AIW_STEPS.length) clearInterval(t);
-  }, 900);
-  return t;
+    if (i >= AIW_STEPS.length) clearInterval(stepTimer);
+  }, 700);
+
+  return stepTimer;
 }
 
-// ── Render all results ────────────────────────────────────
-function aiwRenderResults(msgs, params) {
-  AIW.lastMsgs = msgs;
+// ── Render results ───────────────────────────────────────
+function aiwRenderResults(versions, params) {
+  aiwState.lastResults = versions;
+  const panel = document.getElementById('aiw-results-panel');
 
-  const CHANNEL_META = {
-    email:    { icon:'📧', name:'Email',    color:'var(--orange)' },
-    linkedin: { icon:'💼', name:'LinkedIn', color:'var(--blue)'   },
-    whatsapp: { icon:'💬', name:'WhatsApp', color:'var(--green)'  }
-  };
-
-  // History chips
-  const histHtml = AIW.history.length
-    ? `<div class="aiw-hist-row">${AIW.history.slice(0,5).map((h,i)=>
-        `<div class="aiw-hist-chip" onclick="aiwLoadHist(${i})" title="${h.event}">${h.event.substring(0,22)}…</div>`
-      ).join('')}</div>`
+  // Build history chips
+  const histChips = aiwState.history.length
+    ? `<div class="aiw-history-strip">
+        ${aiwState.history.slice(-5).reverse().map((h,i) =>
+          `<div class="aiw-hist-chip" onclick="aiwLoadHistory(${i})" title="Reload: ${h.name} @ ${h.event}">${h.name.split(' ')[0]} · ${h.event.substring(0,18)}…</div>`
+        ).join('')}
+       </div>`
     : '';
 
-  // Count total messages generated
-  const totalMsgs = Object.values(msgs).reduce((a,v) => a + v.length, 0);
+  const channelIcon = { Email:'📧', LinkedIn:'💼', WhatsApp:'💬' }[params.channel] || '✉️';
 
-  // Build channel group HTML
-  const channelHtml = Object.entries(msgs).map(([ch, versions]) => {
-    const meta = CHANNEL_META[ch] || { icon:'✉️', name: ch, color:'var(--orange)' };
-
-    const cardsHtml = versions.map((rawText, idx) => {
-      const isEmail = ch === 'email';
-      const { subject, body } = isEmail ? aiwSubject(rawText) : { subject: null, body: rawText };
-      const wordCount = body.trim().split(/\s+/).length;
-      const safeBody = body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      const safeSub  = subject ? subject.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';
-      const bodyId = `aiwb-${ch}-${idx}`;
-      const subjId = `aiws-${ch}-${idx}`;
-
-      return `
-        <div class="aiw-card">
-          <div class="aiw-card-bar">
-            <span class="aiw-ver-badge" style="border-color:${meta.color};color:${meta.color}">Version ${idx+1}</span>
-            <div class="aiw-card-meta">
-              <span class="aiw-meta-pill">${wordCount} words</span>
-              <span class="aiw-meta-pill">${params.tone}</span>
-              <span class="aiw-meta-pill">${params.length}</span>
-            </div>
-            <div class="aiw-card-btns">
-              ${isEmail && subject ? `<button class="aiw-btn-sm" onclick="aiwCopy('${subjId}',this)">Copy Subject</button>` : ''}
-              <button class="aiw-btn-sm" onclick="aiwCopy('${bodyId}',this)">Copy</button>
-              <button class="aiw-btn-sm save" onclick="aiwSaveTpl('${ch}',${idx})">Save Template</button>
-            </div>
-          </div>
-          <div class="aiw-card-body">
-            ${subject ? `<div class="aiw-subj"><strong>Subject:</strong> <span id="${subjId}">${safeSub}</span></div>` : ''}
-            <div class="aiw-msg" id="${bodyId}">${safeBody}</div>
-            <div class="aiw-word-count">${wordCount} words · ${body.length} chars</div>
-          </div>
-        </div>`;
-    }).join('');
-
-    return `
-      <div class="aiw-channel-group">
-        <div class="aiw-channel-head">
-          <span class="aiw-channel-icon">${meta.icon}</span>
-          <span class="aiw-channel-name" style="color:${meta.color}">${meta.name}</span>
-          <span class="aiw-channel-count">${versions.length} variation${versions.length!==1?'s':''}</span>
-        </div>
-        ${cardsHtml}
-      </div>`;
-  }).join('');
-
-  document.getElementById('aiw-out').innerHTML = `
-    ${histHtml}
-    <div class="aiw-regen-bar">
+  panel.innerHTML = `
+    ${histChips}
+    <div class="aiw-results-header">
       <div>
         <span class="sec-label">Generated Messages</span>
-        <span class="badge">${totalMsgs}</span>
+        <span class="badge">${versions.length}</span>
       </div>
       <div style="display:flex;gap:.5rem;flex-wrap:wrap">
-        <button class="btn btn-ghost" style="font-size:.62rem" onclick="aiwRun()">↺ Regenerate</button>
-        <button class="btn btn-ghost" style="font-size:.62rem" onclick="aiwCopyAll()">Copy All</button>
+        <button class="btn btn-ghost" onclick="aiwGenerate()" style="font-size:.62rem">↺ Regenerate</button>
+        <button class="btn btn-ghost" onclick="aiwCopyAll()" style="font-size:.62rem">Copy All</button>
       </div>
     </div>
-    ${channelHtml}`;
+    <div class="aiw-results">
+      ${versions.map((v, idx) => aiwBuildCard(v, idx, params, channelIcon)).join('')}
+    </div>`;
 }
 
-// ── Copy helpers ──────────────────────────────────────────
-function aiwCopy(elId, btn) {
+function aiwBuildCard(rawText, idx, params, channelIcon) {
+  const { subject, body } = params.channel === 'Email' ? aiwExtractSubject(rawText) : { subject: null, body: rawText };
+  const charCount = body.length;
+  const wordCount = body.trim().split(/\s+/).length;
+  const safeBody = body.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const safeSubject = subject ? subject.replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';
+  const cardId = 'aiw-card-' + idx;
+  const bodyId = 'aiw-body-' + idx;
+  const subjectId = 'aiw-subj-' + idx;
+
+  return `
+    <div class="aiw-card" id="${cardId}">
+      <div class="aiw-card-head">
+        <span class="aiw-card-ver">Version ${idx + 1}</span>
+        <div class="aiw-card-badges">
+          <span class="aiw-badge">${channelIcon} ${params.channel}</span>
+          <span class="aiw-badge">${params.tone}</span>
+          <span class="aiw-badge">${wordCount} words</span>
+        </div>
+        <div class="aiw-card-actions">
+          ${params.channel === 'Email' && subject ? `<button class="aiw-act-btn" onclick="aiwCopyField('${subjectId}', this)">Copy Subject</button>` : ''}
+          <button class="aiw-act-btn" onclick="aiwCopyField('${bodyId}', this)">Copy</button>
+          <button class="aiw-act-btn save-tpl" onclick="aiwSaveToTemplates(${idx})">Save as Template</button>
+        </div>
+      </div>
+      <div class="aiw-card-body">
+        ${subject ? `<div class="aiw-subject-line"><strong>Subject:</strong> <span id="${subjectId}">${safeSubject}</span></div>` : ''}
+        <div class="aiw-message-text" id="${bodyId}">${safeBody}</div>
+        <div class="aiw-char-badge">${charCount} characters · ${wordCount} words</div>
+      </div>
+    </div>`;
+}
+
+// ── Copy helpers ─────────────────────────────────────────
+function aiwCopyField(elId, btn) {
   const el = document.getElementById(elId);
   if (!el) return;
   const text = el.textContent;
-  const orig = btn.textContent;
   navigator.clipboard.writeText(text).catch(() => {
     const t = document.createElement('textarea');
     t.value = text; document.body.appendChild(t); t.select();
     document.execCommand('copy'); document.body.removeChild(t);
   });
-  btn.textContent = '✓ Copied!';
+  const orig = btn.textContent;
+  btn.textContent = 'Copied!';
   btn.classList.add('copied');
-  setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2200);
-  toast('Copied to clipboard', 'ok');
+  setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 2000);
+  toast('Copied to clipboard!', 'ok');
 }
 
 function aiwCopyAll() {
-  const parts = [];
-  Object.entries(AIW.lastMsgs).forEach(([ch, versions]) => {
-    const name = { email:'EMAIL', linkedin:'LINKEDIN', whatsapp:'WHATSAPP' }[ch] || ch.toUpperCase();
-    versions.forEach((v, i) => parts.push(`── ${name} VERSION ${i+1} ──\n${v}`));
-  });
-  const text = parts.join('\n\n');
+  if (!aiwState.lastResults.length) return;
+  const text = aiwState.lastResults.map((v,i) => `--- Version ${i+1} ---\n${v}`).join('\n\n');
   navigator.clipboard.writeText(text).catch(() => {
     const t = document.createElement('textarea');
     t.value = text; document.body.appendChild(t); t.select();
     document.execCommand('copy'); document.body.removeChild(t);
   });
-  toast(`All ${parts.length} messages copied!`, 'ok');
+  toast('All 3 versions copied!', 'ok');
 }
 
-// ── Save to Templates (if Templates tab exists) ───────────
-function aiwSaveTpl(ch, idx) {
-  if (typeof S === 'undefined' || !S.templates) S.templates = S.templates || [];
-  const versions = AIW.lastMsgs[ch];
-  if (!versions || !versions[idx]) return;
-  const raw = versions[idx];
-  const eventName = document.getElementById('aiw-event').value.trim();
-  const isEmail = ch === 'email';
-  const { subject, body } = isEmail ? aiwSubject(raw) : { subject: null, body: raw };
-  const name = `${ch.charAt(0).toUpperCase()+ch.slice(1)} — ${eventName.substring(0,30)} (v${idx+1})`;
+// ── Save to Templates tab ────────────────────────────────
+function aiwSaveToTemplates(idx) {
+  if (typeof S === 'undefined') { toast('Templates unavailable', 'err'); return; }
   if (!S.templates) S.templates = [];
+  const raw = aiwState.lastResults[idx];
+  if (!raw) return;
+  const params = aiwState._lastParams || {};
+  const { subject, body } = params.channel === 'Email' ? aiwExtractSubject(raw) : { subject: null, body: raw };
+  const name = `${params.channel || 'Message'} — ${(params.event || 'Event').substring(0,30)} (v${idx+1})`;
   S.templates.push({
-    id: uid(), name,
-    subject: subject || `Invitation: ${eventName}`,
-    body, tag: 'outreach',
+    id: (typeof uid === 'function' ? uid() : Date.now().toString(36)),
+    name,
+    subject: subject || `Invitation to ${params.event || 'our event'}`,
+    body,
+    tag: 'outreach',
     createdAt: new Date().toISOString(),
     source: 'ai-writer'
   });
   if (typeof save === 'function') save();
-  toast('Saved to Templates!', 'ok');
+  toast('Saved to Templates tab!', 'ok');
 }
 
-// ── History ───────────────────────────────────────────────
-function aiwSaveHist(params) {
-  AIW.history.unshift(params);
-  if (AIW.history.length > 5) AIW.history.pop();
+// ── History ──────────────────────────────────────────────
+function aiwSaveHistory(params) {
+  aiwState.history.unshift(params);
+  if (aiwState.history.length > 5) aiwState.history.pop();
 }
 
-function aiwLoadHist(idx) {
-  const h = AIW.history[idx];
+function aiwLoadHistory(idx) {
+  const h = aiwState.history.slice(-5).reverse()[idx];
   if (!h) return;
+  document.getElementById('aiw-name').value     = h.name     || '';
+  document.getElementById('aiw-role').value     = h.role     || '';
+  document.getElementById('aiw-company').value  = h.company  || '';
   document.getElementById('aiw-event').value    = h.event    || '';
-  document.getElementById('aiw-desc').value     = h.desc     || '';
   document.getElementById('aiw-date').value     = h.date     || '';
   document.getElementById('aiw-time').value     = h.time     || '';
   document.getElementById('aiw-location').value = h.location || '';
-  document.getElementById('aiw-brand').value    = h.brand    || '';
-  document.getElementById('aiw-extra').value    = h.extra    || '';
-
-  // Restore pills
-  const restorePills = (containerId, values, multi) => {
-    document.querySelectorAll(`#${containerId} .aiw-pill`).forEach(p => {
-      if (multi) {
-        p.classList.toggle('on', values.includes(p.dataset.v));
-      } else {
-        p.classList.toggle('on', p.dataset.v === values);
-      }
+  document.getElementById('aiw-context').value  = h.context  || '';
+  // Re-select toggles
+  ['channel','tone','length'].forEach(group => {
+    const row = document.getElementById('aiw-' + group + '-row');
+    if (!row || !h[group]) return;
+    row.querySelectorAll('.aiw-toggle-btn').forEach(b => {
+      b.classList.toggle('sel', b.dataset.val === h[group]);
     });
-  };
-  restorePills('aiw-channel-pills',  h.channels,   true);
-  restorePills('aiw-audience-pills', h.audiences,  true);
-  restorePills('aiw-industry-pills', h.industries, true);
-  restorePills('aiw-tone-pills',     h.tone,       false);
-  restorePills('aiw-length-pills',   h.length,     false);
-  toast('Previous run loaded', 'ok');
+    aiwState[group] = h[group];
+  });
+  toast('Form loaded from history', 'ok');
 }
 
-// ── Prefill from Event (called from event detail page) ────
-function aiwPrefillFromEvent(evId) {
-  const ev = (typeof S !== 'undefined') ? S.events.find(e => e.id === evId) : null;
-  if (!ev) return;
-  document.getElementById('aiw-event').value = ev.name || '';
-  if (ev.date) {
-    try { document.getElementById('aiw-date').value = ev.date.substring(0,10); } catch(e){}
-    try {
-      if (ev.date.length > 10) {
-        const t = ev.date.substring(11,16);
-        document.getElementById('aiw-time').value = t;
-      }
-    } catch(e){}
-  }
-  if (ev.dateEnd) {
-    try {
-      const t = ev.dateEnd.substring(11,16);
-      const cur = document.getElementById('aiw-time').value;
-      if (cur) document.getElementById('aiw-time').value = cur + '–' + t;
-    } catch(e){}
-  }
-  document.getElementById('aiw-location').value = ev.region || '';
-  if (ev.client) document.getElementById('aiw-brand').value = ev.client;
-  if (ev.notes)  document.getElementById('aiw-desc').value  = ev.notes;
-  // Switch to AI Writer tab
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-aiwriter').classList.add('active');
-  document.querySelector('[onclick="switchTab(\'aiwriter\',this)"]')?.classList.add('active');
-  toast('Event loaded into AI Writer', 'ok');
-}
-
-// ── Main generate function ────────────────────────────────
-async function aiwRun() {
+// ── Main generate function ───────────────────────────────
+async function aiwGenerate() {
   if (!aiwValidate()) return;
 
   const params = {
-    event:      document.getElementById('aiw-event').value.trim(),
-    desc:       document.getElementById('aiw-desc').value.trim(),
-    date:       document.getElementById('aiw-date').value,
-    time:       document.getElementById('aiw-time').value.trim(),
-    location:   document.getElementById('aiw-location').value.trim(),
-    brand:      document.getElementById('aiw-brand').value.trim(),
-    extra:      document.getElementById('aiw-extra').value.trim(),
-    channels:   aiwGetPills('aiw-channel-pills'),
-    audiences:  aiwGetPills('aiw-audience-pills'),
-    industries: aiwGetPills('aiw-industry-pills'),
-    tone:       aiwGetPills('aiw-tone-pills')[0]   || 'professional-warm',
-    length:     aiwGetPills('aiw-length-pills')[0] || 'concise'
+    name:     document.getElementById('aiw-name').value.trim(),
+    role:     document.getElementById('aiw-role').value.trim(),
+    company:  document.getElementById('aiw-company').value.trim(),
+    event:    document.getElementById('aiw-event').value.trim(),
+    date:     document.getElementById('aiw-date').value,
+    time:     document.getElementById('aiw-time').value,
+    location: document.getElementById('aiw-location').value.trim(),
+    context:  document.getElementById('aiw-context').value.trim(),
+    channel:  aiwState.channel,
+    tone:     aiwState.tone,
+    length:   aiwState.length
   };
 
-  aiwSaveHist({ ...params });
+  aiwState._lastParams = params;
+  aiwSaveHistory({ ...params });
 
-  // UI — loading state
-  const btn = document.getElementById('aiwBtn');
-  const lbl = document.getElementById('aiwBtnLbl');
-  const spn = document.getElementById('aiwSpinner');
+  // UI: disable button + show loader
+  const btn = document.getElementById('aiwGenBtn');
+  const btnTxt = document.getElementById('aiwGenBtnTxt');
   btn.disabled = true;
-  lbl.textContent = 'Generating…';
-  spn.style.display = 'block';
+  btnTxt.textContent = 'Generating…';
   const stepTimer = aiwShowLoading();
 
   try {
     const prompt = aiwBuildPrompt(params);
 
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 3000,
-        messages: [{ role: 'user', content: prompt }]
+        max_tokens: 2000,
+        messages: [{
+          role: 'user',
+          content: prompt
+        }]
       })
     });
 
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error?.message || `API error ${response.status}`);
+    }
+
+    const data = await response.json();
+    const rawText = (data.content || [])
+      .filter(c => c.type === 'text')
+      .map(c => c.text)
+      .join('');
+
     clearInterval(stepTimer);
 
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      throw new Error(errData.error?.message || `API error ${res.status}`);
-    }
+    const versions = aiwParseVersions(rawText);
+    if (!versions.length) throw new Error('No messages were returned. Please try again.');
 
-    const data = await res.json();
-    const rawText = (data.content || []).filter(c => c.type === 'text').map(c => c.text).join('');
+    // Pad to 3 if fewer returned
+    while (versions.length < 3) versions.push(versions[versions.length - 1] || '');
 
-    const msgs = aiwParse(rawText, params.channels);
-
-    if (!Object.keys(msgs).length) {
-      throw new Error('No messages were returned. The AI may have hit a formatting issue — please try again.');
-    }
-
-    aiwRenderResults(msgs, params);
-
-    const total = Object.values(msgs).reduce((a,v) => a + v.length, 0);
-    toast(`${total} messages generated!`, 'ok');
+    aiwRenderResults(versions, params);
+    toast(`3 messages generated!`, 'ok');
 
   } catch (err) {
     clearInterval(stepTimer);
-    document.getElementById('aiw-out').innerHTML = `
-      <div class="aiw-err-box">
+    const panel = document.getElementById('aiw-results-panel');
+    panel.innerHTML = `
+      <div class="aiw-error-box">
         <strong>Generation failed</strong><br><br>
-        ${err.message || 'Unknown error. Please check your connection.'}<br><br>
-        <button class="aiw-btn-sm" style="margin-top:.5rem" onclick="aiwRun()">Try Again</button>
+        ${err.message || 'Unknown error. Please check your connection and try again.'}<br><br>
+        <button class="aiw-act-btn" onclick="aiwGenerate()" style="margin-top:.5rem">Try Again</button>
       </div>`;
-    toast('Generation failed', 'err');
+    toast('Generation failed — see error panel', 'err');
   } finally {
     btn.disabled = false;
-    lbl.textContent = 'Generate Messages';
-    spn.style.display = 'none';
+    btnTxt.textContent = 'Generate 3 Versions';
   }
 }
 
-/* ════ END AI WRITER ════ */
+// ── Pre-fill from event detail (called by event page) ────
+function aiwPrefillFromEvent(evId) {
+  const ev = S.events.find(e => e.id === evId);
+  if (!ev) return;
+  document.getElementById('aiw-event').value = ev.name || '';
+  if (ev.date) {
+    try {
+      document.getElementById('aiw-date').value = ev.date.substring(0, 10);
+      if (ev.date.length > 10) document.getElementById('aiw-time').value = ev.date.substring(11, 16);
+    } catch(e) {}
+  }
+  document.getElementById('aiw-location').value = ev.region || '';
+  // Switch to AI Writer tab
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-aiwriter').classList.add('active');
+  document.querySelector('[onclick="switchTab(\'aiwriter\',this)"]')?.classList.add('active');
+  toast('Event loaded into AI Writer!', 'ok');
+}
+// ═══════════════════════════════════════════════════════════
+//  END AI WRITER
+// ═══════════════════════════════════════════════════════════
 </script>
 </body>
 </html>
