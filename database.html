@@ -2038,336 +2038,134 @@ setTimeout(() => {
   }
 }, 8000);
 
-// ═══════════════════════════════════════════════════════════
-// ▶▶▶  ATTENTION PANEL
-// ═══════════════════════════════════════════════════════════
-
-function renderAttention() {
-  const now = new Date();
-  const todayStr = now.toISOString().split('T')[0];
-  const weekMs = 7 * 24 * 3600 * 1000;
-
-  // ── Overdue follow-ups: leads in "waiting" status with tasks overdue, or leads without recent contact
-  const overdueFollowups = S.leads.filter(l => {
-    if (l.status === 'rejected') return false;
-    if (l.status === 'deal') return false;
-    // Waiting leads older than 7 days with no follow-up
-    if (l.status === 'waiting') {
-      const created = l.createdAt ? new Date(l.createdAt) : null;
-      if (created && (now - created) > weekMs) return true;
-    }
-    // Leads status stuck in "leads" for > 14 days
-    if (l.status === 'leads') {
-      const created = l.createdAt ? new Date(l.createdAt) : null;
-      if (created && (now - created) > 14 * 24 * 3600 * 1000) return true;
-    }
-    return false;
-  });
-
-  // ── Overdue tasks
-  const overdueTasks = S.tasks.filter(t => !t.done && t.due && t.due < todayStr);
-
-  // ── Events this week
-  const eventsThisWeek = S.events.filter(ev => {
-    if (!ev.date) return false;
-    const d = new Date(ev.date);
-    return d >= now && d <= new Date(now.getTime() + weekMs);
-  });
-
-  // ── Active deals
-  const activeDeals = S.leads.filter(l => l.status === 'deal');
-
-  // ── Events within 3 days
-  const eventsSoon = S.events.filter(ev => {
-    if (!ev.date || ev.stage === 'delivered') return false;
-    const d = new Date(ev.date);
-    const diff = d - now;
-    return diff > 0 && diff < 3 * 24 * 3600 * 1000;
-  });
-
-  // Update hero numbers
-  document.getElementById('attn-overdue').textContent = overdueFollowups.length + overdueTasks.length;
-  document.getElementById('attn-tasks').textContent = overdueTasks.length;
-  document.getElementById('attn-events').textContent = eventsThisWeek.length;
-  document.getElementById('attn-deals').textContent = activeDeals.length;
-
-  const total = overdueFollowups.length + overdueTasks.length + eventsSoon.length;
-  document.getElementById('attnBadge').textContent = total;
-
-  // Update tab badge
-  const tabBtn = document.getElementById('tab-btn-attention');
-  if (tabBtn && total > 0) tabBtn.style.color = 'var(--red)';
-
-  const grid = document.getElementById('attnGrid');
-
-  const makeCard = (title, icon, colorClass, items, emptyMsg) => {
-    const countHtml = items.length
-      ? `<span class="attn-card-count ${colorClass}">${items.length}</span>`
-      : `<span class="attn-card-count green">✓</span>`;
-    const itemsHtml = items.length
-      ? items.map(i => `
-          <div class="attn-item" onclick="${i.action||''}">
-            <div class="attn-item-dot ${i.color||colorClass}"></div>
-            <div class="attn-item-body">
-              <div class="attn-item-label">${i.label}</div>
-              <div class="attn-item-sub">${i.sub||''}</div>
-            </div>
-            <div class="attn-item-age">${i.age||''}</div>
-          </div>`).join('')
-      : `<div class="attn-empty">${emptyMsg}</div>`;
-    return `<div class="attn-card">
-      <div class="attn-card-head">
-        <span class="attn-card-icon">${icon}</span>
-        <span class="attn-card-title">${title}</span>
-        ${countHtml}
-      </div>
-      ${itemsHtml}
-    </div>`;
-  };
-
-  const daysSince = (iso) => {
-    if (!iso) return '';
-    const d = Math.floor((now - new Date(iso)) / 86400000);
-    return d === 0 ? 'today' : d === 1 ? '1d ago' : `${d}d ago`;
-  };
-
-  const daysUntil = (dateStr) => {
-    if (!dateStr) return '';
-    const d = Math.ceil((new Date(dateStr) - now) / 86400000);
-    return d === 0 ? 'today' : d === 1 ? 'tomorrow' : `in ${d}d`;
-  };
-
-  // Build overdue follow-up items
-  const followupItems = overdueFollowups.slice(0,6).map(l => {
-    const ev = S.events.find(e => e.id === l.eventId);
-    return {
-      label: `${l.firstName} ${l.lastName}${l.company ? ' · '+l.company : ''}`,
-      sub: `Status: ${l.status.toUpperCase()} · ${ev ? ev.name : 'Unknown event'}`,
-      age: daysSince(l.createdAt),
-      color: l.status === 'waiting' ? 'red' : 'yellow',
-      action: ev ? `openEventDetail('${l.eventId}')` : ''
-    };
-  });
-
-  // Overdue tasks
-  const taskItems = overdueTasks.slice(0,6).map(t => ({
-    label: t.text,
-    sub: `Due: ${fmtDate(t.due)} · Priority: ${(t.prio||'').toUpperCase()}`,
-    age: daysUntil(t.due),
-    color: t.prio === 'high' ? 'red' : 'yellow',
-    action: "switchTab('tasks',document.querySelector('[onclick=\"switchTab(\\'tasks\\',this)\"]'))"
-  }));
-
-  // Events soon
-  const eventSoonItems = eventsSoon.slice(0,5).map(ev => {
-    const leads = S.leads.filter(l => l.eventId === ev.id);
-    const checked = leads.filter(l => l.checkedIn).length;
-    return {
-      label: ev.name,
-      sub: `${fmtDT(ev.date)} · ${leads.length} leads · ${checked} checked in`,
-      age: daysUntil(ev.date),
-      color: 'orange',
-      action: `openEventDetail('${ev.id}')`
-    };
-  });
-
-  // Leads stuck in pipeline
-  const stuckItems = S.leads.filter(l=>l.status==='leads'&&l.createdAt&&(now-new Date(l.createdAt))>14*24*3600*1000).slice(0,5).map(l => {
-    const ev = S.events.find(e=>e.id===l.eventId);
-    return {
-      label: `${l.firstName} ${l.lastName} · ${l.status.toUpperCase()}`,
-      sub: ev ? ev.name : '',
-      age: daysSince(l.createdAt),
-      color: 'yellow',
-      action: ev ? `openEventDetail('${l.eventId}')` : ''
-    };
-  });
-
-  const allFollow = [...followupItems, ...taskItems.slice(0,3)];
-
-  grid.innerHTML = [
-    makeCard('Overdue Follow-Ups', '🔴', 'red', allFollow.slice(0,6), 'All follow-ups are on track'),
-    makeCard('Overdue Tasks', '⚡', 'yellow', taskItems, 'No overdue tasks'),
-    makeCard('Events This Week', '📅', 'blue', eventSoonItems, 'No events in the next 3 days'),
-    makeCard('Stuck in Pipeline', '⏳', 'yellow', stuckItems, 'No stale leads in pipeline')
-  ].join('');
-}
 
 // ═══════════════════════════════════════════════════════════
 // ▶▶▶  FINANCE DASHBOARD
 // ═══════════════════════════════════════════════════════════
 
-const FIN_CATS = ['venue','catering','travel','marketing','tech','staff','misc'];
-let _finCat = 'venue';
+// ═══════════════════════════════════════════════════════════
+// ▶▶▶  PERSONAL FINANCE (No event dependency)
+// ═══════════════════════════════════════════════════════════
 
-function finSelCat(el) {
-  document.querySelectorAll('.fin-quick-cat').forEach(b=>b.classList.remove('sel'));
-  el.classList.add('sel');
-  _finCat = el.dataset.v;
-}
+let personalFilter = 'all';
 
-function finGetEvId() { return document.getElementById('finEvSelect').value; }
-
-function finGetRecord(evId) {
-  if (!evId) return null;
-  let rec = S.finances.find(f=>f.eventId===evId);
-  if (!rec) { rec={id:uid(),eventId:evId,revenue:0,attendees:0,expenses:[]}; S.finances.push(rec); }
-  return rec;
-}
-
-function populateFinEventSelect() {
-  const sel = document.getElementById('finEvSelect');
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">Select Event…</option>';
-  S.events.forEach(ev => {
-    const opt = document.createElement('option');
-    opt.value = ev.id; opt.textContent = ev.name;
-    sel.appendChild(opt);
+function renderPersonalFinance() {
+  const transactions = S.personalTransactions || [];
+  
+  // Calculate totals
+  let totalIncome = 0, totalExpense = 0;
+  transactions.forEach(t => {
+    if (t.type === 'income') totalIncome += t.amount;
+    else totalExpense += t.amount;
   });
-  if (cur) sel.value = cur;
+  const balance = totalIncome - totalExpense;
+  
+  // Update summary cards
+  document.getElementById('personalBalance').innerHTML = `€${balance.toFixed(2)}`;
+  document.getElementById('personalIncome').innerHTML = `€${totalIncome.toFixed(2)}`;
+  document.getElementById('personalExpenses').innerHTML = `€${totalExpense.toFixed(2)}`;
+  
+  // Filter and render transactions
+  let filtered = [...transactions].sort((a,b) => new Date(b.date) - new Date(a.date));
+  if (personalFilter !== 'all') {
+    filtered = filtered.filter(t => t.type === personalFilter);
+  }
+  
+  const tbody = document.getElementById('personalTransactionsBody');
+  if (!filtered.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted)">No transactions yet — add your first one</td></tr>`;
+    return;
+  }
+  
+  tbody.innerHTML = filtered.map(tx => `
+    <tr>
+      <td style="font-family:monospace;font-size:.7rem">${tx.date ? tx.date.slice(0,10) : '—'}</td>
+      <td style="font-weight:500">${escapeHtml(tx.desc)}</td>
+      <td><span class="fin-cat-pill">${escapeHtml(tx.category || 'General')}</span></td>
+      <td class="${tx.type === 'income' ? 'income-amount' : 'expense-amount'}">${tx.type === 'income' ? '+' : '-'}€${Math.abs(tx.amount).toFixed(2)}</td>
+      <td><button class="fin-del-btn" onclick="deletePersonalTransaction('${tx.id}')">✕</button></td>
+    </tr>
+  `).join('');
 }
 
-function renderFinance() {
-  populateFinEventSelect();
-  const evId = finGetEvId();
-  const rec = evId ? finGetRecord(evId) : null;
-
-  const fmt = n => '€' + (n||0).toLocaleString('en-GB',{minimumFractionDigits:0,maximumFractionDigits:0});
-  const expenses = rec ? rec.expenses : [];
-  const totalActual = expenses.reduce((a,e)=>a+(parseFloat(e.actual)||0),0);
-  const totalPlanned = expenses.reduce((a,e)=>a+(parseFloat(e.planned)||0),0);
-  const revenue = parseFloat(rec?.revenue||0);
-  const attendees = parseInt(rec?.attendees||0)||1;
-  const pl = revenue - totalActual;
-
-  // Hero cards
-  document.getElementById('fin-revenue').textContent = fmt(revenue);
-  document.getElementById('fin-costs').textContent = fmt(totalActual);
-  document.getElementById('fin-pl').textContent = (pl>=0?'+':'')+fmt(pl);
-  document.getElementById('fin-per-att-rev').textContent = attendees>1?`${fmt(revenue/attendees)} / attendee`:'Set attendees →';
-  document.getElementById('fin-per-att-cost').textContent = attendees>1?`${fmt(totalActual/attendees)} / attendee`:'';
-  document.getElementById('fin-margin').textContent = revenue>0?`${Math.round((pl/revenue)*100)}% margin`:'No revenue set';
-
-  const plCard = document.getElementById('fin-pl-card');
-  plCard.className = 'fin-hero-card ' + (pl>0?'profit':pl<0?'loss':'');
-
-  // Revenue / attendees inputs
-  if (rec) {
-    document.getElementById('finRevInput').value = rec.revenue||'';
-    document.getElementById('finAttendeesInput').value = rec.attendees||'';
-  } else {
-    document.getElementById('finRevInput').value = '';
-    document.getElementById('finAttendeesInput').value = '';
+function addPersonalTransaction(desc, amount, type, category) {
+  if (!desc || !amount || amount <= 0) {
+    toast('Description and valid amount required', 'err');
+    return false;
   }
-
-  // Expenses table
-  const tbody = document.getElementById('finExpBody');
-  if (!expenses.length) {
-    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:2rem;font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--light)">NO EXPENSES YET — ADD ONE →</td></tr>`;
-  } else {
-    tbody.innerHTML = expenses.map(e => {
-      const actual = parseFloat(e.actual)||0;
-      const planned = parseFloat(e.planned)||0;
-      const variance = actual - planned;
-      const over = planned > 0 && actual > planned;
-      return `<tr>
-        <td><span class="fin-cat-pill">${e.category||'misc'}</span></td>
-        <td style="font-weight:600">${e.desc}${over?'<span class="fin-over-badge">OVER</span>':''}</td>
-        <td class="fin-td-mono">${planned?fmt(planned):'—'}</td>
-        <td class="fin-td-mono ${over?'fin-td-over':'fin-td-ok'}">${actual?fmt(actual):'—'}</td>
-        <td class="fin-td-mono ${variance>0?'fin-td-over':variance<0?'fin-td-ok':''}">${variance!==0?(variance>0?'+':'')+fmt(variance):'—'}</td>
-        <td><button class="fin-del-btn" onclick="finDelExp('${evId}','${e.id}')">✕</button></td>
-      </tr>`;
-    }).join('');
-  }
-
-  // Category breakdown bars
-  const catTotals = {};
-  FIN_CATS.forEach(c=>catTotals[c]={planned:0,actual:0});
-  expenses.forEach(e=>{
-    const c=e.category||'misc';
-    if(catTotals[c]){catTotals[c].planned+=parseFloat(e.planned)||0;catTotals[c].actual+=parseFloat(e.actual)||0;}
+  if (!S.personalTransactions) S.personalTransactions = [];
+  S.personalTransactions.push({
+    id: uid(),
+    date: new Date().toISOString(),
+    desc: desc.trim(),
+    amount: parseFloat(amount),
+    type: type,
+    category: category || 'General'
   });
-  const maxVal = Math.max(...Object.values(catTotals).map(v=>Math.max(v.planned,v.actual)),1);
-  const barsEl = document.getElementById('finCatBars');
-  const activeCats = FIN_CATS.filter(c=>catTotals[c].planned>0||catTotals[c].actual>0);
-  if(!activeCats.length){barsEl.innerHTML='<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.65rem;color:var(--light);padding:.5rem 0">No expenses to chart</div>';return;}
-  barsEl.innerHTML = activeCats.map(c=>{
-    const {planned,actual}=catTotals[c];
-    const over=planned>0&&actual>planned;
-    return `<div class="fin-bar-row">
-      <div class="fin-bar-label"><span style="text-transform:capitalize">${c}</span><span>${fmt(actual)}${planned?` / ${fmt(planned)}`:''}</span></div>
-      <div class="fin-bar"><div class="fin-bar-fill${over?' over':''}" style="width:${Math.min(100,(actual/maxVal)*100)}%"></div></div>
-    </div>`;
-  }).join('');
-
-  // Summary sidebar
-  const summaryEl = document.getElementById('finSummaryRows');
-  summaryEl.innerHTML = [
-    {k:'Revenue',v:fmt(revenue)},
-    {k:'Total Planned',v:fmt(totalPlanned)},
-    {k:'Total Actual',v:fmt(totalActual)},
-    {k:'Variance',v:(totalActual-totalPlanned>0?'+':'')+fmt(totalActual-totalPlanned)},
-    {k:'P/L',v:(pl>=0?'+':'')+fmt(pl)},
-    {k:'Attendees',v:attendees>1?attendees:'Not set'},
-  ].map(r=>`<div class="fin-summary-row"><span class="fin-summary-key">${r.k}</span><span class="fin-summary-val">${r.v}</span></div>`).join('');
-}
-
-function finSaveRevenue() {
-  const evId = finGetEvId(); if(!evId)return;
-  const rec = finGetRecord(evId);
-  rec.revenue = parseFloat(document.getElementById('finRevInput').value)||0;
-  rec.attendees = parseInt(document.getElementById('finAttendeesInput').value)||0;
-  save(); renderFinance();
-}
-
-function finSaveExp() {
-  const evId = finGetEvId();
-  if(!evId){toast('Select an event first','err');return;}
-  const desc = document.getElementById('finDesc').value.trim();
-  if(!desc){toast('Description required','err');return;}
-  const rec = finGetRecord(evId);
-  const editId = document.getElementById('finEditId').value;
-  if(editId){
-    const ex=rec.expenses.find(e=>e.id===editId);
-    if(ex){ex.category=_finCat;ex.desc=desc;ex.planned=document.getElementById('finPlanned').value;ex.actual=document.getElementById('finActual').value;}
-    toast('Expense updated','ok');
-  } else {
-    rec.expenses.push({id:uid(),category:_finCat,desc,planned:document.getElementById('finPlanned').value||0,actual:document.getElementById('finActual').value||0});
-    toast('Expense added','ok');
-  }
-  finClearForm(); save(); renderFinance();
-}
-
-function finDelExp(evId,expId){
-  const rec=finGetRecord(evId); if(!rec)return;
-  rec.expenses=rec.expenses.filter(e=>e.id!==expId);
-  save(); renderFinance(); toast('Removed');
-}
-
-function finClearForm(){
-  document.getElementById('finEditId').value='';
-  document.getElementById('finDesc').value='';
-  document.getElementById('finPlanned').value='';
-  document.getElementById('finActual').value='';
-  document.getElementById('finSideTitle').textContent='Add Expense';
-}
-
-function finFocusAdd(){ document.getElementById('finDesc').focus(); }
-
-function finDuplicateBudget(){
-  const evId = finGetEvId();
-  if(!evId){toast('Select an event to duplicate','err');return;}
-  const rec = finGetRecord(evId);
-  if(!rec.expenses.length){toast('No budget to duplicate','err');return;}
-  const newId=uid();
-  const newRec={id:newId,eventId:'__dup_'+newId,revenue:rec.revenue,attendees:rec.attendees,expenses:rec.expenses.map(e=>({...e,id:uid(),actual:0}))};
-  S.finances.push(newRec);
-  // prompt for event to attach
-  const evName=S.events.find(e=>e.id===evId)?.name||'';
-  toast(`Budget duplicated (planned costs copied, actuals cleared) — attach to a new event in Finance tab`,'ok');
   save();
+  renderPersonalFinance();
+  return true;
 }
+
+function addQuickTransaction() {
+  const desc = document.getElementById('quickDesc')?.value;
+  const amount = document.getElementById('quickAmount')?.value;
+  const type = document.getElementById('quickType')?.value;
+  const category = document.getElementById('quickCategory')?.value;
+  
+  if (addPersonalTransaction(desc, amount, type, category)) {
+    if (document.getElementById('quickDesc')) document.getElementById('quickDesc').value = '';
+    if (document.getElementById('quickAmount')) document.getElementById('quickAmount').value = '';
+    toast(`${type === 'income' ? 'Income' : 'Expense'} added`, 'ok');
+  }
+}
+
+function openTransactionModal() {
+  // Quick add is already visible, but we can show a modal if needed
+  document.getElementById('quickDesc')?.focus();
+}
+
+function deletePersonalTransaction(id) {
+  if (!S.personalTransactions) return;
+  S.personalTransactions = S.personalTransactions.filter(t => t.id !== id);
+  save();
+  renderPersonalFinance();
+  toast('Transaction deleted', 'ok');
+}
+
+function setPersonalFilter(filter) {
+  personalFilter = filter;
+  document.querySelectorAll('.fin-filter-chip').forEach(chip => {
+    chip.classList.remove('active');
+    if (chip.dataset.filter === filter) chip.classList.add('active');
+  });
+  renderPersonalFinance();
+}
+
+// Initialize personal transactions if empty
+if (!S.personalTransactions) {
+  S.personalTransactions = [
+    { id: uid(), date: new Date().toISOString(), desc: 'Freelance project', amount: 1500, type: 'income', category: 'Salary' },
+    { id: uid(), date: new Date(Date.now() - 3*86400000).toISOString(), desc: 'Groceries', amount: 85.50, type: 'expense', category: 'Food' },
+    { id: uid(), date: new Date(Date.now() - 7*86400000).toISOString(), desc: 'Gym membership', amount: 45, type: 'expense', category: 'Health' },
+    { id: uid(), date: new Date(Date.now() - 14*86400000).toISOString(), desc: 'Client payment', amount: 3200, type: 'income', category: 'Salary' },
+    { id: uid(), date: new Date(Date.now() - 2*86400000).toISOString(), desc: 'Dinner out', amount: 62.30, type: 'expense', category: 'Entertainment' }
+  ];
+}
+
+// Helper function
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
+  });
+}
+
+// Call renderPersonalFinance when finance tab is opened
+// Add this to your existing switchTab function or call it when finance tab becomes active
 
 // ═══════════════════════════════════════════════════════════
 // ▶▶▶  TIMEZONE HELPER
