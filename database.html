@@ -473,6 +473,377 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .tz-quick-cities{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.7rem;}
 .tz-quick-btn{font-family:'IBM Plex Mono',monospace;font-size:.6rem;padding:3px 9px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--bg);color:var(--muted);}
 .tz-quick-btn:hover{border-color:var(--orange);color:var(--orange);}
+   * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Main container */
+        .sm-tracker {
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 1.5rem;
+        }
+
+        /* Header */
+        .sm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.8rem;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 1rem;
+        }
+        .sm-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ec4899, #f43f5e);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-group {
+            display: flex;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 0.45rem 1.1rem;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            border: 1px solid #e2e8f0;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-pink {
+            background: #ec4899;
+            color: white;
+            border: none;
+        }
+        .btn-outline {
+            border-color: #ec4899;
+            color: #ec4899;
+            background: transparent;
+        }
+        .btn-outline:hover {
+            background: #ec4899;
+            color: white;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .kpi-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1rem;
+            border-left: 4px solid;
+            transition: 0.1s;
+            cursor: pointer;
+        }
+        .kpi-card.ig { border-left-color: #ec4899; }
+        .kpi-card.tw { border-left-color: #1da1f2; }
+        .kpi-card.li { border-left-color: #0a66c2; }
+        .kpi-card.yt { border-left-color: #ff0000; }
+        .kpi-card.tt { border-left-color: #000000; }
+        .kpi-platform {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            margin-bottom: 0.3rem;
+        }
+        .kpi-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        .kpi-sub {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            margin-top: 0.2rem;
+        }
+
+        /* Account Manager Panel */
+        .account-panel {
+            background: #f1f5f9;
+            border-radius: 20px;
+            padding: 1rem;
+            margin-bottom: 1.8rem;
+        }
+        .panel-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #475569;
+            margin-bottom: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .account-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 0.8rem;
+        }
+        .account-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 0.6rem 0.9rem;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .account-info {
+            display: flex;
+            gap: 0.8rem;
+            align-items: baseline;
+            flex-wrap: wrap;
+            flex: 2;
+        }
+        .account-platform {
+            font-weight: 700;
+            font-size: 0.8rem;
+            background: #f1f5f9;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+        }
+        .account-handle {
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #334155;
+            word-break: break-all;
+        }
+        .account-actions {
+            display: flex;
+            gap: 0.4rem;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 6px;
+            color: #64748b;
+        }
+        .icon-btn:hover {
+            background: #e2e8f0;
+        }
+        .add-form {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+        .add-form input, .add-form select {
+            padding: 0.5rem 0.8rem;
+            border-radius: 40px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.75rem;
+            background: white;
+            flex: 1;
+            min-width: 120px;
+        }
+        .add-form button {
+            background: #ec4899;
+            border: none;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Two columns layout */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        @media (max-width: 760px) {
+            .two-columns { grid-template-columns: 1fr; }
+        }
+
+        /* Posts section */
+        .post-filters {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .filter-chip {
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 0.3rem 0.9rem;
+            border-radius: 40px;
+            background: #f1f5f9;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+        }
+        .filter-chip.active {
+            background: #ec4899;
+            color: white;
+            border-color: #ec4899;
+        }
+        .post-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        .post-card {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 1rem;
+            border: 1px solid #eef2ff;
+        }
+        .post-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.7rem;
+            margin-bottom: 0.7rem;
+            flex-wrap: wrap;
+        }
+        .platform-badge {
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 0.2rem 0.7rem;
+            border-radius: 20px;
+            background: #e2e8f0;
+        }
+        .platform-badge.Instagram { background: #fce7f3; color: #db2777; }
+        .platform-badge.Twitter { background: #dbeafe; color: #1d4ed8; }
+        .platform-badge.LinkedIn { background: #e0f2fe; color: #0a66c2; }
+        .platform-badge.YouTube { background: #fee2e2; color: #dc2626; }
+        .platform-badge.TikTok { background: #f1f5f9; color: #0f172a; }
+        .post-content {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-bottom: 0.6rem;
+            word-break: break-word;
+        }
+        .post-meta {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            font-size: 0.7rem;
+            color: #475569;
+        }
+        .stat {
+            background: #eef2ff;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+        }
+        .delete-post {
+            background: none;
+            border: none;
+            font-size: 1rem;
+            cursor: pointer;
+            color: #94a3b8;
+            margin-left: auto;
+        }
+        .delete-post:hover { color: #ef4444; }
+
+        /* Sidebar widgets */
+        .insight-box, .goal-box, .caption-box {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .widget-title {
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #475569;
+            margin-bottom: 0.8rem;
+        }
+        .platform-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.4rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .goal-item {
+            margin-bottom: 0.6rem;
+        }
+        .goal-bar {
+            height: 5px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            margin-top: 0.3rem;
+            overflow: hidden;
+        }
+        .goal-fill {
+            background: #ec4899;
+            height: 100%;
+            width: 0%;
+            border-radius: 4px;
+        }
+        textarea, select, input {
+            font-family: inherit;
+            font-size: 0.8rem;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            padding: 0.5rem;
+            width: 100%;
+            margin-bottom: 0.6rem;
+        }
+        .caption-output {
+            background: white;
+            border-radius: 12px;
+            padding: 0.7rem;
+            font-size: 0.8rem;
+            margin-top: 0.6rem;
+            display: none;
+            border: 1px solid #e2e8f0;
+        }
+        .small-btn {
+            background: #f1f5f9;
+            border: none;
+            padding: 0.3rem 0.7rem;
+            border-radius: 30px;
+            font-size: 0.65rem;
+            cursor: pointer;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #0f172a;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            z-index: 999;
+            animation: fadeOut 2s ease forwards;
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: translateY(0); }
+            70% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
 </style>
 </head>
 <body>
@@ -510,6 +881,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   <div class="tab" onclick="switchTab('timer',this)">Timer</div>
   <div class="tab" onclick="switchTab('tasks',this)">Tasks</div>
   <div class="tab" onclick="switchTab('workout',this)">Workout</div>
+  <div class="tab" onclick="switchTab('social media',this)">Social Media</div>
 </div>
 
 <div class="page active" id="tab-events">
@@ -688,6 +1060,104 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 
 <div class="toasts" id="toasts"></div>
 
+  <div class="sm-tracker" id="socialTrackerApp">
+    <!-- Header -->
+    <div class="sm-header">
+        <div class="sm-title">📱 Social Media Tracker</div>
+        <div class="btn-group">
+            <button class="btn btn-outline" onclick="openGoalsModal()">🎯 Goals</button>
+            <button class="btn btn-pink" onclick="openPostModal()">+ New Post</button>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid" id="kpiContainer"></div>
+
+    <!-- Account Manager Panel -->
+    <div class="account-panel">
+        <div class="panel-title">
+            <span>📌 MY SOCIAL ACCOUNTS</span>
+            <span class="badge" id="accountCount">0</span>
+        </div>
+        <div class="account-list" id="accountList"></div>
+        <div class="add-form">
+            <select id="newPlatform">
+                <option>Instagram</option><option>Twitter</option><option>LinkedIn</option><option>YouTube</option><option>TikTok</option>
+            </select>
+            <input type="text" id="newHandle" placeholder="@username or profile URL">
+            <button onclick="addAccount()">+ Add Account</button>
+        </div>
+    </div>
+
+    <!-- Two columns: posts + sidebar -->
+    <div class="two-columns">
+        <!-- left: posts -->
+        <div>
+            <div class="post-filters" id="filterContainer"></div>
+            <div class="post-list" id="postList"></div>
+        </div>
+
+        <!-- right sidebar -->
+        <div>
+            <div class="insight-box">
+                <div class="widget-title">📊 Platform Activity</div>
+                <div id="platformBreakdown"></div>
+            </div>
+            <div class="goal-box">
+                <div class="widget-title">🎯 Goals Progress</div>
+                <div id="goalsList"></div>
+            </div>
+            <div class="caption-box">
+                <div class="widget-title">✨ AI Caption Generator</div>
+                <select id="captionPlatform">
+                    <option>Instagram</option><option>Twitter</option><option>LinkedIn</option><option>TikTok</option>
+                </select>
+                <textarea id="captionTopic" rows="2" placeholder="Describe your post idea..."></textarea>
+                <select id="captionTone">
+                    <option>Professional</option><option>Casual</option><option>Energetic</option><option>Witty</option>
+                </select>
+                <button class="btn btn-pink" style="width:100%; margin-top:0.2rem;" onclick="generateCaption()">✨ Generate Caption</button>
+                <div id="captionResult" class="caption-output"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODALS (simple inline) -->
+<div id="postModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000;">
+    <div style="background:white; max-width:500px; width:90%; border-radius:24px; padding:1.5rem;">
+        <h3 style="margin-bottom:1rem;">New Social Post</h3>
+        <select id="modalPlatform" style="width:100%; margin-bottom:0.8rem;">
+            <option>Instagram</option><option>Twitter</option><option>LinkedIn</option><option>YouTube</option><option>TikTok</option>
+        </select>
+        <textarea id="modalContent" rows="3" placeholder="Post caption / content..."></textarea>
+        <select id="modalStatus" style="margin-top:0.5rem;">
+            <option value="published">Published</option><option value="scheduled">Scheduled</option><option value="draft">Draft</option>
+        </select>
+        <input type="datetime-local" id="modalDate" style="margin-top:0.5rem;">
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.5rem; margin-top:0.8rem;">
+            <input type="number" id="modalLikes" placeholder="Likes" value="0">
+            <input type="number" id="modalComments" placeholder="Comments" value="0">
+            <input type="number" id="modalShares" placeholder="Shares" value="0">
+        </div>
+        <input type="text" id="modalTags" placeholder="#tags" style="margin-top:0.5rem;">
+        <div style="display:flex; gap:0.7rem; margin-top:1.2rem; justify-content:flex-end;">
+            <button class="btn" onclick="closePostModal()">Cancel</button>
+            <button class="btn btn-pink" onclick="savePost()">Save Post</button>
+        </div>
+    </div>
+</div>
+
+<div id="goalsModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000;">
+    <div style="background:white; max-width:400px; width:90%; border-radius:24px; padding:1.5rem;">
+        <h3>Set Likes Goals</h3>
+        <div id="goalInputs"></div>
+        <div style="display:flex; gap:0.7rem; margin-top:1.2rem; justify-content:flex-end;">
+            <button class="btn" onclick="closeGoalsModal()">Cancel</button>
+            <button class="btn btn-pink" onclick="saveGoals()">Save Goals</button>
+        </div>
+    </div>
+</div>
 <script>
 // Constants
 const BASE_URL = 'https://101webstudio.github.io/Database/database.html';
@@ -1407,6 +1877,281 @@ function renderTimezone() {
   _tzInterval = setInterval(doRender, 10000);
 }
 
+ // ---------- DATA (localStorage) ----------
+    let socialData = {
+        accounts: [],
+        posts: [],
+        goals: {}
+    };
+
+    function loadData() {
+        const stored = localStorage.getItem('social_tracker_data');
+        if(stored) {
+            try {
+                const parsed = JSON.parse(stored);
+                socialData.accounts = parsed.accounts || [];
+                socialData.posts = parsed.posts || [];
+                socialData.goals = parsed.goals || {};
+            } catch(e) {}
+        }
+        if(!socialData.accounts.length) {
+            // demo accounts
+            socialData.accounts = [
+                { id: '1', platform: 'Instagram', handle: '@tech_events_oslo' },
+                { id: '2', platform: 'Twitter', handle: '@itreader_daily' }
+            ];
+        }
+        if(!socialData.posts.length) {
+            socialData.posts = [
+                { id: 'p1', platform: 'Instagram', content: '🚀 Oslo Tech Summit is coming! Join us.', status: 'published', date: new Date().toISOString(), likes: 245, comments: 12, shares: 8, tags: '#tech' },
+                { id: 'p2', platform: 'Twitter', content: 'New blog post: Firebase tips for 2026', status: 'published', date: new Date(Date.now() - 86400000).toISOString(), likes: 89, comments: 4, shares: 23, tags: '#firebase' }
+            ];
+        }
+        saveData();
+    }
+    function saveData() {
+        localStorage.setItem('social_tracker_data', JSON.stringify({ accounts: socialData.accounts, posts: socialData.posts, goals: socialData.goals }));
+    }
+
+    // helpers
+    function showToast(msg) {
+        let toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+    function formatNumber(n) { if(n>=1000000) return (n/1000000).toFixed(1)+'M'; if(n>=1000) return (n/1000).toFixed(1)+'K'; return String(n||0); }
+
+    // render all UI
+    function renderAll() {
+        renderKPIs();
+        renderAccountList();
+        renderPosts();
+        renderPlatformBreakdown();
+        renderGoalsProgress();
+        renderFilterChips();
+    }
+
+    function renderKPIs() {
+        const platforms = ['Instagram','Twitter','LinkedIn','YouTube','TikTok'];
+        const container = document.getElementById('kpiContainer');
+        container.innerHTML = platforms.map(plat => {
+            const platPosts = socialData.posts.filter(p => p.platform === plat);
+            const totalLikes = platPosts.reduce((sum,p) => sum + (p.likes||0), 0);
+            const cls = plat.toLowerCase().slice(0,2);
+            return `<div class="kpi-card ${cls}" onclick="filterByPlatform('${plat}')">
+                        <div class="kpi-platform">${plat}</div>
+                        <div class="kpi-value">${formatNumber(totalLikes)}</div>
+                        <div class="kpi-sub">${platPosts.length} posts</div>
+                    </div>`;
+        }).join('');
+    }
+
+    function renderAccountList() {
+        const container = document.getElementById('accountList');
+        const countSpan = document.getElementById('accountCount');
+        if(!socialData.accounts.length) {
+            container.innerHTML = '<div style="padding:0.8rem; text-align:center; color:#64748b;">No accounts yet. Add above.</div>';
+            countSpan.innerText = '0';
+            return;
+        }
+        countSpan.innerText = socialData.accounts.length;
+        container.innerHTML = socialData.accounts.map(acc => `
+            <div class="account-row">
+                <div class="account-info">
+                    <span class="account-platform">${acc.platform}</span>
+                    <span class="account-handle">${escapeHtml(acc.handle)}</span>
+                </div>
+                <div class="account-actions">
+                    <button class="icon-btn" onclick="editAccount('${acc.id}')">✎</button>
+                    <button class="icon-btn" onclick="deleteAccount('${acc.id}')">🗑</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function addAccount() {
+        const platform = document.getElementById('newPlatform').value;
+        const handle = document.getElementById('newHandle').value.trim();
+        if(!handle) { showToast("Enter handle"); return; }
+        socialData.accounts.push({ id: Date.now().toString(36) + Math.random(), platform, handle });
+        document.getElementById('newHandle').value = '';
+        saveData();
+        renderAll();
+        showToast("Account added");
+    }
+    function editAccount(id) {
+        const acc = socialData.accounts.find(a => a.id === id);
+        if(!acc) return;
+        const newHandle = prompt("Edit handle/URL:", acc.handle);
+        if(newHandle && newHandle.trim()) { acc.handle = newHandle.trim(); saveData(); renderAll(); showToast("Updated"); }
+    }
+    function deleteAccount(id) {
+        socialData.accounts = socialData.accounts.filter(a => a.id !== id);
+        saveData();
+        renderAll();
+        showToast("Account removed");
+    }
+
+    // posts
+    let currentFilter = 'all';
+    function renderPosts() {
+        let filtered = socialData.posts.filter(p => {
+            if(currentFilter === 'scheduled') return p.status === 'scheduled';
+            if(currentFilter === 'draft') return p.status === 'draft';
+            if(currentFilter !== 'all') return p.platform === currentFilter;
+            return true;
+        });
+        filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
+        const container = document.getElementById('postList');
+        if(!filtered.length) { container.innerHTML = '<div style="padding:2rem; text-align:center; color:#94a3b8;">No posts yet ✨</div>'; return; }
+        container.innerHTML = filtered.map(p => `
+            <div class="post-card">
+                <div class="post-header">
+                    <span class="platform-badge ${p.platform}">${p.platform}</span>
+                    <span class="stat status">${p.status || 'published'}</span>
+                    <button class="delete-post" onclick="deletePost('${p.id}')">✕</button>
+                </div>
+                <div class="post-content">${escapeHtml(p.content || '').replace(/\n/g,'<br>')}</div>
+                <div class="post-meta">
+                    ${p.likes ? `<span class="stat">👍 ${formatNumber(p.likes)}</span>` : ''}
+                    ${p.comments ? `<span class="stat">💬 ${formatNumber(p.comments)}</span>` : ''}
+                    ${p.shares ? `<span class="stat">🔄 ${formatNumber(p.shares)}</span>` : ''}
+                    ${p.tags ? `<span>${escapeHtml(p.tags)}</span>` : ''}
+                    <span>📅 ${p.date ? new Date(p.date).toLocaleDateString() : ''}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function deletePost(id) {
+        socialData.posts = socialData.posts.filter(p => p.id !== id);
+        saveData();
+        renderAll();
+        showToast("Post deleted");
+    }
+
+    function openPostModal() {
+        document.getElementById('modalContent').value = '';
+        document.getElementById('modalLikes').value = 0;
+        document.getElementById('modalComments').value = 0;
+        document.getElementById('modalShares').value = 0;
+        document.getElementById('modalTags').value = '';
+        document.getElementById('modalPlatform').value = 'Instagram';
+        document.getElementById('modalStatus').value = 'published';
+        document.getElementById('modalDate').value = new Date().toISOString().slice(0,16);
+        document.getElementById('postModal').style.display = 'flex';
+    }
+    function closePostModal() { document.getElementById('postModal').style.display = 'none'; }
+    function savePost() {
+        const newPost = {
+            id: Date.now().toString(36) + Math.random(),
+            platform: document.getElementById('modalPlatform').value,
+            content: document.getElementById('modalContent').value.trim(),
+            status: document.getElementById('modalStatus').value,
+            date: document.getElementById('modalDate').value || new Date().toISOString(),
+            likes: parseInt(document.getElementById('modalLikes').value) || 0,
+            comments: parseInt(document.getElementById('modalComments').value) || 0,
+            shares: parseInt(document.getElementById('modalShares').value) || 0,
+            tags: document.getElementById('modalTags').value.trim()
+        };
+        if(!newPost.content) { showToast("Write content first"); return; }
+        socialData.posts.unshift(newPost);
+        saveData();
+        renderAll();
+        closePostModal();
+        showToast("Post saved");
+    }
+
+    function renderPlatformBreakdown() {
+        const platforms = ['Instagram','Twitter','LinkedIn','YouTube','TikTok'];
+        const container = document.getElementById('platformBreakdown');
+        const counts = {};
+        platforms.forEach(p => counts[p] = socialData.posts.filter(post => post.platform === p).length);
+        container.innerHTML = platforms.map(p => `<div class="platform-row"><span>${p}</span><span>${counts[p]} posts</span></div>`).join('');
+    }
+
+    function renderGoalsProgress() {
+        const goals = socialData.goals;
+        const container = document.getElementById('goalsList');
+        if(Object.keys(goals).length === 0) {
+            container.innerHTML = '<div style="font-size:0.7rem; color:#64748b;">No goals set. Click 🎯 Goals</div>';
+            return;
+        }
+        container.innerHTML = Object.entries(goals).map(([plat, goal]) => {
+            const posts = socialData.posts.filter(p => p.platform === plat);
+            const totalLikes = posts.reduce((sum,p) => sum + (p.likes||0), 0);
+            const percent = Math.min(100, Math.round((totalLikes / goal) * 100));
+            return `<div class="goal-item">
+                        <div style="display:flex; justify-content:space-between;"><span>${plat}</span><span>${formatNumber(totalLikes)} / ${formatNumber(goal)}</span></div>
+                        <div class="goal-bar"><div class="goal-fill" style="width:${percent}%"></div></div>
+                    </div>`;
+        }).join('');
+    }
+
+    function renderFilterChips() {
+        const container = document.getElementById('filterContainer');
+        const filters = ['all', 'Instagram', 'Twitter', 'LinkedIn', 'YouTube', 'TikTok', 'scheduled', 'draft'];
+        container.innerHTML = filters.map(f => `<div class="filter-chip ${currentFilter === f ? 'active' : ''}" onclick="setFilter('${f}')">${f === 'all' ? 'All' : f}</div>`).join('');
+    }
+    function setFilter(f) { currentFilter = f; renderPosts(); renderFilterChips(); }
+    function filterByPlatform(plat) { setFilter(plat); }
+
+    // goals modal
+    function openGoalsModal() {
+        const platforms = ['Instagram','Twitter','LinkedIn','YouTube','TikTok'];
+        const inputsHtml = platforms.map(p => `<div style="margin-bottom:0.6rem;"><label>${p} likes goal</label><input type="number" id="goal_${p}" value="${socialData.goals[p] || ''}" placeholder="0" style="width:100%;"></div>`).join('');
+        document.getElementById('goalInputs').innerHTML = inputsHtml;
+        document.getElementById('goalsModal').style.display = 'flex';
+    }
+    function closeGoalsModal() { document.getElementById('goalsModal').style.display = 'none'; }
+    function saveGoals() {
+        const platforms = ['Instagram','Twitter','LinkedIn','YouTube','TikTok'];
+        platforms.forEach(p => {
+            const val = parseInt(document.getElementById(`goal_${p}`)?.value);
+            if(val && val > 0) socialData.goals[p] = val;
+            else delete socialData.goals[p];
+        });
+        saveData();
+        renderAll();
+        closeGoalsModal();
+        showToast("Goals saved");
+    }
+
+    // ai caption (simulated)
+    function generateCaption() {
+        const platform = document.getElementById('captionPlatform').value;
+        const topic = document.getElementById('captionTopic').value.trim();
+        const tone = document.getElementById('captionTone').value;
+        if(!topic) { showToast("Describe your post idea"); return; }
+        const demoCaptions = {
+            Instagram: `✨ ${topic} — Let's make it happen! ${tone} vibes only. 🔥 Drop a ❤️ if you agree! #${platform.toLowerCase()} #growth`,
+            Twitter: `${topic} 🚀 Big things coming. ${tone} take: it's time to level up. Thoughts?`,
+            LinkedIn: `📌 ${topic}\n\nI truly believe ${tone} approach drives results. What's your strategy? Let's discuss.`,
+            TikTok: `${topic} 🔥 POV: you're ready to crush it. ${tone} energy ⚡ #fyp #trending`
+        };
+        const result = demoCaptions[platform] || `${topic} – ${tone} style. Ready to engage! ✨`;
+        const outDiv = document.getElementById('captionResult');
+        outDiv.innerText = result;
+        outDiv.style.display = 'block';
+        showToast("Caption generated");
+    }
+
+    function escapeHtml(str) { return String(str || '').replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+    // initialize
+    loadData();
+    renderAll();
+
+    // expose globals
+    window.addAccount = addAccount; window.editAccount = editAccount; window.deleteAccount = deleteAccount;
+    window.openPostModal = openPostModal; window.closePostModal = closePostModal; window.savePost = savePost;
+    window.deletePost = deletePost; window.setFilter = setFilter; window.filterByPlatform = filterByPlatform;
+    window.openGoalsModal = openGoalsModal; window.closeGoalsModal = closeGoalsModal; window.saveGoals = saveGoals;
+    window.generateCaption = generateCaption;
+
+  
 // Utils
 function fmtDate(d) { if (!d) return ''; try { return new Date(d + 'T00:00:00').toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }); } catch { return d; } }
 function fmtDT(d) { if (!d) return ''; try { const dt = new Date(d); if (isNaN(dt)) return d; return dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + (d.includes('T') ? ' · ' + dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) : ''); } catch { return d; } }
