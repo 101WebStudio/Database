@@ -52,6 +52,10 @@
 
 <!-- QR Code library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- Chart.js and jsPDF for Finance -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.1/dist/jspdf.plugin.autotable.min.js"></script>
 
 <style>
 :root{
@@ -63,7 +67,11 @@
   --red:#ef4444;--red-light:#fef2f2;
   --blue:#3b82f6;--blue-light:#eff6ff;
   --yellow:#f59e0b;--yellow-light:#fffbeb;
+  --purple:#8b5cf6;--purple-light:#f5f3ff;
   --radius:8px;--radius-sm:4px;
+  --shadow-sm:0 1px 2px 0 rgba(0,0,0,0.05);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,0.1);
+  --shadow-lg:0 10px 15px -3px rgba(0,0,0,0.1);
 }
 [data-theme="dark"]{
   --bg:#0f0e0d;--surface:#1a1714;--surface2:#231f1b;
@@ -71,6 +79,7 @@
   --text:#f5f0eb;--muted:#9a9088;--light:#4a4642;
   --orange-light:#1f1208;--green-light:#0a1f0a;
   --red-light:#1f0a0a;--blue-light:#0a0f1f;--yellow-light:#1a1400;
+  --purple-light:#1a1525;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .2s,color .2s;}
@@ -273,7 +282,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 .task-txt{font-size:.82rem;}
 .task-item.done .task-txt{text-decoration:line-through;color:var(--muted);}
 .task-meta2{display:flex;gap:.35rem;margin-top:2px;align-items:center;flex-wrap:wrap;}
-.task-date2{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--light);}
+.task-date2{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--muted);}
 .ptag{font-family:'IBM Plex Mono',monospace;font-size:.54rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:1px 5px;border:1px solid var(--border);border-radius:3px;color:var(--muted);}
 .ptag.high{border-color:var(--orange);color:var(--orange);}
 .ptag.med{border-color:var(--muted);color:var(--muted);}
@@ -433,145 +442,69 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
 
 /* ══════════════════════════════════
-   ATTENTION PANEL
+   ENHANCED FINANCE STYLES
    ══════════════════════════════════ */
-.attn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem;margin-bottom:1.5rem;}
-.attn-card{border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);overflow:hidden;}
-.attn-card-head{padding:.6rem 1rem;display:flex;align-items:center;gap:.5rem;border-bottom:1px solid var(--border);}
-.attn-card-icon{font-size:1rem;}
-.attn-card-title{font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;}
-.attn-card-count{margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:.62rem;font-weight:700;padding:1px 7px;border-radius:3px;}
-.attn-card-count.red{background:var(--red-light);color:var(--red);}
-.attn-card-count.yellow{background:var(--yellow-light);color:var(--yellow);}
-.attn-card-count.blue{background:var(--blue-light);color:var(--blue);}
-.attn-card-count.green{background:var(--green-light);color:var(--green);}
-.attn-item{padding:.55rem 1rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:.6rem;cursor:pointer;transition:background .08s;}
-.attn-item:last-child{border-bottom:none;}
-.attn-item:hover{background:var(--surface);}
-.attn-item-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:.3rem;}
-.attn-item-dot.red{background:var(--red);}
-.attn-item-dot.yellow{background:var(--yellow);}
-.attn-item-dot.blue{background:var(--blue);}
-.attn-item-dot.orange{background:var(--orange);}
-.attn-item-body{flex:1;}
-.attn-item-label{font-size:.78rem;font-weight:600;line-height:1.3;}
-.attn-item-sub{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);margin-top:1px;}
-.attn-item-age{font-family:'IBM Plex Mono',monospace;font-size:.58rem;color:var(--light);flex-shrink:0;}
-.attn-empty{padding:1.1rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--light);text-align:center;letter-spacing:1px;}
-.attn-hero{display:grid;grid-template-columns:repeat(4,1fr);gap:.6rem;margin-bottom:1.5rem;}
-.attn-hero-card{border:1.5px solid var(--border);border-radius:var(--radius);padding:.9rem 1rem;text-align:center;background:var(--bg);}
-.attn-hero-num{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.8rem;line-height:1;}
-.attn-hero-num.red{color:var(--red);}
-.attn-hero-num.yellow{color:var(--yellow);}
-.attn-hero-num.orange{color:var(--orange);}
-.attn-hero-num.green{color:var(--green);}
-.attn-hero-lbl{font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-top:.3rem;}
+.finance-container{display:flex;flex-direction:column;gap:2rem;}
 
-/* ══════════════════════════════════
-   TIMEZONE HELPER
-   ══════════════════════════════════ */
-.tz-layout{display:grid;grid-template-columns:1fr 280px;gap:1.5rem;align-items:start;}
-.tz-main{}
-.tz-cities{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.2rem;}
-.tz-city-row{border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);overflow:hidden;transition:border-color .15s;}
-.tz-city-row:hover{border-color:var(--orange);}
-.tz-city-top{display:flex;align-items:center;padding:.65rem 1rem;gap:.75rem;}
-.tz-city-name{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.85rem;flex:1;}
-.tz-city-time{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.5rem;letter-spacing:2px;}
-.tz-city-time.working{color:var(--green);}
-.tz-city-time.off{color:var(--muted);}
-.tz-city-meta{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);}
-.tz-city-del{background:none;border:none;color:var(--light);cursor:pointer;font-size:.75rem;padding:3px;transition:color .1s;}
-.tz-city-del:hover{color:var(--red);}
-.tz-city-bar-wrap{height:6px;background:var(--surface);position:relative;overflow:hidden;}
-.tz-city-bar-fill{position:absolute;top:0;left:0;height:100%;background:var(--green);opacity:.5;transition:width .5s;}
-.tz-city-bar-work{position:absolute;top:0;height:100%;background:var(--green);opacity:.25;}
-.tz-overlap-box{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:1rem;margin-bottom:1.2rem;}
-.tz-overlap-title{font-family:'IBM Plex Mono',monospace;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;}
-.tz-overlap-grid{display:flex;gap:2px;height:24px;}
-.tz-overlap-slot{flex:1;border-radius:2px;position:relative;}
-.tz-overlap-slot.all{background:var(--green);}
-.tz-overlap-slot.partial{background:var(--yellow);}
-.tz-overlap-slot.none{background:var(--surface2);}
-.tz-overlap-labels{display:flex;justify-content:space-between;margin-top:.3rem;}
-.tz-overlap-lbl{font-family:'IBM Plex Mono',monospace;font-size:.5rem;color:var(--light);}
-.tz-best-box{background:var(--orange-light);border:1.5px solid var(--orange);border-radius:var(--radius);padding:.8rem 1rem;margin-bottom:1.2rem;}
-.tz-best-title{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--orange);margin-bottom:.3rem;}
-.tz-best-time{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.95rem;color:var(--text);}
-.tz-best-sub{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);margin-top:.2rem;}
-.tz-sidebar-box{border:1.5px solid var(--border-dark);border-radius:var(--radius);overflow:hidden;background:var(--bg);position:sticky;top:80px;}
-.tz-sidebar-head{background:var(--orange);padding:.75rem 1rem;}
-.tz-sidebar-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.7rem;color:#fff;letter-spacing:2px;text-transform:uppercase;}
-.tz-sidebar-body{padding:.9rem;}
-.tz-preset-list{display:flex;flex-direction:column;gap:.4rem;margin-bottom:.8rem;}
-.tz-preset-item{display:flex;align-items:center;justify-content:space-between;padding:.42rem .65rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;transition:all .12s;background:var(--bg);}
-.tz-preset-item:hover{border-color:var(--orange);background:var(--orange-light);}
-.tz-preset-name{font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:600;}
-.tz-preset-cities{font-family:'IBM Plex Mono',monospace;font-size:.57rem;color:var(--muted);}
-.tz-preset-del{background:none;border:none;color:var(--light);cursor:pointer;font-size:.65rem;}
-.tz-preset-del:hover{color:var(--red);}
-.tz-quick-cities{display:flex;flex-wrap:wrap;gap:.35rem;margin-bottom:.7rem;}
-.tz-quick-btn{font-family:'IBM Plex Mono',monospace;font-size:.6rem;padding:3px 9px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;}
-.tz-quick-btn:hover{border-color:var(--orange);color:var(--orange);}
+/* KPI Cards */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-bottom:.5rem;}
+.kpi-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:1.2rem;transition:all .2s;}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);}
+.kpi-card.income{border-left:4px solid var(--green);}
+.kpi-card.expense{border-left:4px solid var(--red);}
+.kpi-card.profit{border-left:4px solid var(--orange);}
+.kpi-card.balance{border-left:4px solid var(--blue);}
+.kpi-label{font-size:.6rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;}
+.kpi-value{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.6rem;line-height:1.2;}
+.kpi-value.positive{color:var(--green);}
+.kpi-value.negative{color:var(--red);}
+.kpi-sub{font-size:.6rem;color:var(--muted);margin-top:.3rem;}
 
-/* ══════════════════════════════════
-   FINANCE DASHBOARD
-   ══════════════════════════════════ */
-.fin-layout{display:grid;grid-template-columns:1fr 300px;gap:1.5rem;align-items:start;}
-.fin-hero{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.5rem;}
-.fin-hero-card{border:1.5px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.2rem;background:var(--bg);}
-.fin-hero-card.highlight{background:var(--orange);border-color:var(--orange);}
-.fin-hero-card.profit{background:var(--green-light);border-color:var(--green);}
-.fin-hero-card.loss{background:var(--red-light);border-color:var(--red);}
-.fin-hero-label{font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
-.fin-hero-card.highlight .fin-hero-label{color:rgba(255,255,255,.75);}
-.fin-hero-num{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:1.8rem;line-height:1;}
-.fin-hero-card.highlight .fin-hero-num{color:#fff;}
-.fin-hero-card.profit .fin-hero-num{color:var(--green);}
-.fin-hero-card.loss .fin-hero-num{color:var(--red);}
-.fin-hero-sub{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);margin-top:.3rem;}
-.fin-hero-card.highlight .fin-hero-sub{color:rgba(255,255,255,.65);}
-.fin-ev-select{font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.38rem .65rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;cursor:pointer;transition:border-color .15s;}
-.fin-ev-select:focus{border-color:var(--orange);}
-.fin-table-wrap{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem;}
-.fin-table{width:100%;border-collapse:collapse;}
-.fin-table thead th{padding:.5rem .85rem;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:.57rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--border);background:var(--surface);white-space:nowrap;}
-.fin-table tbody tr{border-bottom:1px solid var(--border);transition:background .07s;}
-.fin-table tbody tr:last-child{border-bottom:none;}
-.fin-table tbody tr:hover{background:var(--orange-light);}
-.fin-table td{padding:.55rem .85rem;font-size:.8rem;vertical-align:middle;}
-.fin-td-mono{font-family:'IBM Plex Mono',monospace;font-size:.75rem;}
-.fin-td-over{color:var(--red);font-weight:600;}
-.fin-td-ok{color:var(--green);}
-.fin-over-badge{font-family:'IBM Plex Mono',monospace;font-size:.55rem;padding:1px 6px;background:var(--red-light);border:1px solid var(--red);color:var(--red);border-radius:3px;margin-left:.4rem;}
-.fin-cat-pill{font-family:'IBM Plex Mono',monospace;font-size:.57rem;padding:2px 7px;border:1px solid var(--border);border-radius:3px;color:var(--muted);}
-.fin-del-btn{background:none;border:none;color:var(--light);cursor:pointer;font-size:.68rem;padding:2px;}
-.fin-del-btn:hover{color:var(--red);}
-.fin-add-row{padding:.42rem .85rem;font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);cursor:pointer;transition:all .1s;letter-spacing:1px;border-top:1px solid var(--border);background:var(--surface);}
-.fin-add-row:hover{color:var(--orange);background:var(--orange-light);}
-.fin-sidebar-box{border:1.5px solid var(--border-dark);border-radius:var(--radius);overflow:hidden;background:var(--bg);position:sticky;top:80px;}
-.fin-sidebar-head{background:var(--orange);padding:.75rem 1rem;}
-.fin-sidebar-title{font-family:'IBM Plex Mono',monospace;font-weight:700;font-size:.7rem;color:#fff;letter-spacing:2px;text-transform:uppercase;}
-.fin-sidebar-body{padding:.9rem;}
-.fin-form-field{margin-bottom:.55rem;}
-.fin-form-field label{display:block;font-family:'IBM Plex Mono',monospace;font-size:.55rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.2rem;}
-.fin-form-field input,.fin-form-field select{width:100%;font-family:'IBM Plex Mono',monospace;font-size:.75rem;padding:.35rem .58rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;}
-.fin-form-field input:focus,.fin-form-field select:focus{border-color:var(--orange);}
-.fin-quick-bar{display:flex;gap:.4rem;margin-bottom:.6rem;flex-wrap:wrap;}
-.fin-quick-cat{font-family:'IBM Plex Mono',monospace;font-size:.58rem;padding:3px 8px;border:1.5px solid var(--border);border-radius:20px;cursor:pointer;background:var(--bg);color:var(--muted);transition:all .12s;}
-.fin-quick-cat:hover,.fin-quick-cat.sel{border-color:var(--orange);color:var(--orange);background:var(--orange-light);}
-.fin-summary-row{display:flex;align-items:center;justify-content:space-between;padding:.42rem 0;border-bottom:1px solid var(--border);font-family:'IBM Plex Mono',monospace;font-size:.68rem;}
-.fin-summary-row:last-child{border-bottom:none;}
-.fin-summary-key{color:var(--muted);}
-.fin-summary-val{font-weight:700;}
-.fin-bar-row{margin-bottom:.5rem;}
-.fin-bar-label{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted);margin-bottom:2px;}
-.fin-bar{height:6px;background:var(--surface2);border-radius:3px;overflow:hidden;}
-.fin-bar-fill{height:100%;border-radius:3px;background:var(--orange);transition:width .4s;}
-.fin-bar-fill.over{background:var(--red);}
+/* Filter Bar */
+.filter-bar{display:flex;flex-wrap:wrap;gap:.6rem;margin-bottom:1.2rem;padding:.8rem 0;border-bottom:1px solid var(--border);}
+.filter-chip{padding:.4rem 1rem;border:1.5px solid var(--border);border-radius:30px;font-size:.7rem;cursor:pointer;transition:all .12s;background:var(--bg);color:var(--muted);}
+.filter-chip:hover{border-color:var(--orange);color:var(--orange);}
+.filter-chip.active{background:var(--orange);border-color:var(--orange);color:#fff;}
+.filter-chip.date-chip{background:var(--purple-light);border-color:var(--purple);color:var(--purple);}
+.filter-chip.date-chip.active{background:var(--purple);color:#fff;}
+.date-range-picker{display:flex;gap:.5rem;align-items:center;margin-left:auto;}
+.date-range-picker input{padding:.4rem .7rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.7rem;background:var(--bg);color:var(--text);}
 
-@media(max-width:1024px){.wo-layout{grid-template-columns:1fr;}.daily-sidebar{position:static;}.tpl-layout{grid-template-columns:1fr;}.tpl-form-box{position:static;}.tz-layout{grid-template-columns:1fr;}.tz-sidebar-box{position:static;}.fin-layout{grid-template-columns:1fr;}.fin-sidebar-box{position:static;}.attn-hero{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:768px){.tasks-layout{grid-template-columns:1fr;}.ev-timer-box{grid-template-columns:repeat(2,1fr);}.ev-grid{grid-template-columns:1fr;}.tmr-cards{grid-template-columns:1fr;}.tmr-summary{grid-template-columns:1fr 1fr;}.fin-hero{grid-template-columns:1fr;}.attn-hero{grid-template-columns:repeat(2,1fr);}}
+/* Charts Row */
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:1.5rem;}
+.chart-card{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:1rem;}
+.chart-title{font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem;text-align:center;}
+canvas{max-height:250px;width:100%;}
+
+/* Quick Add Form */
+.quick-add-form{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:1.2rem;margin-bottom:1.5rem;}
+.quick-add-title{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:.8rem;color:var(--muted);}
+.quick-add-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr auto;gap:.6rem;align-items:end;}
+.quick-add-grid .field{margin-bottom:0;}
+
+/* Transactions Table */
+.transactions-section{background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+.section-header{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.2rem;background:var(--surface);border-bottom:1.5px solid var(--border);}
+.section-title{font-size:.7rem;letter-spacing:2px;text-transform:uppercase;font-weight:700;}
+.export-buttons{display:flex;gap:.4rem;}
+.transactions-table{width:100%;border-collapse:collapse;}
+.transactions-table th{padding:.8rem 1rem;text-align:left;font-size:.6rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);border-bottom:1.5px solid var(--border);}
+.transactions-table td{padding:.7rem 1rem;font-size:.75rem;border-bottom:1px solid var(--border);}
+.transactions-table tr:last-child td{border-bottom:none;}
+.transactions-table tr:hover{background:var(--orange-light);}
+.income-amount{color:var(--green);font-weight:600;}
+.expense-amount{color:var(--red);font-weight:600;}
+
+/* Category Breakdown */
+.category-breakdown{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:1rem;margin-top:1rem;}
+.category-item{display:flex;justify-content:space-between;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--border);}
+.category-name{font-size:.75rem;font-weight:500;}
+.category-amount{font-family:'IBM Plex Mono',monospace;font-size:.7rem;}
+.category-bar{flex:1;margin:0 1rem;height:6px;background:var(--border);border-radius:3px;overflow:hidden;}
+.category-bar-fill{height:100%;background:var(--orange);border-radius:3px;transition:width .3s;}
+
+@media(max-width:1024px){.wo-layout{grid-template-columns:1fr;}.daily-sidebar{position:static;}.tpl-layout{grid-template-columns:1fr;}.tpl-form-box{position:static;}.kpi-grid{grid-template-columns:repeat(2,1fr);}.charts-row{grid-template-columns:1fr;}.quick-add-grid{grid-template-columns:1fr;}}
+@media(max-width:768px){.tasks-layout{grid-template-columns:1fr;}.ev-timer-box{grid-template-columns:repeat(2,1fr);}.ev-grid{grid-template-columns:1fr;}.tmr-cards{grid-template-columns:1fr;}.tmr-summary{grid-template-columns:1fr 1fr;}.kpi-grid{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -607,9 +540,7 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   <div class="tab" onclick="switchTab('drive',this)">Drive</div>
   <div class="tab" onclick="switchTab('templates',this)">Templates</div>
   <div class="tab" onclick="switchTab('finance',this)">Finance</div>
-  <div class="tab" onclick="switchTab('attention',this)" id="tab-btn-attention">Attention</div>
-  <div class="tab" onclick="switchTab('timezone',this)">Timezones</div>
-   <div class="tab" onclick="switchTab('timer',this)">Timer</div>
+  <div class="tab" onclick="switchTab('timer',this)">Timer</div>
   <div class="tab" onclick="switchTab('tasks',this)">Tasks</div>
   <div class="tab" onclick="switchTab('workout',this)">Workout</div>
 </div>
@@ -706,6 +637,156 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
   </div>
 </div>
 
+<!-- ENHANCED FINANCE PAGE -->
+<div class="page" id="tab-finance">
+  <div class="finance-container">
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card income">
+        <div class="kpi-label">💰 Total Income</div>
+        <div class="kpi-value positive" id="totalIncome">€0</div>
+        <div class="kpi-sub" id="incomePeriod">This period</div>
+      </div>
+      <div class="kpi-card expense">
+        <div class="kpi-label">📉 Total Expenses</div>
+        <div class="kpi-value negative" id="totalExpense">€0</div>
+        <div class="kpi-sub" id="expensePeriod">This period</div>
+      </div>
+      <div class="kpi-card profit">
+        <div class="kpi-label">📊 Net Profit</div>
+        <div class="kpi-value" id="netProfit">€0</div>
+        <div class="kpi-sub" id="profitMargin">Margin: 0%</div>
+      </div>
+      <div class="kpi-card balance">
+        <div class="kpi-label">🏦 Running Balance</div>
+        <div class="kpi-value" id="runningBalance">€0</div>
+        <div class="kpi-sub">Cumulative</div>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <span class="filter-chip active" data-filter="all" onclick="setFinanceFilter('all')">All Time</span>
+      <span class="filter-chip" data-filter="month" onclick="setFinanceFilter('month')">This Month</span>
+      <span class="filter-chip" data-filter="quarter" onclick="setFinanceFilter('quarter')">This Quarter</span>
+      <span class="filter-chip" data-filter="year" onclick="setFinanceFilter('year')">This Year</span>
+      <span class="filter-chip date-chip" data-filter="custom" onclick="toggleDateRange()">📅 Custom Range</span>
+      <div class="date-range-picker" id="dateRangePicker" style="display:none;">
+        <input type="date" id="startDate">
+        <span>→</span>
+        <input type="date" id="endDate">
+        <button class="btn btn-ghost" style="padding:.2rem .6rem;" onclick="applyCustomRange()">Apply</button>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-title">Income vs Expenses</div>
+        <canvas id="incomeExpenseChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Expenses by Category</div>
+        <canvas id="categoryChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Quick Add Form -->
+    <div class="quick-add-form">
+      <div class="quick-add-title">⚡ Quick Add Transaction</div>
+      <div class="quick-add-grid">
+        <div class="field"><label>Description</label><input id="quickDesc" placeholder="e.g., Freelance, Groceries..." onkeypress="if(event.key==='Enter')addQuickTransaction()"></div>
+        <div class="field"><label>Amount (€)</label><input id="quickAmount" type="number" step="0.01" placeholder="0.00" onkeypress="if(event.key==='Enter')addQuickTransaction()"></div>
+        <div class="field"><label>Type</label><select id="quickType"><option value="income">Income +</option><option value="expense">Expense -</option></select></div>
+        <div class="field"><label>Category</label><select id="quickCategory"><option value="Salary">Salary</option><option value="Freelance">Freelance</option><option value="Food">Food</option><option value="Transport">Transport</option><option value="Entertainment">Entertainment</option><option value="Shopping">Shopping</option><option value="Bills">Bills</option><option value="Health">Health</option><option value="Other">Other</option></select></div>
+        <button class="btn btn-fill" onclick="addQuickTransaction()">+ Add</button>
+      </div>
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="transactions-section">
+      <div class="section-header">
+        <span class="section-title">📋 Transaction History</span>
+        <div class="export-buttons">
+          <button class="btn btn-ghost" onclick="exportToGoogleSheets()" style="font-size:.6rem;">📎 Export to Sheets</button>
+          <button class="btn btn-ghost" onclick="exportToPDF()" style="font-size:.6rem;">📄 Export PDF</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto;">
+        <table class="transactions-table">
+          <thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th><th></th></tr></thead>
+          <tbody id="transactionsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Category Breakdown -->
+    <div class="category-breakdown">
+      <div class="section-title" style="margin-bottom:.8rem;">📊 Spending by Category</div>
+      <div id="categoryBreakdownList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TIMER -->
+<div class="page" id="tab-timer">
+  <div class="sec-head">
+    <span class="sec-label">Work Timer</span>
+    <button class="btn btn-ghost" onclick="tmrReset()" style="opacity:.7">↺ Reset All</button>
+  </div>
+
+  <div style="max-width:640px">
+
+    <!-- Status indicator -->
+    <div class="tmr-status">
+      <div class="tmr-pulse" id="tmrPulse"></div>
+      <span class="tmr-status-txt" id="tmrStatusTxt">Idle — press Start Work to begin</span>
+    </div>
+
+    <!-- Two big clocks -->
+    <div class="tmr-cards">
+      <div class="tmr-card">
+        <div class="sec-label" style="margin-bottom:.4rem">Work time</div>
+        <div class="tmr-display" id="tmrWork">00:00:00</div>
+      </div>
+      <div class="tmr-card">
+        <div class="sec-label" style="margin-bottom:.4rem">Break time</div>
+        <div class="tmr-display" id="tmrBreak">00:00:00</div>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="tmr-controls">
+      <button class="btn btn-fill" id="tmrWorkBtn" onclick="tmrStartWork()">▶ Start Work</button>
+      <button class="btn" id="tmrBreakBtn" onclick="tmrStartBreak()" disabled style="border-color:var(--green);color:var(--green)">☕ Take Break</button>
+      <button class="btn btn-ghost" id="tmrStopBtn" onclick="tmrStop()" disabled>■ Stop</button>
+    </div>
+
+    <!-- Summary stats -->
+    <div class="tmr-summary">
+      <div class="tmr-stat">
+        <div class="tmr-stat-val" id="tmrTotalWork">0h 0m</div>
+        <div class="tmr-stat-lbl">Total work</div>
+      </div>
+      <div class="tmr-stat">
+        <div class="tmr-stat-val" id="tmrTotalBreak">0h 0m</div>
+        <div class="tmr-stat-lbl">Total break</div>
+      </div>
+      <div class="tmr-stat">
+        <div class="tmr-stat-val" id="tmrSessionCount">0</div>
+        <div class="tmr-stat-lbl">Work sessions</div>
+      </div>
+    </div>
+
+    <!-- Session log -->
+    <div class="sec-label" style="margin-bottom:.6rem">Session log</div>
+    <div id="tmrLog">
+      <div class="tmr-empty">No sessions yet</div>
+    </div>
+
+  </div>
+</div>
+
 <!-- TASKS -->
 <div class="page" id="tab-tasks">
   <div class="tasks-layout">
@@ -793,201 +874,6 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
             <div id="todayExList"></div>
           </div>
           <button class="save-day-btn" onclick="saveDay()">💾 Save Day</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- TIMER -->
-<div class="page" id="tab-timer">
-  <div class="sec-head">
-    <span class="sec-label">Work Timer</span>
-    <button class="btn btn-ghost" onclick="tmrReset()" style="opacity:.7">↺ Reset All</button>
-  </div>
-
-  <div style="max-width:640px">
-
-    <!-- Status indicator -->
-    <div class="tmr-status">
-      <div class="tmr-pulse" id="tmrPulse"></div>
-      <span class="tmr-status-txt" id="tmrStatusTxt">Idle — press Start Work to begin</span>
-    </div>
-
-    <!-- Two big clocks -->
-    <div class="tmr-cards">
-      <div class="tmr-card">
-        <div class="sec-label" style="margin-bottom:.4rem">Work time</div>
-        <div class="tmr-display" id="tmrWork">00:00:00</div>
-      </div>
-      <div class="tmr-card">
-        <div class="sec-label" style="margin-bottom:.4rem">Break time</div>
-        <div class="tmr-display" id="tmrBreak">00:00:00</div>
-      </div>
-    </div>
-
-    <!-- Controls -->
-    <div class="tmr-controls">
-      <button class="btn btn-fill" id="tmrWorkBtn" onclick="tmrStartWork()">▶ Start Work</button>
-      <button class="btn" id="tmrBreakBtn" onclick="tmrStartBreak()" disabled style="border-color:var(--green);color:var(--green)">☕ Take Break</button>
-      <button class="btn btn-ghost" id="tmrStopBtn" onclick="tmrStop()" disabled>■ Stop</button>
-    </div>
-
-    <!-- Summary stats -->
-    <div class="tmr-summary">
-      <div class="tmr-stat">
-        <div class="tmr-stat-val" id="tmrTotalWork">0h 0m</div>
-        <div class="tmr-stat-lbl">Total work</div>
-      </div>
-      <div class="tmr-stat">
-        <div class="tmr-stat-val" id="tmrTotalBreak">0h 0m</div>
-        <div class="tmr-stat-lbl">Total break</div>
-      </div>
-      <div class="tmr-stat">
-        <div class="tmr-stat-val" id="tmrSessionCount">0</div>
-        <div class="tmr-stat-lbl">Work sessions</div>
-      </div>
-    </div>
-
-    <!-- Session log -->
-    <div class="sec-label" style="margin-bottom:.6rem">Session log</div>
-    <div id="tmrLog">
-      <div class="tmr-empty">No sessions yet</div>
-    </div>
-
-  </div>
-</div>
-
-<!-- ══════════ ATTENTION PANEL ══════════ -->
-<div class="page" id="tab-attention">
-  <div class="sec-head">
-    <div><span class="sec-label">What Needs Attention</span><span class="badge" id="attnBadge">0</span></div>
-    <button class="btn btn-ghost" onclick="renderAttention()">↺ Refresh</button>
-  </div>
-  <div class="attn-hero">
-    <div class="attn-hero-card"><div class="attn-hero-num red" id="attn-overdue">0</div><div class="attn-hero-lbl">Overdue Follow-Ups</div></div>
-    <div class="attn-hero-card"><div class="attn-hero-num yellow" id="attn-tasks">0</div><div class="attn-hero-lbl">Overdue Tasks</div></div>
-    <div class="attn-hero-card"><div class="attn-hero-num orange" id="attn-events">0</div><div class="attn-hero-lbl">Events This Week</div></div>
-    <div class="attn-hero-card"><div class="attn-hero-num green" id="attn-deals">0</div><div class="attn-hero-lbl">Active Deals</div></div>
-  </div>
-  <div class="attn-grid" id="attnGrid"></div>
-</div>
-
-<!-- ══════════ FINANCE DASHBOARD ══════════ -->
-<div class="page" id="tab-finance">
-  <div class="fin-layout">
-    <div>
-      <div class="sec-head">
-        <div><span class="sec-label">Financial Dashboard</span></div>
-        <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
-          <select class="fin-ev-select" id="finEvSelect" onchange="renderFinance()">
-            <option value="">Select Event…</option>
-          </select>
-          <button class="btn btn-ghost" onclick="finDuplicateBudget()">⧉ Duplicate Budget</button>
-        </div>
-      </div>
-      <!-- Hero KPIs -->
-      <div class="fin-hero" id="finHero">
-        <div class="fin-hero-card highlight"><div class="fin-hero-label">Total Revenue</div><div class="fin-hero-num" id="fin-revenue">€0</div><div class="fin-hero-sub" id="fin-per-att-rev">—</div></div>
-        <div class="fin-hero-card"><div class="fin-hero-label">Total Costs</div><div class="fin-hero-num" id="fin-costs">€0</div><div class="fin-hero-sub" id="fin-per-att-cost">—</div></div>
-        <div class="fin-hero-card" id="fin-pl-card"><div class="fin-hero-label">Profit / Loss</div><div class="fin-hero-num" id="fin-pl">€0</div><div class="fin-hero-sub" id="fin-margin">—</div></div>
-      </div>
-      <!-- Expenses table -->
-      <div class="sec-head" style="margin-bottom:.7rem"><span class="sec-label">Cost Breakdown</span></div>
-      <div class="fin-table-wrap">
-        <table class="fin-table">
-          <thead><tr><th>Category</th><th>Description</th><th>Planned</th><th>Actual</th><th>Variance</th><th></th></tr></thead>
-          <tbody id="finExpBody"></tbody>
-        </table>
-        <div class="fin-add-row" onclick="finFocusAdd()">+ QUICK ADD EXPENSE</div>
-      </div>
-      <!-- Category bar chart -->
-      <div class="sec-head" style="margin-bottom:.7rem;margin-top:1rem"><span class="sec-label">By Category</span></div>
-      <div id="finCatBars"></div>
-    </div>
-    <!-- Sidebar -->
-    <div class="fin-sidebar-box">
-      <div class="fin-sidebar-head"><div class="fin-sidebar-title" id="finSideTitle">Add Expense</div></div>
-      <div class="fin-sidebar-body">
-        <input type="hidden" id="finEditId">
-        <div class="fin-form-field"><label>Category</label>
-          <div class="fin-quick-bar" id="finCatBtns">
-            <div class="fin-quick-cat sel" data-v="venue" onclick="finSelCat(this)">Venue</div>
-            <div class="fin-quick-cat" data-v="catering" onclick="finSelCat(this)">Catering</div>
-            <div class="fin-quick-cat" data-v="travel" onclick="finSelCat(this)">Travel</div>
-            <div class="fin-quick-cat" data-v="marketing" onclick="finSelCat(this)">Marketing</div>
-            <div class="fin-quick-cat" data-v="tech" onclick="finSelCat(this)">Tech</div>
-            <div class="fin-quick-cat" data-v="staff" onclick="finSelCat(this)">Staff</div>
-            <div class="fin-quick-cat" data-v="misc" onclick="finSelCat(this)">Misc</div>
-          </div>
-        </div>
-        <div class="fin-form-field"><label>Description *</label><input id="finDesc" placeholder="Venue rental…" onkeydown="if(event.key==='Enter')finSaveExp()"></div>
-        <div class="fin-form-field"><label>Planned (€)</label><input id="finPlanned" type="number" placeholder="0" min="0" step="0.01"></div>
-        <div class="fin-form-field"><label>Actual (€)</label><input id="finActual" type="number" placeholder="0" min="0" step="0.01"></div>
-        <div style="display:flex;gap:.4rem;margin-bottom:1rem">
-          <button class="btn btn-ghost" style="flex:1" onclick="finClearForm()">Clear</button>
-          <button class="btn btn-fill" style="flex:2" onclick="finSaveExp()">Save Expense</button>
-        </div>
-        <div style="border-top:1px solid var(--border);padding-top:.85rem">
-          <div class="fin-form-field"><label>Event Revenue (€)</label><input id="finRevInput" type="number" placeholder="0" min="0" step="0.01" oninput="finSaveRevenue()"></div>
-          <div class="fin-form-field"><label>Attendees</label><input id="finAttendeesInput" type="number" placeholder="0" min="0" oninput="finSaveRevenue()"></div>
-        </div>
-        <div style="border-top:1px solid var(--border);padding-top:.85rem;margin-top:.3rem">
-          <div class="sec-label" style="margin-bottom:.6rem">Summary</div>
-          <div id="finSummaryRows"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════ TIMEZONE HELPER ══════════ -->
-<div class="page" id="tab-timezone">
-  <div class="tz-layout">
-    <div>
-      <div class="sec-head">
-        <div><span class="sec-label">World Clock</span></div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted)" id="tzLocalTime"></div>
-      </div>
-      <div class="tz-cities" id="tzCities"></div>
-      <!-- Visual overlap bar -->
-      <div class="tz-overlap-box">
-        <div class="tz-overlap-title">Working Hours Overlap (9:00–17:00 per city)</div>
-        <div class="tz-overlap-grid" id="tzOverlapGrid"></div>
-        <div class="tz-overlap-labels">
-          <span class="tz-overlap-lbl">00:00</span>
-          <span class="tz-overlap-lbl">06:00</span>
-          <span class="tz-overlap-lbl">12:00</span>
-          <span class="tz-overlap-lbl">18:00</span>
-          <span class="tz-overlap-lbl">24:00</span>
-        </div>
-      </div>
-      <!-- Best time suggestion -->
-      <div class="tz-best-box" id="tzBestBox">
-        <div class="tz-best-title">Best Meeting Window</div>
-        <div class="tz-best-time" id="tzBestTime">Add at least 2 cities to see suggestion</div>
-        <div class="tz-best-sub" id="tzBestSub"></div>
-      </div>
-    </div>
-    <!-- Sidebar -->
-    <div class="tz-sidebar-box">
-      <div class="tz-sidebar-head"><div class="tz-sidebar-title">Add City</div></div>
-      <div class="tz-sidebar-body">
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem">Quick Add</div>
-        <div class="tz-quick-cities" id="tzQuickCities"></div>
-        <div style="border-top:1px solid var(--border);padding-top:.75rem;margin-bottom:.75rem">
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem">Custom City</div>
-          <select id="tzCitySelect" style="width:100%;font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.35rem .6rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;margin-bottom:.4rem;" onchange="if(this.value)tzAddCity(this.value)">
-            <option value="">Select timezone…</option>
-          </select>
-        </div>
-        <div style="border-top:1px solid var(--border);padding-top:.75rem">
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem">Saved Presets</div>
-          <div id="tzPresets" style="display:flex;flex-direction:column;gap:.35rem;margin-bottom:.6rem"></div>
-          <div style="display:flex;gap:.4rem">
-            <input id="tzPresetName" style="flex:1;font-family:'IBM Plex Mono',monospace;font-size:.72rem;padding:.35rem .6rem;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;" placeholder="Preset name…">
-            <button class="btn btn-fill" style="font-size:.62rem" onclick="tzSavePreset()">Save</button>
-          </div>
         </div>
       </div>
     </div>
@@ -1174,66 +1060,6 @@ body{font-family:'IBM Plex Sans',sans-serif;background:var(--bg);color:var(--tex
 
 <div class="toasts" id="toasts"></div>
 
-<!-- ═══════════════════════════════════════════════════════
-     JAVASCRIPT
-     ═══════════════════════════════════════════════════════ -->
-<script>
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Data Base — IT Reader</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-<!-- Firebase -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, getDocs, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyDP8AT6qRBNuajZM6bG0EsbALvhwH6WG7k",
-    authDomain: "database-b5155.firebaseapp.com",
-    projectId: "database-b5155",
-    storageBucket: "database-b5155.firebasestorage.app",
-    messagingSenderId: "766770588944",
-    appId: "1:766770588944:web:106eb61c482b2a12ad0995",
-    measurementId: "G-44EBYYJBRG"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  window._db = db;
-  window._fbReady = true;
-
-  window.fbSave = async function(data) {
-    try {
-      await setDoc(doc(db, "app", "state"), data);
-      return true;
-    } catch(e) { console.error("fbSave error", e); return false; }
-  };
-
-  window.fbLoad = async function() {
-    try {
-      const snap = await getDoc(doc(db, "app", "state"));
-      return snap.exists() ? snap.data() : null;
-    } catch(e) { console.error("fbLoad error", e); return null; }
-  };
-
-  window.fbListen = function(callback) {
-    return onSnapshot(doc(db, "app", "state"), (snap) => {
-      if (snap.exists()) callback(snap.data());
-    });
-  };
-
-  window.dispatchEvent(new Event("fbReady"));
-</script>
-
-<!-- QR Code library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-
 <script>
 // ── Constants ────────────────────────────────────────────
 const BASE_URL = 'https://101webstudio.github.io/Database/database.html';
@@ -1271,13 +1097,20 @@ const EV_STAGES = ['planning','outreach','confirmed','delivered'];
 const EV_LABELS = {planning:'PLANNING',outreach:'OUTREACH',confirmed:'CONFIRMED',delivered:'DELIVERED'};
 
 // ── State ─────────────────────────────────────────────────
-let S = { events:[], leads:[], tasks:[], driveSheets:[], workoutLogs:[], templates:[], finances:[], tzCities:[], tzPresets:[], prio:'med', theme:'light' };
+let S = { events:[], leads:[], tasks:[], driveSheets:[], workoutLogs:[], templates:[], transactions:[], tzCities:[], tzPresets:[], prio:'med', theme:'light' };
 let timerInt=null, currentEventId=null, editingEventId=null;
 let selectedExId=null, exCatFilter='all';
 let calExtraAttendees=[], calSelectedLeadIds=new Set(), calCurrentEvId=null;
 let fbUnsubscribe = null;
 const todayKey = () => new Date().toISOString().split('T')[0];
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2);
+
+// Finance chart variables
+let incomeExpenseChart = null;
+let categoryChart = null;
+let financeFilter = 'all';
+let customStart = null;
+let customEnd = null;
 
 // ── Firebase helpers ──────────────────────────────────────
 let fbReady = false;
@@ -1316,7 +1149,21 @@ function mergeRemote(data) {
   const localTheme = S.theme;
   S = { ...S, ...data };
   if (!data.theme) S.theme = localTheme;
-  ['events','leads','tasks','driveSheets','workoutLogs','templates','finances','tzCities','tzPresets'].forEach(k => { if(!S[k]) S[k]=[]; });
+  ['events','leads','tasks','driveSheets','workoutLogs','templates','transactions','tzCities','tzPresets'].forEach(k => { if(!S[k]) S[k]=[]; });
+  if (!S.transactions || !S.transactions.length) initSampleTransactions();
+}
+
+function initSampleTransactions() {
+  if (!S.transactions || S.transactions.length === 0) {
+    S.transactions = [
+      { id: uid(), date: new Date().toISOString(), desc: 'Freelance Project', amount: 2500, type: 'income', category: 'Freelance' },
+      { id: uid(), date: new Date(Date.now() - 2*86400000).toISOString(), desc: 'Groceries', amount: 85.50, type: 'expense', category: 'Food' },
+      { id: uid(), date: new Date(Date.now() - 5*86400000).toISOString(), desc: 'Gym Membership', amount: 45, type: 'expense', category: 'Health' },
+      { id: uid(), date: new Date(Date.now() - 10*86400000).toISOString(), desc: 'Client Payment', amount: 1200, type: 'income', category: 'Salary' },
+      { id: uid(), date: new Date(Date.now() - 3*86400000).toISOString(), desc: 'Dinner Out', amount: 62.30, type: 'expense', category: 'Entertainment' },
+      { id: uid(), date: new Date(Date.now() - 7*86400000).toISOString(), desc: 'Transport', amount: 35, type: 'expense', category: 'Transport' }
+    ];
+  }
 }
 
 async function saveToFirebase() {
@@ -1350,10 +1197,8 @@ function setSyncStatus(state) {
 }
 
 function renderAll() {
-  renderEvents(); renderDrive(); renderTasks(); renderTemplates(); renderAttention();
-  populateFinEventSelect(); renderTimezone();
+  renderEvents(); renderDrive(); renderTasks(); renderTemplates(); renderFinance();
   if (document.getElementById('tab-workout').classList.contains('active')) renderWorkout();
-  if (document.getElementById('tab-finance').classList.contains('active')) renderFinance();
   applyTheme();
 }
 
@@ -1367,12 +1212,6 @@ function applyTheme() {
 
 // ── Navigation ────────────────────────────────────────────
 function switchTab(name,el) {
-  // Clear timezone interval when leaving tab
-  if (name !== 'timezone' && _tzInterval) {
-    clearInterval(_tzInterval);
-    _tzInterval = null;
-  }
-  
   closeEventDetail();
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
@@ -1380,9 +1219,7 @@ function switchTab(name,el) {
   if(el) el.classList.add('active');
   updateBC();
   if(name==='workout') renderWorkout();
-  if(name==='finance'){populateFinEventSelect();renderFinance();}
-  if(name==='attention') renderAttention();
-  if(name==='timezone') renderTimezone();
+  if(name==='finance') renderFinance();
 }
 function openEventDetail(evId) {
   currentEventId=evId;
@@ -1503,8 +1340,8 @@ function renderEventDetail(evId) {
       <div class="table-wrap">
         <table class="leads-table"><thead><tr>
           <th>#</th><th>First</th><th>Last</th><th>Email</th><th>Phone</th><th>Company</th><th>Title</th><th>LinkedIn</th><th>Status</th><th>Check-In</th><th>Notes</th><th></th>
-        </tr></thead><tbody id="leadsBody"></tbody>
-        </table>
+         </thead><tbody id="leadsBody"></tbody>
+         </table>
       </div>
       <div class="table-add" onclick="openLeadModal('${ev.id}')">+ ADD LEAD</div>
     </div>
@@ -1585,7 +1422,8 @@ function importCSV(){
 }
 function parseCSVRow(row){const r=[];let c='',q=false;for(let i=0;i<row.length;i++){const ch=row[i];if(ch==='"'){if(q&&row[i+1]==='"'){c+='"';i++;}else q=!q;}else if(ch===','&&!q){r.push(c.trim());c='';}else c+=ch;}r.push(c.trim());return r.map(v=>v.replace(/^"|"$/g,''));}
 
-// ── CSV Export ────────────────────────────────────────────
+// ── CSV Export ──
+  // ── CSV Export ────────────────────────────────────────────
 function exportLeadsCSV(evId){
   const ev=S.events.find(e=>e.id===evId);const leads=S.leads.filter(l=>l.eventId===evId);
   if(!leads.length){toast('No leads to export','err');return;}
@@ -1616,7 +1454,6 @@ function renderDrive(){
     c.onclick=e=>{if(e.target.classList.contains('drive-del'))return;window.open(s.url,'_blank');};
     g.appendChild(c);
   });
-  // reapply existing search if any
   const inp=document.getElementById('driveSearchInput');
   if(inp && inp.value) filterDrive(inp.value);
   else updateDriveCount();
@@ -1928,13 +1765,12 @@ function quickCopy(id,field){
   });
 }
 
-// Template Use Modal — fill placeholders then copy
+// Template Use Modal
 let _tplUseId=null;
 function openTplUseModal(id){
   const tpl=S.templates.find(t=>t.id===id); if(!tpl)return;
   _tplUseId=id;
   document.getElementById('tplUseTitle').textContent='Use: '+tpl.name;
-  // detect placeholders like {{name}}
   const matches=[...new Set([...(tpl.subject+' '+tpl.body).matchAll(/\{\{(\w+)\}\}/g)].map(m=>m[1]))];
   const ph=document.getElementById('tplUsePlaceholders');
   ph.innerHTML='';
@@ -1968,6 +1804,203 @@ function copyTplSubject(){
 function copyTplBody(){
   const text=document.getElementById('tplUseBodyOut').textContent;
   navigator.clipboard.writeText(text).then(()=>toast('Message copied!','ok')).catch(()=>{const el=document.createElement('textarea');el.value=text;document.body.appendChild(el);el.select();document.execCommand('copy');document.body.removeChild(el);toast('Message copied!','ok');});
+}
+
+// ═══════════════════════════════════════════════════
+// ▶▶▶ ENHANCED FINANCE FUNCTIONS
+// ═══════════════════════════════════════════════════
+
+function renderFinance() {
+  if (!S.transactions) S.transactions = [];
+  if (!S.transactions.length) initSampleTransactions();
+  
+  let filtered = [...S.transactions];
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const startOfQuarter = new Date(now.getFullYear(), Math.floor(now.getMonth()/3)*3, 1);
+  const startOfYear = new Date(now.getFullYear(), 0, 1);
+  
+  if (financeFilter === 'month') filtered = filtered.filter(t => new Date(t.date) >= startOfMonth);
+  else if (financeFilter === 'quarter') filtered = filtered.filter(t => new Date(t.date) >= startOfQuarter);
+  else if (financeFilter === 'year') filtered = filtered.filter(t => new Date(t.date) >= startOfYear);
+  else if (financeFilter === 'custom' && customStart && customEnd) filtered = filtered.filter(t => new Date(t.date) >= new Date(customStart) && new Date(t.date) <= new Date(customEnd));
+  
+  const totalIncome = filtered.filter(t => t.type === 'income').reduce((s,t)=>s+t.amount,0);
+  const totalExpense = filtered.filter(t => t.type === 'expense').reduce((s,t)=>s+t.amount,0);
+  const netProfit = totalIncome - totalExpense;
+  const profitMargin = totalIncome > 0 ? (netProfit / totalIncome * 100).toFixed(1) : 0;
+  const allTimeBalance = S.transactions.reduce((s,t)=>s+(t.type==='income'?t.amount:-t.amount),0);
+  
+  document.getElementById('totalIncome').innerHTML = `€${totalIncome.toFixed(2)}`;
+  document.getElementById('totalExpense').innerHTML = `€${totalExpense.toFixed(2)}`;
+  document.getElementById('netProfit').innerHTML = `€${netProfit.toFixed(2)}`;
+  document.getElementById('netProfit').className = `kpi-value ${netProfit>=0?'positive':'negative'}`;
+  document.getElementById('profitMargin').innerHTML = `Margin: ${profitMargin}%`;
+  document.getElementById('runningBalance').innerHTML = `€${allTimeBalance.toFixed(2)}`;
+  document.getElementById('runningBalance').className = `kpi-value ${allTimeBalance>=0?'positive':'negative'}`;
+  
+  const periodText = financeFilter === 'month' ? 'This month' : financeFilter === 'quarter' ? 'This quarter' : financeFilter === 'year' ? 'This year' : financeFilter === 'custom' ? 'Custom range' : 'All time';
+  document.getElementById('incomePeriod').innerHTML = periodText;
+  document.getElementById('expensePeriod').innerHTML = periodText;
+  
+  // Render transactions table
+  const sorted = [...filtered].sort((a,b)=>new Date(b.date) - new Date(a.date));
+  const tbody = document.getElementById('transactionsBody');
+  if(!sorted.length) tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:2rem">No transactions</td></tr>';
+  else tbody.innerHTML = sorted.map(tx => `
+    <tr>
+      <td style="font-family:monospace;font-size:.7rem">${fmtDate(tx.date)}</td>
+      <td>${escapeHtmlFinance(tx.desc)}</td>
+      <td><span style="font-size:.6rem;padding:2px 8px;border:1px solid var(--border);border-radius:20px">${escapeHtmlFinance(tx.category||'General')}</span></td>
+      <td>${tx.type === 'income' ? '💰 Income' : '📉 Expense'}</td>
+      <td class="${tx.type === 'income' ? 'income-amount' : 'expense-amount'}">${tx.type === 'income' ? '+' : '-'}€${Math.abs(tx.amount).toFixed(2)}</td>
+      <td><button class="lt-del" onclick="deleteTransaction('${tx.id}')">✕</button></td>
+    </table>
+  `).join('');
+  
+  // Category breakdown for expenses only
+  const expenses = filtered.filter(t => t.type === 'expense');
+  const categoryMap = new Map();
+  expenses.forEach(t => { const cat = t.category || 'Other'; categoryMap.set(cat, (categoryMap.get(cat)||0) + t.amount); });
+  const categories = Array.from(categoryMap.entries()).sort((a,b)=>b[1]-a[1]);
+  const breakdownDiv = document.getElementById('categoryBreakdownList');
+  if(!categories.length) breakdownDiv.innerHTML = '<div>No expense data</div>';
+  else breakdownDiv.innerHTML = categories.map(([cat, amt]) => `
+    <div class="category-item">
+      <span class="category-name">${escapeHtmlFinance(cat)}</span>
+      <div class="category-bar"><div class="category-bar-fill" style="width:${(amt/totalExpense*100)}%"></div></div>
+      <span class="category-amount">€${amt.toFixed(2)} (${((amt/totalExpense)*100).toFixed(0)}%)</span>
+    </div>
+  `).join('');
+  
+  // Update charts
+  updateFinanceCharts(filtered, totalIncome, totalExpense);
+}
+
+function updateFinanceCharts(transactions, totalIncome, totalExpense) {
+  const ctx1 = document.getElementById('incomeExpenseChart')?.getContext('2d');
+  const ctx2 = document.getElementById('categoryChart')?.getContext('2d');
+  if(!ctx1 || !ctx2) return;
+  
+  if(incomeExpenseChart) incomeExpenseChart.destroy();
+  incomeExpenseChart = new Chart(ctx1, {
+    type: 'doughnut',
+    data: { labels: ['Income', 'Expenses'], datasets: [{ data: [totalIncome, totalExpense], backgroundColor: ['#22c55e', '#ef4444'], borderWidth: 0 }] },
+    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { position: 'bottom' } } }
+  });
+  
+  const expenses = transactions.filter(t => t.type === 'expense');
+  const catMap = new Map();
+  expenses.forEach(t => { const cat = t.category || 'Other'; catMap.set(cat, (catMap.get(cat)||0) + t.amount); });
+  const categories = Array.from(catMap.entries()).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  if(categoryChart) categoryChart.destroy();
+  categoryChart = new Chart(ctx2, {
+    type: 'bar',
+    data: { labels: categories.map(c=>c[0]), datasets: [{ label: 'Amount (€)', data: categories.map(c=>c[1]), backgroundColor: '#E86B25', borderRadius: 8 }] },
+    options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false } } }
+  });
+}
+
+function setFinanceFilter(filter) {
+  financeFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.remove('active'));
+  document.querySelector(`.filter-chip[data-filter="${filter}"]`)?.classList.add('active');
+  if(filter !== 'custom') document.getElementById('dateRangePicker').style.display = 'none';
+  renderFinance();
+}
+
+function toggleDateRange() {
+  const picker = document.getElementById('dateRangePicker');
+  picker.style.display = picker.style.display === 'none' ? 'flex' : 'none';
+  if(picker.style.display === 'flex') {
+    const today = new Date().toISOString().split('T')[0];
+    const monthAgo = new Date(Date.now() - 30*86400000).toISOString().split('T')[0];
+    document.getElementById('startDate').value = monthAgo;
+    document.getElementById('endDate').value = today;
+  }
+}
+
+function applyCustomRange() {
+  customStart = document.getElementById('startDate').value;
+  customEnd = document.getElementById('endDate').value;
+  if(customStart && customEnd) {
+    financeFilter = 'custom';
+    document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.remove('active'));
+    renderFinance();
+  } else toast('Select both dates','err');
+}
+
+function addQuickTransaction() {
+  const desc = document.getElementById('quickDesc')?.value.trim();
+  const amount = parseFloat(document.getElementById('quickAmount')?.value);
+  const type = document.getElementById('quickType')?.value;
+  const category = document.getElementById('quickCategory')?.value;
+  if(!desc || isNaN(amount) || amount <= 0) { toast('Valid description and amount required','err'); return; }
+  S.transactions.push({ id: uid(), date: new Date().toISOString(), desc, amount, type, category });
+  save(); renderFinance();
+  document.getElementById('quickDesc').value = '';
+  document.getElementById('quickAmount').value = '';
+  toast(`${type==='income'?'Income':'Expense'} added`,'ok');
+}
+
+function deleteTransaction(id) {
+  S.transactions = S.transactions.filter(t => t.id !== id);
+  save(); renderFinance();
+  toast('Transaction deleted','ok');
+}
+
+function escapeHtmlFinance(str) {
+  if (!str) return '';
+  return str.replace(/[&<>]/g, function(m) {
+    if (m === '&') return '&amp;';
+    if (m === '<') return '&lt;';
+    if (m === '>') return '&gt;';
+    return m;
+  });
+}
+
+async function exportToGoogleSheets() {
+  let filtered = [...S.transactions];
+  const now = new Date();
+  if (financeFilter === 'month') filtered = filtered.filter(t => new Date(t.date) >= new Date(now.getFullYear(), now.getMonth(), 1));
+  else if (financeFilter === 'quarter') filtered = filtered.filter(t => new Date(t.date) >= new Date(now.getFullYear(), Math.floor(now.getMonth()/3)*3, 1));
+  else if (financeFilter === 'year') filtered = filtered.filter(t => new Date(t.date) >= new Date(now.getFullYear(), 0, 1));
+  else if (financeFilter === 'custom' && customStart && customEnd) filtered = filtered.filter(t => new Date(t.date) >= new Date(customStart) && new Date(t.date) <= new Date(customEnd));
+  
+  if(!filtered.length){ toast('No data to export','err'); return; }
+  const headers = ['Date','Description','Category','Type','Amount'];
+  const rows = filtered.map(t => [fmtDate(t.date), t.desc, t.category||'General', t.type, t.amount.toFixed(2)]);
+  const csv = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `finance_export_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('CSV downloaded — import to Google Sheets','ok');
+}
+
+async function exportToPDF() {
+  let filtered = [...S.transactions];
+  const now = new Date();
+  if (financeFilter === 'month') filtered = filtered.filter(t => new Date(t.date) >= new Date(now.getFullYear(), now.getMonth(), 1));
+  else if (financeFilter === 'quarter') filtered = filtered.filter(t => new Date(t.date) >= new Date(now.getFullYear(), Math.floor(now.getMonth()/3)*3, 1));
+  else if (financeFilter === 'year') filtered = filtered.filter(t => new Date(t.date) >= new Date(now.getFullYear(), 0, 1));
+  else if (financeFilter === 'custom' && customStart && customEnd) filtered = filtered.filter(t => new Date(t.date) >= new Date(customStart) && new Date(t.date) <= new Date(customEnd));
+  
+  if(!filtered.length){ toast('No data to export','err'); return; }
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('landscape');
+  const totalIncome = filtered.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
+  const totalExpense = filtered.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
+  doc.setFontSize(16); doc.text('Financial Report', 14, 20);
+  doc.setFontSize(10); doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
+  doc.text(`Total Income: €${totalIncome.toFixed(2)}`, 14, 40);
+  doc.text(`Total Expenses: €${totalExpense.toFixed(2)}`, 14, 48);
+  doc.text(`Net Profit: €${(totalIncome-totalExpense).toFixed(2)}`, 14, 56);
+  const tableData = filtered.map(t=>[fmtDate(t.date), t.desc, t.category||'General', t.type, `€${t.amount.toFixed(2)}`]);
+  doc.autoTable({ head: [['Date','Description','Category','Type','Amount']], body: tableData, startY: 65 });
+  doc.save(`finance_report_${new Date().toISOString().slice(0,10)}.pdf`);
+  toast('PDF exported','ok');
 }
 
 // ═══════════════════════════════════════════════════
@@ -2434,345 +2467,7 @@ setTimeout(() => {
   }
 }, 8000);
 
-
-// ═══════════════════════════════════════════════════════════
-// ▶▶▶  FINANCE DASHBOARD
-// ═══════════════════════════════════════════════════════════
-
-// ═══════════════════════════════════════════════════════════
-// ▶▶▶  PERSONAL FINANCE (No event dependency)
-// ═══════════════════════════════════════════════════════════
-
-let personalFilter = 'all';
-
-function renderPersonalFinance() {
-  const transactions = S.personalTransactions || [];
-  
-  // Calculate totals
-  let totalIncome = 0, totalExpense = 0;
-  transactions.forEach(t => {
-    if (t.type === 'income') totalIncome += t.amount;
-    else totalExpense += t.amount;
-  });
-  const balance = totalIncome - totalExpense;
-  
-  // Update summary cards
-  document.getElementById('personalBalance').innerHTML = `€${balance.toFixed(2)}`;
-  document.getElementById('personalIncome').innerHTML = `€${totalIncome.toFixed(2)}`;
-  document.getElementById('personalExpenses').innerHTML = `€${totalExpense.toFixed(2)}`;
-  
-  // Filter and render transactions
-  let filtered = [...transactions].sort((a,b) => new Date(b.date) - new Date(a.date));
-  if (personalFilter !== 'all') {
-    filtered = filtered.filter(t => t.type === personalFilter);
-  }
-  
-  const tbody = document.getElementById('personalTransactionsBody');
-  if (!filtered.length) {
-    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--muted)">No transactions yet — add your first one</td></tr>`;
-    return;
-  }
-  
-  tbody.innerHTML = filtered.map(tx => `
-    <tr>
-      <td style="font-family:monospace;font-size:.7rem">${tx.date ? tx.date.slice(0,10) : '—'}</td>
-      <td style="font-weight:500">${escapeHtml(tx.desc)}</td>
-      <td><span class="fin-cat-pill">${escapeHtml(tx.category || 'General')}</span></td>
-      <td class="${tx.type === 'income' ? 'income-amount' : 'expense-amount'}">${tx.type === 'income' ? '+' : '-'}€${Math.abs(tx.amount).toFixed(2)}</td>
-      <td><button class="fin-del-btn" onclick="deletePersonalTransaction('${tx.id}')">✕</button></td>
-    </tr>
-  `).join('');
-}
-
-function addPersonalTransaction(desc, amount, type, category) {
-  if (!desc || !amount || amount <= 0) {
-    toast('Description and valid amount required', 'err');
-    return false;
-  }
-  if (!S.personalTransactions) S.personalTransactions = [];
-  S.personalTransactions.push({
-    id: uid(),
-    date: new Date().toISOString(),
-    desc: desc.trim(),
-    amount: parseFloat(amount),
-    type: type,
-    category: category || 'General'
-  });
-  save();
-  renderPersonalFinance();
-  return true;
-}
-
-function addQuickTransaction() {
-  const desc = document.getElementById('quickDesc')?.value;
-  const amount = document.getElementById('quickAmount')?.value;
-  const type = document.getElementById('quickType')?.value;
-  const category = document.getElementById('quickCategory')?.value;
-  
-  if (addPersonalTransaction(desc, amount, type, category)) {
-    if (document.getElementById('quickDesc')) document.getElementById('quickDesc').value = '';
-    if (document.getElementById('quickAmount')) document.getElementById('quickAmount').value = '';
-    toast(`${type === 'income' ? 'Income' : 'Expense'} added`, 'ok');
-  }
-}
-
-function openTransactionModal() {
-  // Quick add is already visible, but we can show a modal if needed
-  document.getElementById('quickDesc')?.focus();
-}
-
-function deletePersonalTransaction(id) {
-  if (!S.personalTransactions) return;
-  S.personalTransactions = S.personalTransactions.filter(t => t.id !== id);
-  save();
-  renderPersonalFinance();
-  toast('Transaction deleted', 'ok');
-}
-
-function setPersonalFilter(filter) {
-  personalFilter = filter;
-  document.querySelectorAll('.fin-filter-chip').forEach(chip => {
-    chip.classList.remove('active');
-    if (chip.dataset.filter === filter) chip.classList.add('active');
-  });
-  renderPersonalFinance();
-}
-
-// Initialize personal transactions if empty
-if (!S.personalTransactions) {
-  S.personalTransactions = [
-    { id: uid(), date: new Date().toISOString(), desc: 'Freelance project', amount: 1500, type: 'income', category: 'Salary' },
-    { id: uid(), date: new Date(Date.now() - 3*86400000).toISOString(), desc: 'Groceries', amount: 85.50, type: 'expense', category: 'Food' },
-    { id: uid(), date: new Date(Date.now() - 7*86400000).toISOString(), desc: 'Gym membership', amount: 45, type: 'expense', category: 'Health' },
-    { id: uid(), date: new Date(Date.now() - 14*86400000).toISOString(), desc: 'Client payment', amount: 3200, type: 'income', category: 'Salary' },
-    { id: uid(), date: new Date(Date.now() - 2*86400000).toISOString(), desc: 'Dinner out', amount: 62.30, type: 'expense', category: 'Entertainment' }
-  ];
-}
-
-// Helper function
-function escapeHtml(str) {
-  if (!str) return '';
-  return str.replace(/[&<>]/g, function(m) {
-    if (m === '&') return '&amp;';
-    if (m === '<') return '&lt;';
-    if (m === '>') return '&gt;';
-    return m;
-  });
-}
-
-// Call renderPersonalFinance when finance tab is opened
-// Add this to your existing switchTab function or call it when finance tab becomes active
-
-// ═══════════════════════════════════════════════════════════
-// ▶▶▶  TIMEZONE HELPER
-// ═══════════════════════════════════════════════════════════
-
-const TZ_ZONES = [
-  {name:'Oslo',tz:'Europe/Oslo'},{name:'London',tz:'Europe/London'},{name:'New York',tz:'America/New_York'},
-  {name:'Los Angeles',tz:'America/Los_Angeles'},{name:'Chicago',tz:'America/Chicago'},
-  {name:'Toronto',tz:'America/Toronto'},{name:'São Paulo',tz:'America/Sao_Paulo'},
-  {name:'Reykjavik',tz:'Atlantic/Reykjavik'},{name:'Paris',tz:'Europe/Paris'},
-  {name:'Berlin',tz:'Europe/Berlin'},{name:'Amsterdam',tz:'Europe/Amsterdam'},
-  {name:'Stockholm',tz:'Europe/Stockholm'},{name:'Helsinki',tz:'Europe/Helsinki'},
-  {name:'Warsaw',tz:'Europe/Warsaw'},{name:'Kyiv',tz:'Europe/Kyiv'},
-  {name:'Moscow',tz:'Europe/Moscow'},{name:'Istanbul',tz:'Europe/Istanbul'},
-  {name:'Dubai',tz:'Asia/Dubai'},{name:'Riyadh',tz:'Asia/Riyadh'},
-  {name:'Mumbai',tz:'Asia/Kolkata'},{name:'Delhi',tz:'Asia/Kolkata'},
-  {name:'Bangkok',tz:'Asia/Bangkok'},{name:'Singapore',tz:'Asia/Singapore'},
-  {name:'Hong Kong',tz:'Asia/Hong_Kong'},{name:'Shanghai',tz:'Asia/Shanghai'},
-  {name:'Tokyo',tz:'Asia/Tokyo'},{name:'Seoul',tz:'Asia/Seoul'},
-  {name:'Sydney',tz:'Australia/Sydney'},{name:'Auckland',tz:'Pacific/Auckland'},
-  {name:'Nairobi',tz:'Africa/Nairobi'},{name:'Lagos',tz:'Africa/Lagos'},
-  {name:'Johannesburg',tz:'Africa/Johannesburg'},{name:'Cairo',tz:'Africa/Cairo'},
-];
-
-const TZ_QUICK = ['Oslo','London','New York','Dubai','Singapore','Tokyo','Sydney'];
-let _tzInterval = null;
-
-function tzAddCity(tzOrName){
-  const zone = TZ_ZONES.find(z=>z.tz===tzOrName||z.name===tzOrName);
-  if(!zone)return;
-  if(S.tzCities.find(c=>c.tz===zone.tz)){toast('Already added','err');return;}
-  S.tzCities.push({name:zone.name,tz:zone.tz});
-  save(); renderTimezone(); toast(`${zone.name} added`,'ok');
-}
-
-function tzRemoveCity(tz){
-  S.tzCities=S.tzCities.filter(c=>c.tz!==tz);
-  save(); renderTimezone();
-}
-
-function tzSavePreset(){
-  const name=document.getElementById('tzPresetName').value.trim();
-  if(!name){toast('Enter preset name','err');return;}
-  if(!S.tzCities.length){toast('Add cities first','err');return;}
-  S.tzPresets.push({id:uid(),name,cities:[...S.tzCities]});
-  document.getElementById('tzPresetName').value='';
-  save(); renderTimezone(); toast('Preset saved','ok');
-}
-
-function tzLoadPreset(id){
-  const p=S.tzPresets.find(x=>x.id===id);
-  if(!p)return;
-  S.tzCities=[...p.cities];
-  save(); renderTimezone(); toast(`Loaded: ${p.name}`,'ok');
-}
-
-function tzDelPreset(id){
-  S.tzPresets=S.tzPresets.filter(p=>p.id!==id);
-  save(); renderTimezone();
-}
-
-function tzGetLocalHour(tz){
-  try{
-    const s=new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'numeric',minute:'numeric',hour12:false}).format(new Date());
-    if (!s || !s.includes(':')) return 0;
-    const [h,m]=s.split(':').map(Number);
-    return h+(m/60);
-  }catch{return 0;}
-}
-
-function tzGetTimeStr(tz){
-  try{
-    return new Intl.DateTimeFormat('en-GB',{timeZone:tz,hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());
-  }catch{return '--:--';}
-}
-
-function tzGetDayLabel(tz){
-  try{
-    const d=new Intl.DateTimeFormat('en-GB',{timeZone:tz,weekday:'short',day:'numeric',month:'short'}).format(new Date());
-    return d;
-  }catch{return '';}
-}
-
-function renderTimezone(){
-  if(_tzInterval){clearInterval(_tzInterval);_tzInterval=null;}
-
-  // Populate select
-  const sel=document.getElementById('tzCitySelect');
-  sel.innerHTML='<option value="">Select timezone…</option>';
-  TZ_ZONES.forEach(z=>{
-    const opt=document.createElement('option');
-    opt.value=z.tz; opt.textContent=`${z.name} (${z.tz})`;
-    sel.appendChild(opt);
-  });
-
-  // Quick city buttons
-  document.getElementById('tzQuickCities').innerHTML=TZ_QUICK.map(name=>`
-    <div class="tz-quick-btn" onclick="tzAddCity('${name}')">${name}</div>`).join('');
-
-  // Presets
-  const presetsEl=document.getElementById('tzPresets');
-  presetsEl.innerHTML=!S.tzPresets.length
-    ?'<div style="font-family:\'IBM Plex Mono\',monospace;font-size:.62rem;color:var(--light)">No presets yet</div>'
-    :S.tzPresets.map(p=>`
-      <div class="tz-preset-item" onclick="tzLoadPreset('${p.id}')">
-        <div><div class="tz-preset-name">${p.name}</div><div class="tz-preset-cities">${p.cities.map(c=>c.name).join(', ')}</div></div>
-        <button class="tz-preset-del" onclick="event.stopPropagation();tzDelPreset('${p.id}')">✕</button>
-      </div>`).join('');
-
-  function doRender(){
-    // Local time header
-    const localTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const localStr = new Intl.DateTimeFormat('en-GB',{timeZone:localTZ,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
-    const el=document.getElementById('tzLocalTime');
-    if(el) el.textContent=`Your time: ${localStr}`;
-
-    // Cities
-    const citiesEl=document.getElementById('tzCities');
-    if(!citiesEl)return;
-    if(!S.tzCities.length){
-      citiesEl.innerHTML=`<div class="tmr-empty">No cities added — use Quick Add or the dropdown →</div>`;
-    } else {
-      citiesEl.innerHTML=S.tzCities.map(c=>{
-        const hour=tzGetLocalHour(c.tz);
-        const timeStr=tzGetTimeStr(c.tz);
-        const dayLbl=tzGetDayLabel(c.tz);
-        const isWorking=hour>=9&&hour<17;
-        const pct=Math.min(100,(hour/24)*100);
-        const workStart=(9/24)*100;
-        const workEnd=(17/24)*100;
-        return `<div class="tz-city-row">
-          <div class="tz-city-top">
-            <div>
-              <div class="tz-city-name">${c.name}</div>
-              <div class="tz-city-meta">${c.tz} · ${dayLbl}</div>
-            </div>
-            <div>
-              <div class="tz-city-time ${isWorking?'working':'off'}">${timeStr}</div>
-              <div class="tz-city-meta" style="text-align:right">${isWorking?'🟢 Working':'🔴 Off hours'}</div>
-            </div>
-            <button class="tz-city-del" onclick="tzRemoveCity('${c.tz}')">✕</button>
-          </div>
-          <div class="tz-city-bar-wrap">
-            <div class="tz-city-bar-work" style="left:${workStart}%;width:${workEnd-workStart}%"></div>
-            <div class="tz-city-bar-fill" style="width:${pct}%"></div>
-          </div>
-        </div>`;
-      }).join('');
-    }
-
-    // Overlap grid — 24 slots (1hr each), show how many cities are working that hour
-    const overlapEl=document.getElementById('tzOverlapGrid');
-    if(overlapEl&&S.tzCities.length>0){
-      const slots=Array.from({length:24},(_,h)=>{
-        const count=S.tzCities.filter(c=>{
-          try{
-            const now=new Date();
-            const test=new Date(now);
-            test.setUTCHours(h,0,0,0);
-            const cityHour=parseFloat(new Intl.DateTimeFormat('en',{timeZone:c.tz,hour:'numeric',minute:'numeric',hour12:false}).format(test).replace(':','.'));
-            return cityHour>=9&&cityHour<17;
-          }catch{return false;}
-        }).length;
-        return count;
-      });
-      const maxCount=Math.max(...slots,1);
-      overlapEl.innerHTML=slots.map((cnt,h)=>{
-        const cls=cnt===S.tzCities.length?'all':cnt>0?'partial':'none';
-        return `<div class="tz-overlap-slot ${cls}" title="${String(h).padStart(2,'0')}:00 — ${cnt}/${S.tzCities.length} cities working"></div>`;
-      }).join('');
-
-      // Best time: find longest consecutive window where ALL cities are in working hours
-      let bestStart=-1,bestLen=0,curStart=-1,curLen=0;
-      slots.forEach((cnt,h)=>{
-        if(cnt===S.tzCities.length&&S.tzCities.length>0){
-          if(curStart<0)curStart=h;
-          curLen++;
-          if(curLen>bestLen){bestLen=curLen;bestStart=curStart;}
-        } else {curStart=-1;curLen=0;}
-      });
-      const bestEl=document.getElementById('tzBestTime');
-      const bestSub=document.getElementById('tzBestSub');
-      if(bestStart>=0&&S.tzCities.length>1){
-        const fmt=h=>`${String(h).padStart(2,'0')}:00`;
-        bestEl.textContent=`${fmt(bestStart)} – ${fmt(bestStart+bestLen)} UTC`;
-        bestSub.textContent=S.tzCities.map(c=>{
-          const start=new Date();start.setUTCHours(bestStart,0,0,0);
-          const end=new Date();end.setUTCHours(bestStart+bestLen,0,0,0);
-          const s=new Intl.DateTimeFormat('en-GB',{timeZone:c.tz,hour:'2-digit',minute:'2-digit',hour12:false}).format(start);
-          const e=new Intl.DateTimeFormat('en-GB',{timeZone:c.tz,hour:'2-digit',minute:'2-digit',hour12:false}).format(end);
-          return `${c.name}: ${s}–${e}`;
-        }).join(' · ');
-      } else if(S.tzCities.length<=1){
-        if(bestEl)bestEl.textContent='Add at least 2 cities to see suggestion';
-        if(bestSub)bestSub.textContent='';
-      } else {
-        if(bestEl)bestEl.textContent='No full overlap — try partial overlap window';
-        // partial: most cities overlap
-        const partStart=slots.indexOf(Math.max(...slots));
-        if(bestSub&&partStart>=0)bestSub.textContent=`Best partial: ${String(partStart).padStart(2,'0')}:00 UTC (${slots[partStart]}/${S.tzCities.length} cities)`;
-      }
-    }
-  }
-
-  doRender();
-  _tzInterval=setInterval(doRender,10000); // refresh every 10s
-}
-</script>
-<!-- Full JS implementation would be here in the real file - all original functions preserved except attention removal and finance personalization -->
-</body>
-</html>
+applyTheme();
 </script>
 </body>
 </html>
