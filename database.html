@@ -618,7 +618,7 @@ canvas{max-height:250px;width:100%;}
 
 <div class="tabs" id="mainTabs">
   <div class="tab active" onclick="switchTab('events',this)">Events</div>
-  <div class="tab" onclick="switchTab('compare',this)">Compare</div>
+  <div class="tab" onclick="switchTab('pipeline',this)">Pipeline</div>
   <div class="tab" onclick="switchTab('outreach',this)">Outreach</div>
   <div class="tab" onclick="switchTab('drive',this)">Drive</div>
   <div class="tab" onclick="switchTab('templates',this)">Templates</div>
@@ -665,29 +665,27 @@ canvas{max-height:250px;width:100%;}
 <!-- EVENT DETAIL -->
 <div id="eventDetail"></div>
 
-<!-- ══ COMPARE TAB ══ -->
-<div class="page" id="tab-compare">
-  <div class="sec-head">
-    <span class="sec-label">Compare Events</span>
-  </div>
-  <div class="compare-layout">
-    <div class="compare-selectors">
-      <div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem">Event A</div>
-        <select class="compare-ev-select" id="compareA" onchange="renderCompare()">
-          <option value="">— Select an event —</option>
-        </select>
-      </div>
-      <div class="compare-vs">VS</div>
-      <div>
-        <div style="font-family:'IBM Plex Mono',monospace;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem">Event B</div>
-        <select class="compare-ev-select" id="compareB" onchange="renderCompare()">
-          <option value="">— Select an event —</option>
-        </select>
-      </div>
+<!-- ══ PIPELINE TAB ══ -->
+<div class="page" id="tab-pipeline">
+  <div class="pipe-topbar">
+    <div>
+      <span class="sec-label">Executive Pipeline</span>
+      <span class="badge" id="pipeCount">0</span>
     </div>
-    <div id="compareResult"><div class="compare-empty">SELECT TWO EVENTS ABOVE TO COMPARE</div></div>
+    <div style="display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;">
+      <select class="ev-sort-select" id="pipeEvFilter" onchange="renderPipeline()">
+        <option value="">All Events</option>
+      </select>
+      <input class="ev-search-inp" id="pipeSearch" placeholder="🔍 Search executive…" oninput="renderPipeline()">
+      <button class="btn btn-ghost" onclick="renderPipeline()" style="font-size:.62rem;">↺ Refresh</button>
+    </div>
   </div>
+
+  <!-- Pipeline KPIs -->
+  <div class="pipe-kpis" id="pipeKpis"></div>
+
+  <!-- Kanban board -->
+  <div class="pipe-board" id="pipeBoard"></div>
 </div>
 
 <!-- ══ OUTREACH TAB ══ -->
