@@ -12,10 +12,13 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   window._db = db;
-  window.fbSave = async (data) => { try { await setDoc(doc(db,"app","state"),data); return true; } catch(e){ return false; } };
-  window.fbLoad = async () => { try { const s=await getDoc(doc(db,"app","state")); return s.exists()?s.data():null; } catch(e){ return null; } };
+  window.fbSave = async (data) => { try { await setDoc(doc(db,"app","state"),data); return true; } catch(e){ console.error('fbSave error:',e); return false; } };
+  window.fbLoad = async () => { try { const s=await getDoc(doc(db,"app","state")); return s.exists()?s.data():null; } catch(e){ console.error('fbLoad error:',e); return null; } };
   window.fbListen = (cb) => onSnapshot(doc(db,"app","state"),(s)=>{ if(s.exists()) cb(s.data()); });
-  window.dispatchEvent(new Event("fbReady"));
+  // Wait for DOM + main script to be ready before firing
+  window.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => window.dispatchEvent(new Event("fbReady")), 100);
+  });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -1030,7 +1033,6 @@ const MSG_TYPES=['Event Invite','Attendance Reminder','Day-Before','Day-Of','Con
 let S={events:[],leads:[],tasks:[],driveSheets:[],templates:[],outreachLogs:[],activeEventId:null,prio:'med',theme:'light'};
 let timerInt=null,currentEventId=null,editEvId=null;
 let calExtraAtt=[],calSelLeads=new Set();
-let fbReady=false;
 let driveEvFilter='all',sheetFilter='all',sheetSort={col:'date',dir:'asc'};
 let selOutLeadId=null,outChannel='whatsapp',outMsgType='Attendance Reminder';
 let _tplUseId=null;
@@ -1044,29 +1046,70 @@ const closeModal=id=>document.getElementById(id).classList.remove('open');
 function toast(msg,type=''){const el=document.createElement('div');el.className='toast'+(type?' '+type:'');el.textContent=msg;document.getElementById('toasts').appendChild(el);setTimeout(()=>el.remove(),3000);}
 
 // ─── Firebase ────────────────────────────────────────
-window.addEventListener('fbReady',async()=>{
-  fbReady=true;
+let _fbInitDone = false;
+
+async function initApp(){
+  if(_fbInitDone) return;
+  _fbInitDone = true;
   const hash=window.location.hash;
   if(hash.startsWith('#checkin/')){await loadFB();showCheckinPage(hash.replace('#checkin/','').trim());return;}
-  setSyncSt('loading');await loadFB();setSyncSt('ok');renderAll();
-  window.fbListen(d=>{mergeRemote(d);renderAll();setSyncSt('ok');});
-});
-async function loadFB(){try{const d=await window.fbLoad();if(d){mergeRemote(d);return true;}return false;}catch{return false;}}
-function mergeRemote(data){const lt=S.theme;S={...S,...data};if(!data.theme)S.theme=lt;['events','leads','tasks','driveSheets','templates','outreachLogs'].forEach(k=>{if(!S[k])S[k]=[];});}
-async function saveToFB(){if(!fbReady)return;setSyncSt('saving');const ok=await window.fbSave(S);setSyncSt(ok?'ok':'err');}
+  setSyncSt('loading');
+  await loadFB();
+  setSyncSt('ok');
+  renderAll();
+  if(window.fbListen){
+    window.fbListen(d=>{mergeRemote(d);renderAll();setSyncSt('ok');});
+  }
+}
+
+window.addEventListener('fbReady', initApp);
+// Fallback: if Firebase module fires before this script runs
+if(window.fbSave && window.fbLoad) { setTimeout(initApp, 200); }
+// Hard fallback after 3s even if Firebase never connects
+setTimeout(()=>{ if(!_fbInitDone){ _fbInitDone=true; setSyncSt('err'); renderAll(); toast('Firebase offline — working locally','err'); }}, 3000);
+
+async function loadFB(){
+  try{
+    const d = await window.fbLoad();
+    if(d){ mergeRemote(d); return true; }
+    return false;
+  } catch(e){
+    console.error('loadFB:',e);
+    return false;
+  }
+}
+function mergeRemote(data){
+  const lt=S.theme;
+  S={...S,...data};
+  if(!data.theme) S.theme=lt;
+  ['events','leads','tasks','driveSheets','templates','outreachLogs'].forEach(k=>{if(!S[k])S[k]=[];});
+}
+async function saveToFB(){
+  if(!window.fbSave) return;
+  setSyncSt('saving');
+  try{
+    const ok=await window.fbSave(S);
+    setSyncSt(ok?'ok':'err');
+    if(!ok) toast('Save failed — check connection','err');
+  } catch(e){
+    setSyncSt('err');
+  }
+}
 let _st=null;
 function save(){clearTimeout(_st);_st=setTimeout(saveToFB,800);}
-async function forceSave(){clearTimeout(_st);await saveToFB();toast('☁️ Saved','ok');}
+async function forceSave(){clearTimeout(_st);await saveToFB();toast('☁️ Saved to Firebase','ok');}
 function setSyncSt(st){
-  const dot=document.getElementById('syncDot'),sdot=document.getElementById('sbSyncDot'),txt=document.getElementById('syncTxt'),stxt=document.getElementById('sbSyncTxt'),btn=document.getElementById('syncBtn');
+  const dot=document.getElementById('syncDot'),sdot=document.getElementById('sbSyncDot'),
+        txt=document.getElementById('syncTxt'),stxt=document.getElementById('sbSyncTxt'),
+        btn=document.getElementById('syncBtn');
   const cls='sync-dot'+(st==='loading'||st==='saving'?' stale':st==='err'?' err':'');
-  if(dot)dot.className=cls;if(sdot)sdot.className=cls;
-  const msg=st==='loading'?'Loading…':st==='saving'?'Saving…':st==='ok'?'Saved':'Error';
-  if(txt)txt.textContent=msg;if(stxt)stxt.textContent=msg;
+  if(dot)dot.className=cls; if(sdot)sdot.className=cls;
+  const msg=st==='loading'?'Loading…':st==='saving'?'Saving…':st==='ok'?'Saved':st==='err'?'Error':'…';
+  if(txt)txt.textContent=msg; if(stxt)stxt.textContent=msg;
   if(btn){if(st==='loading'||st==='saving')btn.classList.add('syncing');else btn.classList.remove('syncing');}
-  if(st==='ok')setTimeout(()=>{if(txt&&txt.textContent==='Saved')txt.textContent='Firebase';if(stxt&&stxt.textContent==='Saved')stxt.textContent='Firebase';},2000);
+  if(st==='ok') setTimeout(()=>{if(txt&&txt.textContent==='Saved')txt.textContent='Firebase';if(stxt&&stxt.textContent==='Saved')stxt.textContent='Firebase';},2000);
 }
-function renderAll(){renderSheet();renderDrive();renderTasks();renderTemplates();populateOutEvSel();updateSbBadges();}
+function renderAll(){renderSheet();renderDrive();renderTasks();renderTemplates();populateOutEvSel();updateSbBadges();applyTheme();}
 
 // ─── Theme ───────────────────────────────────────────
 function toggleTheme(){setTheme(S.theme==='dark'?'light':'dark');}
@@ -1695,16 +1738,17 @@ window.addEventListener('hashchange',()=>{const h=window.location.hash;if(h.star
 ['evModal','leadModal','driveModal','csvModal','calModal','qrModal','tplUseModal'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('click',function(e){if(e.target===this)closeModal(id);});});
 
 // ─── Init ────────────────────────────────────────────
-if(window.innerWidth<=768)collapseSidebar();
+if(window.innerWidth<=768) collapseSidebar();
 else expandSidebar();
 
-// Re-evaluate sidebar on resize
 window.addEventListener('resize',()=>{
-  if(window.innerWidth<=768){collapseSidebar();}
-  else{expandSidebar();}
+  if(window.innerWidth<=768){ if(_sbOpen) collapseSidebar(); }
+  else { if(!_sbOpen) expandSidebar(); }
 });
-setTimeout(()=>{if(!fbReady){document.getElementById('syncTxt').textContent='Offline';document.getElementById('syncDot').className='sync-dot err';renderAll();toast('Firebase not connected','err');}},8000);
+
+// Render immediately so UI is not blank while Firebase connects
 applyTheme();
+renderAll();
 </script>
 </body>
 </html>
